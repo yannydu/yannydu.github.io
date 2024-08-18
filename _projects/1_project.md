@@ -1,81 +1,50 @@
 ---
 layout: page
-title: project 1
-description: with background image
-img: assets/img/12.jpg
+title: ChessMate - An Interactive Chessboard
+description: Built for ENSC 440 at SFU
+img: assets/img/automate_logo.jpg
 importance: 1
-category: work
-related_publications: true
+category: learning
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+## Overview
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+The goal of this project was to create a chessboard that automates piece movement, allowing a single player to enjoy a game of chess without needing to manually move the opponent's pieces.
+This combination of traditional chess with modern technology offers a unique and interactive experience.
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+## Key Features
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+- **Automated Piece Movement**: Chess pieces move with human interaction
+- **Player Piece Movement Detection**: Registers the move that the player made
+- **Adjustable Difficulty**: Players can choose from 8 difficulty levels for their bot opponent
+- **Traditional Design**: Chessboard was crafted from maple and walnut, preserving the classic feel of the game while integrating modern features
 
-You can also put regular text between your rows of images, even citations {% cite einstein1950meaning %}.
-Say you wanted to write a bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, _bled_ for your project, and then... you reveal its glory in the next row of images.
+## Technologies
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
+- **Electromagnetic Trolley**: Chess pieces with embedded magnets are moved using an electromagnetic trolley assembled on an XY table.
+- **Board State Detection**: A Raspberry Pi camera paired with OpenCV captures the board state in real time
+- **Lichess**: For game analytics tracking and Stockfish engine for the bot opponent
+- **Web Application**: Built using Flask, provides a user interface to configure and start games
+- **Raspberry Pi**: Serves as the host for the chessboard's service, managing all operations
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
+## Challenges
 
-{% raw %}
+One of my responsibilities was developing the piece movement detection module. Initially, there was a suggestion within the team to use machine learning to identify and track pieces, but given our lack of ML experience and the pressing need to focus on other critical modules, I opted for a more straightforward approach using OpenCV.
 
-```html
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
-```
+The approach I developed involved tracking piece movement by comparing the chess square occupancies before and after a player's move. To do this, I first needed to detect the corners of each chess square. Without access to the finalized board for testing, I started with a photo of the board that my teammate was working on. I successfully used the Hough Line Transform to detect the corners, and the initial results were promising.
 
-{% endraw %}
+However, after the chessboard surface was finished and I began testing with the Raspberry Pi camera, the algorithm encountered issues. The camera captured additional corner points due to the wood grain patterns and significant light glare on certain regions of the board.
+
+With only two weeks left before the demo day and my lack of experience with OpenCV, refactoring the original solution did not yield any improvement. As a result, I decided to manually calibrate the camera by selecting the corner points directly in the captured image. Although this solution lacked the robustness I had initially aimed for, the fixed camera setup ensured that the piece movement detection still functioned as intended.
+
+## Lessons Learned
+
+- **Prioritize and stay focused**: Identify and ensure that key features work as intended. Don't lose focus on important requirements and get distracted by tasks further down.
+- **Rapid Iteration**: Taking longer to develop a solution doesn't guarantee correctness. Iterating quickly and refining work based on testing worked the best when creating the product.
+- **Ownership and Collaboration**: To take full responsibility for my contributions and being mindful how my work affects my fellow collaborators works.
+- **Structured Testing**: Prioritize creating structured tests and unit tests throughout the development process.
+
+## Conclusions
+
+This project has given me a deeper appreciation for the technologies I have used without much thought.
+I'd like to thank the SFU Instructional team and Lab Engineers for all their help and support throughout the endeavor.
