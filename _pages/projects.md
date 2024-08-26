@@ -4,7 +4,7 @@ title: Projects
 permalink: /projects/
 description: Things I've been working on
 nav: true
-nav_order: 2
+nav_order: 1
 display_categories: [Learning]
 horizontal: false
 ---

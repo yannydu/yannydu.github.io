@@ -2,22 +2,34 @@
 layout: page
 title: ChessMate - An Interactive Chessboard
 description: Built for ENSC 440 at SFU
-img: assets/img/automate_logo.jpg
+img: assets/img/automate_chess.png
 importance: 1
-category: learning
+category: Learning
 ---
 
 ## Overview
 
-The goal of this project was to create a chessboard that automates piece movement, allowing a single player to enjoy a game of chess without needing to manually move the opponent's pieces.
-This combination of traditional chess with modern technology offers a unique and interactive experience.
+The goal of this project was to create a chessboard that automates piece movement, allowing a single player to enjoy a game of physical chess without needing to manually move the opponent's pieces.
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include video.liquid path="https://youtube.com/embed/FKa2ypu3yss" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 ## Key Features
 
 - **Automated Piece Movement**: Chess pieces move with human interaction
 - **Player Piece Movement Detection**: Registers the move that the player made
 - **Adjustable Difficulty**: Players can choose from 8 difficulty levels for their bot opponent
+- **Retractable Camera Arm**: The camera arm can be lowered to move the board and raised during gameplay
 - **Traditional Design**: Chessboard was crafted from maple and walnut, preserving the classic feel of the game while integrating modern features
+
+<div class="row">
+    <div class="col-sm-8 mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/ChessMate.jpg" title="board image" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 ## Technologies
 

@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: Just trying to learn
+subtitle: Building and Learning Every Day
 
 profile:
   align: right
@@ -15,4 +15,6 @@ selected_papers: false # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
 ---
 
-Computer Engineering graduate currently trying to learn more about software development
+Hi, I'm Danny, a Computer Engineering graduate from Simon Fraser University. 
+Currently I'm trying to deepen my understanding of software development. 
+This site will be a space to share what I learn, showcase my projects, and reflect on my growth.
