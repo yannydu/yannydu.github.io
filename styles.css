@@ -1,0 +1,326 @@
+/* defaults match the Kanagawa Dragon theme in themes.js;
+   applyTheme() overrides these via inline CSS vars on :root */
+:root {
+  --bg: #181616;
+  --bgAlt: #282727;
+  --fg: #c5c9c5;
+  --muted: #a6a69c;
+  --accent: #8ea4a2;
+  --red: #c4746e;
+  --orange: #b6927b;
+  --yellow: #c4b28a;
+  --green: #87a987;
+  --blue: #658594;
+  --purple: #a292a3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family:
+    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* ---------- terminal view ---------- */
+#terminal-view {
+  min-height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#output {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#output .entry {
+  margin-bottom: 0.15rem;
+}
+#output .entry:empty {
+  height: 1em;
+}
+
+#output .prompt-echo {
+  color: var(--green);
+}
+#output .cmd-echo {
+  color: var(--fg);
+}
+#output .error {
+  color: var(--red);
+}
+#output .warn {
+  color: var(--yellow);
+}
+#output .ok {
+  color: var(--green);
+}
+
+#output a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+#output a:hover,
+#output a:focus {
+  color: var(--yellow);
+}
+
+#output h3 {
+  color: var(--yellow);
+  margin: 0.5rem 0 0.1rem;
+  font-size: 1em;
+  font-weight: 700;
+}
+
+#output .banner {
+  color: var(--accent);
+  margin: 0.25rem 0;
+  line-height: 1.15;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* ---------- neofetch / ASCII portrait ---------- */
+#output .neofetch {
+  color: var(--muted);
+  margin: 0.25rem 0;
+  line-height: 1.15;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.art-y {
+  color: var(--yellow);
+}
+.art-f {
+  color: var(--fg);
+}
+
+#prompt-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  position: relative;
+}
+
+.prompt {
+  color: var(--green);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#cmd-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg);
+  font: inherit;
+  padding: 0;
+  caret-color: transparent;
+  min-width: 0;
+}
+
+/* ---------- block caret ---------- */
+.block-caret {
+  position: absolute;
+  background: transparent;
+  border: 1px solid var(--fg);
+  opacity: 0.7;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+#prompt-form:focus-within .block-caret {
+  background: var(--fg);
+  border: none;
+  animation: caret-blink 1s infinite;
+}
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 0.85;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #prompt-form:focus-within .block-caret {
+    animation: none;
+  }
+}
+
+/* ---------- boot sequence fade ---------- */
+.boot-line {
+  animation: fade-in 0.18s ease both;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(1px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- CRT mode (toggled by the `crt` command) ---------- */
+html.crt body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.18) 3px
+  );
+  animation: crt-flicker 6s infinite;
+}
+html.crt #terminal-view,
+html.crt #standard-view {
+  text-shadow: 0 0 4px color-mix(in srgb, currentColor 40%, transparent);
+}
+@keyframes crt-flicker {
+  0%,
+  91%,
+  94%,
+  100% {
+    opacity: 1;
+  }
+  92%,
+  93% {
+    opacity: 0.8;
+  }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .boot-line {
+    animation: none;
+  }
+  html.crt body::after {
+    animation: none;
+  }
+}
+
+/* ---------- standard (accessible) view ---------- */
+#standard-view {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+#standard-view h1 {
+  color: var(--accent);
+  margin: 0.5rem 0 0.25rem;
+  outline: none;
+}
+#standard-view .tagline {
+  color: var(--muted);
+  margin-top: 0;
+}
+#standard-view h2 {
+  color: var(--yellow);
+  border-bottom: 1px solid var(--bgAlt);
+  padding-bottom: 0.25rem;
+  margin-top: 2rem;
+}
+#standard-view p[data-about] {
+  white-space: pre-wrap;
+}
+#standard-view a {
+  color: var(--accent);
+}
+#standard-view ul,
+#standard-view dl {
+  padding-left: 1.25rem;
+}
+#standard-view dt {
+  font-weight: 700;
+  margin-top: 0.5rem;
+  color: var(--fg);
+}
+#standard-view dd {
+  margin-left: 0;
+  color: var(--muted);
+}
+
+#back-to-terminal {
+  background: var(--bgAlt);
+  color: var(--fg);
+  border: 1px solid var(--muted);
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+}
+#back-to-terminal:hover,
+#back-to-terminal:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
+/* ---------- mobile ---------- */
+@media (max-width: 600px) {
+  html,
+  body {
+    font-size: 14px;
+  }
+  #terminal-view {
+    padding: 1rem;
+  }
+  .prompt {
+    font-size: 0.9em;
+  }
+}

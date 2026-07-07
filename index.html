@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danny Yu — Terminal Portfolio</title>
+    <meta
+      name="description"
+      content="Danny Yu — aspiring developer. An interactive terminal portfolio."
+    />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a href="#standard-view" class="skip-link" id="skip-link"
+      >Skip to standard (non-terminal) view</a
+    >
+
+    <main
+      id="terminal-view"
+      role="application"
+      aria-label="Interactive terminal portfolio"
+    >
+      <div id="output"></div>
+      <!-- screen readers hear responses here, in full and only once;
+           the visual #output animates character-by-character -->
+      <div id="sr-log" class="sr-only" aria-live="polite" aria-atomic="false"></div>
+      <form id="prompt-form" autocomplete="off">
+        <label for="cmd-input" class="sr-only"
+          >Enter a command. Type 'help' for a list.</label
+        >
+        <span class="prompt" aria-hidden="true">danny@portfolio:~$</span>
+        <input
+          id="cmd-input"
+          type="text"
+          spellcheck="false"
+          autocapitalize="off"
+          autocorrect="off"
+          aria-describedby="input-hint"
+        />
+      </form>
+      <span id="input-hint" class="sr-only"
+        >Use arrow keys for history, Tab for autocomplete.</span
+      >
+    </main>
+
+    <section id="standard-view" hidden aria-label="Standard portfolio view">
+      <button type="button" id="back-to-terminal">← Back to terminal</button>
+      <h1 tabindex="-1" data-name>Danny Yu</h1>
+      <p class="tagline"><span data-title></span></p>
+
+      <h2>About</h2>
+      <p data-about></p>
+
+      <h2>Projects</h2>
+      <ul data-projects></ul>
+
+      <h2>Skills</h2>
+      <dl data-skills></dl>
+
+      <h2>Contact</h2>
+      <ul data-contact></ul>
+    </section>
+
+    <script src="content.js"></script>
+    <script src="themes.js"></script>
+    <script src="terminal.js"></script>
+  </body>
+</html>
