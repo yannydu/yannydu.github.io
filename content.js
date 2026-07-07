@@ -63,12 +63,27 @@ Type 'help' to look around.`,
     ],
   },
 
+  community: [
+    {
+      role: "SFU FAS Student Ambassador",
+      dates: "Dec 2021 – Dec 2024",
+      description:
+        "mentored undergraduate engineering students and recruited prospective ones.",
+    },
+    {
+      role: "SFU Computing Science Peer Tutor",
+      dates: "Jan 2020 – Aug 2021",
+      description:
+        "helped undergrads untangle course material and problem solving.",
+    },
+  ],
+
   contact: {
     github: "https://github.com/yannydu",
     linkedin: "https://www.linkedin.com/in/REPLACE-ME",
     email: "danny_yu_2@sfu.ca",
   },
 
-  // set to a real path (e.g. "/resume.pdf") once you drop a PDF in the repo
-  resumePath: null,
+  // compiled from resume/dev.typ — see resume/template.typ
+  resumePath: "resume/Danny_Yu_Resume.pdf",
 };

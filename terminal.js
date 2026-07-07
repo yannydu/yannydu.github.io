@@ -126,7 +126,7 @@ const ART_LINES = [
 ];
 
 // ---------- command registry ----------
-const SECTIONS = ["about", "projects", "skills", "contact", "resume"];
+const SECTIONS = ["about", "projects", "skills", "community", "contact", "resume"];
 
 function currentThemeId() {
   try {
@@ -143,6 +143,7 @@ const commands = {
       '  <span class="ok">about</span>         — who I am',
       '  <span class="ok">projects</span>      — things I\'ve built',
       '  <span class="ok">skills</span>        — languages & tools',
+      '  <span class="ok">community</span>     — mentoring & volunteering',
       '  <span class="ok">contact</span>       — how to reach me',
       '  <span class="ok">resume</span>        — my resume',
       '  <span class="ok">theme</span> [name]  — change color theme (try: theme list)',
@@ -184,6 +185,16 @@ const commands = {
         ([cat, items]) =>
           `<h3>${escapeHtml(cat)}</h3>` +
           items.map((i) => `  • ${escapeHtml(i)}`).join("\n"),
+      )
+      .join("\n\n");
+  },
+
+  community() {
+    return content.community
+      .map(
+        (c) =>
+          `<h3>${escapeHtml(c.role)} (${escapeHtml(c.dates)})</h3>` +
+          `  ${escapeHtml(c.description)}`,
       )
       .join("\n\n");
   },
