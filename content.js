@@ -28,7 +28,7 @@ Type 'help' to look around.`,
       description:
         "Every camp week becomes an issue of an online magazine, and the games campers build are playable right in the browser. Astro on Cloudflare Workers, with D1 and R2 behind it. The part I care about most is invisible: real names are pseudonymized before anything touches the repo, and camper-written code is served from its own origin so it can never reach the gallery's cookies. Live through a full summer of camps.",
       facts: "13 camps · 471 camper pages published",
-      link: "https://spark-gallery.saadmin4.workers.dev",
+      link: "https://sparkgallery.ca",
       page: "projects/spark-gallery.html",
     },
     {

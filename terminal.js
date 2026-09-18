@@ -153,7 +153,8 @@ const commands = {
       '  <span class="ok">banner</span>        — show the ASCII banner',
       '  <span class="ok">ls</span>            — list sections',
       '  <span class="ok">cat</span> &lt;section&gt; — show a section (e.g. cat about)',
-      '  <span class="ok">open</span> &lt;target&gt;  — github / email / a project name (e.g. open spark-gallery)',
+      '  <span class="ok">read</span> &lt;project&gt; — deep dive on a project, right here (e.g. read spark-gallery)',
+      '  <span class="ok">open</span> &lt;target&gt;  — github / email / a project page (e.g. open spark-gallery)',
       '  <span class="ok">whoami</span>        — a quiet existential moment',
       '  <span class="ok">echo</span> &lt;text&gt;    — repeat after me',
       '  <span class="ok">clear</span>         — clear the screen (or Ctrl+L)',
@@ -178,7 +179,7 @@ const commands = {
           `<h3>${escapeHtml(p.name)}</h3>` +
           `${escapeHtml(p.description)}\n` +
           `  <span style="color: var(--muted)">${escapeHtml(p.facts)}</span>\n` +
-          `  case study: <a href="${page}">${page}</a>\n` +
+          `  deep dive: <span class="ok">read ${escapeHtml(p.name)}</span> · <a href="${page}">${page}</a>\n` +
           liveLine
         );
       })
@@ -316,6 +317,37 @@ const commands = {
     return { err: `cat: ${escapeHtml(section)}: no such section` };
   },
 
+  read(args) {
+    const name = args[0];
+    const p = content.projects.find((x) => x.name === name);
+    if (!p) {
+      const names = content.projects.map((x) => x.name).join(", ");
+      return { err: `read: unknown project '${escapeHtml(name || "")}'. try: ${names}` };
+    }
+    return fetch(p.page)
+      .then((r) => r.text())
+      .then((html) => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const main = doc.querySelector("main");
+        const lines = [];
+        main.querySelectorAll(":scope > *").forEach((el) => {
+          const t = el.textContent.trim();
+          if (el.tagName === "H1") lines.push(`<h3>${escapeHtml(t)}</h3>`);
+          else if (el.tagName === "H2") lines.push(`\n<span class="ok">${escapeHtml(t)}</span>`);
+          else if (el.tagName === "PRE") lines.push(`<span style="color: var(--muted)">${escapeHtml(el.textContent)}</span>`);
+          else if (el.tagName === "UL")
+            [...el.children].forEach((li) => lines.push(`  • ${escapeHtml(li.textContent.trim())}`));
+          else if (el.querySelector("a")) {
+            const a = el.querySelector("a");
+            lines.push(`  <a href="${escapeHtml(a.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(a.textContent)}</a>`);
+          } else lines.push(escapeHtml(t));
+        });
+        lines.push(`\n<span style="color: var(--muted)">full page: <a href="${escapeHtml(p.page)}">${escapeHtml(p.page)}</a></span>`);
+        return lines.join("\n");
+      })
+      .catch(() => ({ err: `read: could not load ${escapeHtml(p.page)}` }));
+  },
+
   whoami() {
     return "you are a visitor. I am Danny. we are both, statistically, mostly water.";
   },
@@ -401,6 +433,15 @@ function dispatch(line) {
     return;
   }
   const result = fn(args);
+  if (result && typeof result.then === "function") {
+    const pending = write('<span style="color: var(--muted)">loading…</span>');
+    result.then((r) => {
+      pending.remove();
+      if (r && typeof r === "object" && "err" in r) typewrite(write(r.err, "error"));
+      else typewrite(write(r));
+    });
+    return;
+  }
   if (result && typeof result === "object" && "err" in result) {
     typewrite(write(result.err, "error"));
   } else if (result) {
@@ -481,6 +522,7 @@ function autocomplete() {
   if (cmd === "theme") pool = Object.keys(themes);
   if (cmd === "open")
     pool = ["github", "email", ...content.projects.map((p) => p.name)];
+  if (cmd === "read") pool = content.projects.map((p) => p.name);
 
   if (pool) {
     const matches = pool.filter((n) => n.startsWith(arg));
@@ -586,7 +628,7 @@ function populateStandardView() {
     li.append(strong, " — " + p.description + " ");
     const caseStudy = document.createElement("a");
     caseStudy.href = p.page;
-    caseStudy.textContent = "case study";
+    caseStudy.textContent = "deep dive";
     li.appendChild(caseStudy);
     if (p.link) {
       li.append(" ");
