@@ -284,8 +284,8 @@ const commands = {
           `  requests served        ${approx(d.requests_served)}`,
           `  error rate             ${d.error_rate_pct} %`,
           `  lessons served         ${approx(d.lessons_served)}`,
-          `  projects viewed        ${approx(d.projects_viewed)}`,
-          `  showcases opened       ${approx(d.showcases_opened)}`,
+          `  gallery pages viewed   ${approx(d.gallery_pages_viewed)}`,
+          `  sponsor pages viewed   ${approx(d.sponsor_pages_viewed)}`,
           `  (updated ${d.updated}; aggregate counts only, no personal data)`,
         ].join("\n");
         typewrite(write(escapeHtml(lines)));

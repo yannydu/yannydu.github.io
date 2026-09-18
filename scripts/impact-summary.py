@@ -15,9 +15,10 @@ whoever owns the impact-log source data):
     latest one.
   - Only a fixed allow-list of (source, worker, event) combinations feeds the
     output: workers requests/errors, hellowattson page_view, and spark-gallery
-    project_view/issue_open. Anything else in the CSV (sponsor_view, upload,
-    gate_fail, module_unlock, ...) is ignored on purpose — it's either not
-    meaningful publicly or not yet cleared for disclosure.
+    page_view/project_view/issue_open (gallery pages) and sponsor_view
+    (sponsor pages). Anything else in the CSV (upload, gate_fail,
+    module_unlock, ...) is ignored on purpose — it's either not meaningful
+    publicly or not yet cleared for disclosure.
   - Large counts are rounded to 2 significant figures before publishing, so
     the public number is an approximation rather than an exact operational
     figure.
@@ -52,8 +53,8 @@ def summarize(csv_path):
     total_requests = 0.0
     total_errors = 0.0
     lessons = 0.0
-    projects_viewed = 0.0
-    showcases = 0.0
+    gallery_pages = 0.0
+    sponsor_pages = 0.0
 
     with open(csv_path, newline="") as f:
         reader = csv.DictReader(f)
@@ -82,10 +83,14 @@ def summarize(csv_path):
             elif source == "analytics_engine":
                 if worker == "hellowattson" and event == "page_view":
                     lessons += count
-                elif worker == "spark-gallery" and event == "project_view":
-                    projects_viewed += count
-                elif worker == "spark-gallery" and event == "issue_open":
-                    showcases += count
+                elif worker == "spark-gallery" and event in (
+                    "page_view",
+                    "project_view",
+                    "issue_open",
+                ):
+                    gallery_pages += count
+                elif worker == "spark-gallery" and event == "sponsor_view":
+                    sponsor_pages += count
 
     if not weeks:
         raise SystemExit(f"no usable rows found in {csv_path}")
@@ -102,8 +107,8 @@ def summarize(csv_path):
         "requests_served": round_sig2(total_requests),
         "error_rate_pct": error_rate_pct,
         "lessons_served": round_sig2(lessons),
-        "projects_viewed": round_sig2(projects_viewed),
-        "showcases_opened": round_sig2(showcases),
+        "gallery_pages_viewed": round_sig2(gallery_pages),
+        "sponsor_pages_viewed": round_sig2(sponsor_pages),
     }
 
 
