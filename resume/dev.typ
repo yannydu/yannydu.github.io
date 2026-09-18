@@ -42,7 +42,7 @@ architecture, privacy model, and operations end to end.
 - Built *spark-gallery*, a publishing platform that turns each camp week into
   an issue of an online magazine, with camper-built games playable in the
   browser (Astro on Cloudflare Workers, D1, R2). Live through a full summer
-  of camps.
+  of camps: 509 camper projects from 416 campers, zero worker errors.
 - Designed its privacy model for minors: camper names are pseudonymized
   before anything reaches the repo, and camper-written code is served from an
   isolated origin so it can never touch the gallery's cookies.
@@ -50,12 +50,13 @@ architecture, privacy model, and operations end to end.
   suites, and a full-history gitleaks scan; a fail-closed pre-push name guard
   and EXIF/GPS stripping are tested invariants.
 - Built *campkit*, the program's curriculum platform (Hono + Drizzle on
-  Workers; Cloudflare Access with SFU accounts), now in use by curriculum
-  writers: activities are written once and assembled into camps, succeeding
-  my Python + Typst pipeline.
+  Workers; Cloudflare Access with SFU accounts): 356 activities and 25 camps
+  authored by six curriculum writers, activities written once and assembled
+  into camps, succeeding my Python + Typst pipeline.
 - Run *hello-wattson* (hellowattson.ca), the public lesson site for twenty
-  programs and 54 lessons (Astro on Cloudflare Workers), with a nightly
-  GitHub Actions rebuild that keeps program dates current.
+  programs and 54 lessons (Astro on Cloudflare Workers), serving hundreds of
+  classroom visits a month, with a nightly GitHub Actions rebuild that keeps
+  program dates current.
 - Teach coding camps (Python, web dev, Arduino, LEGO robotics) and authored
   SPARK, the program's workshop-design framework.
 

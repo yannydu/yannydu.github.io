@@ -42,8 +42,10 @@ services with real users.
   "Jun. 2021 – Present",
 )
 - Build and operate the program's production web platforms on Cloudflare
-  Workers — a publishing gallery, a curriculum system, and public lesson
-  sites — live through a full summer of camps.
+  Workers — a publishing gallery (509 camper projects from 416 campers), a
+  curriculum system (356 activities by six writers), and public lesson sites
+  (hundreds of classroom visits a month) — a full summer of camps with zero
+  worker errors.
 - Own quality on all of them: node --test suite (51 files) on the gallery,
   Vitest suite on the curriculum platform, gitleaks full-history scan and
   typecheck/lint gates in CI on every push.
