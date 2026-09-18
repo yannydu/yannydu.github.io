@@ -148,6 +148,7 @@ const commands = {
       '  <span class="ok">resume</span>        — my resume',
       '  <span class="ok">theme</span> [name]  — change color theme (try: theme list)',
       '  <span class="ok">neofetch</span>      — system info, terminal-nerd style',
+      '  <span class="ok">impact</span>        — platform usage figures',
       '  <span class="ok">crt</span>           — toggle retro CRT mode',
       '  <span class="ok">banner</span>        — show the ASCII banner',
       '  <span class="ok">ls</span>            — list sections',
@@ -262,6 +263,32 @@ const commands = {
       lines.push((ART_LINES[r] || blank) + "   " + (info[r] || ""));
     }
     return `<pre class="neofetch">${lines.join("\n")}</pre>`;
+  },
+
+  impact() {
+    fetch("impact.json", { cache: "no-store" })
+      .then((r) => {
+        if (!r.ok) throw new Error("bad response");
+        return r.json();
+      })
+      .then((d) => {
+        const approx = (n) => "~" + Number(n).toLocaleString();
+        const lines = [
+          `impact — Science Alive platform, cumulative since ${d.since}`,
+          `  apps in production     ${d.apps_in_production}`,
+          `  requests served        ${approx(d.requests_served)}`,
+          `  error rate             ${d.error_rate_pct} %`,
+          `  lessons served         ${approx(d.lessons_served)}`,
+          `  projects viewed        ${approx(d.projects_viewed)}`,
+          `  showcases opened       ${approx(d.showcases_opened)}`,
+          `  (updated ${d.updated}; aggregate counts only, no personal data)`,
+        ].join("\n");
+        typewrite(write(escapeHtml(lines)));
+      })
+      .catch(() => {
+        typewrite(write("impact: could not load impact.json.", "error"));
+      });
+    return "";
   },
 
   crt() {

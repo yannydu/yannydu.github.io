@@ -1,0 +1,41 @@
+# impact.json is a public, privacy-safe usage summary (see
+# scripts/impact-summary.py for the disclosure rules), regenerated weekly by
+# this workflow from the private SFU-Science-Alive/workspace metrics CSV.
+# Secret ORG_METRICS_TOKEN: a GitHub token that can read that file in
+# SFU-Science-Alive/workspace (Contents: Read).
+name: Refresh impact summary
+
+on:
+  schedule:
+    - cron: "0 14 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download impact-log.csv
+        env:
+          GH_TOKEN: ${{ secrets.ORG_METRICS_TOKEN }}
+        run: |
+          gh api -H "Accept: application/vnd.github.raw" repos/SFU-Science-Alive/workspace/contents/strategy/metrics/impact-log.csv > "$RUNNER_TEMP/impact-log.csv"
+
+      - name: Generate impact.json
+        run: python3 scripts/impact-summary.py "$RUNNER_TEMP/impact-log.csv" > impact.json
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add impact.json
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "chore: refresh impact summary $(date -u +%Y-%m-%d)"
+            git push
+          fi
