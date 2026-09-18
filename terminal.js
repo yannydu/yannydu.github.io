@@ -136,6 +136,14 @@ function currentThemeId() {
   }
 }
 
+// impact.json is fetched once at boot; `impact` only advertises itself in
+// help once a few weeks of event data exist (see scripts/impact-summary.py).
+const IMPACT_MIN_WEEKS = 4;
+let impactData = null;
+function impactReady() {
+  return !!impactData && (impactData.event_weeks_logged || 0) >= IMPACT_MIN_WEEKS;
+}
+
 const commands = {
   help() {
     return [
@@ -148,7 +156,7 @@ const commands = {
       '  <span class="ok">resume</span>        — my resume',
       '  <span class="ok">theme</span> [name]  — change color theme (try: theme list)',
       '  <span class="ok">neofetch</span>      — system info, terminal-nerd style',
-      '  <span class="ok">impact</span>        — platform usage figures',
+      ...(impactReady() ? ['  <span class="ok">impact</span>        — platform usage figures'] : []),
       '  <span class="ok">crt</span>           — toggle retro CRT mode',
       '  <span class="ok">banner</span>        — show the ASCII banner',
       '  <span class="ok">ls</span>            — list sections',
@@ -277,6 +285,19 @@ const commands = {
         return r.json();
       })
       .then((d) => {
+        impactData = d;
+        if (!impactReady()) {
+          const n = d.event_weeks_logged || 0;
+          typewrite(
+            write(
+              escapeHtml(
+                `impact: still collecting — ${n} week${n === 1 ? "" : "s"} of usage data so far, ` +
+                  `figures publish after ${IMPACT_MIN_WEEKS}.`,
+              ),
+            ),
+          );
+          return;
+        }
         const approx = (n) => "~" + Number(n).toLocaleString();
         const lines = [
           `impact — Science Alive platform, cumulative since ${d.since}`,
@@ -751,5 +772,11 @@ async function boot() {
     /* private mode, ignore */
   }
   populateStandardView();
+  fetch("impact.json", { cache: "no-store" })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((d) => {
+      impactData = d;
+    })
+    .catch(() => {});
   boot();
 })();

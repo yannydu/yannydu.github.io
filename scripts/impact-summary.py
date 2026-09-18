@@ -49,6 +49,7 @@ def round_sig2(value):
 
 def summarize(csv_path):
     weeks = set()
+    event_weeks = set()
     workers_seen = set()
     total_requests = 0.0
     total_errors = 0.0
@@ -81,6 +82,7 @@ def summarize(csv_path):
                 elif event == "errors":
                     total_errors += count
             elif source == "analytics_engine":
+                event_weeks.add(week_ending)
                 if worker == "hellowattson" and event == "page_view":
                     lessons += count
                 elif worker == "spark-gallery" and event in (
@@ -103,6 +105,7 @@ def summarize(csv_path):
         "since": min(weeks),
         "updated": max(weeks),
         "weeks_logged": len(weeks),
+        "event_weeks_logged": len(event_weeks),
         "apps_in_production": len(workers_seen),
         "requests_served": round_sig2(total_requests),
         "error_rate_pct": error_rate_pct,
