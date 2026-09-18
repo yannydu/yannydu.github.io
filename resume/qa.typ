@@ -25,6 +25,10 @@ services with real users.
   ),
   ("Daily drivers", "Python, JavaScript, HTML / CSS, git, Linux"),
   (
+    "Current tooling",
+    "node --test, Vitest, gitleaks, GitHub Actions, Cloudflare Workers / D1",
+  ),
+  (
     "AI-assisted development",
     "Claude Code as a daily tool — custom skills, hooks, and subagents",
   ),
@@ -40,9 +44,13 @@ services with real users.
 - Build and operate the program's production web platforms on Cloudflare
   Workers — a publishing gallery, a curriculum system, and public lesson
   sites — live through a full summer of camps.
-- Enforce privacy constraints as invariants: camper names are pseudonymized
-  before data reaches repos or backups, and camper-written code runs on an
-  isolated origin. Also teach K-8 coding camps.
+- Own quality on all of them: node --test suite (51 files) on the gallery,
+  Vitest suite on the curriculum platform, gitleaks full-history scan and
+  typecheck/lint gates in CI on every push.
+- Enforce privacy constraints as tested invariants: camper names
+  pseudonymized before data reaches repos or backups, a fail-closed pre-push
+  name guard, EXIF/GPS stripping verified in CI, camper-written code isolated
+  on its own origin. Also teach K-8 coding camps.
 
 #entry(
   "Global Relay",

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campkit — case study — Danny Yu</title>
+<meta name="description" content="An internal platform where camp curriculum is written once, assembled into camps, and turned into shopping lists and print packets." />
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../styles.css" />
+<script src="../themes.js"></script>
+<script>try{var s=localStorage.getItem("theme");if(s&&themes[s])applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}</script>
+</head>
+<body class="page">
+<a class="back" href="../">← back to terminal</a>
+<main>
+<h1>Campkit</h1>
+<p>The internal platform where our camp curriculum is written, assembled, and costed.</p>
+
+<h2>What it is</h2>
+<p>Curriculum lived in one large document per camp, so activities were hard to reuse and supply lists drifted. In Campkit, writers author an activity once and build a camp by arranging published activities into days. The site produces the reading view, the print packet, and a shopping list costed from the student count. Our curriculum writers use it.</p>
+<p>It replaced tech-curriculum, a Python and Typst pipeline where 355 Typst files compiled in CI on every push, with a small git-backed web editor so non-technical staff never touched git.</p>
+
+<h2>Constraints</h2>
+<p>Built for about ten writers and twenty instructors, with no budget and no appetite for another password. Past camps have to stay as they ran, even after their activities are edited for next year.</p>
+
+<h2>Architecture</h2>
+<pre class="diagram">
+  staff browser
+       |  SFU Microsoft sign-in
+       v
+[ Hono app on Workers ]
+  server-rendered HTML + HTMX
+       |               |
+       v               v
+   D1 database     R2 storage
+   (Drizzle)       (images, files)
+       |
+       v
+  activity draft --publish--&gt; frozen revision
+                               ^
+              a camp pins a revision, not a draft
+</pre>
+<p>Platform-specific calls sit behind a single module, so a later move to university servers rewrites that module, not the app.</p>
+
+<h2>Decisions I made</h2>
+<ul>
+<li>Publishing freezes a copy of the activity, and camps point at that copy, so an edit never rewrites a camp that already ran.</li>
+<li>Materials come from one catalogue with alias matching and a single unit per item, so "rubber band" and "elastic band" cannot drift apart. Free-text supply names are impossible to type.</li>
+<li>Staff sign in with the SFU Microsoft accounts they already have, and the app never sees a password. Roles are granted by invite, never on first arrival.</li>
+<li>The programmatic interface is rate limited per caller, so one bad script cannot drain the day's budget.</li>
+<li>The deployed version is stamped in the footer, so a bug report pins an exact deploy.</li>
+<li>CI runs typecheck, lint, and a 28-file Vitest suite, then deploys on push.</li>
+</ul>
+<p>One habit came from a mistake next door. A strategy PDF reached a funder four hours behind its Markdown source, carrying a grade band we had already changed. A pre-commit hook now blocks a source change committed without its regenerated render.</p>
+
+<h2>What I decided not to build</h2>
+<p>A family portal beside registration, with saved child profiles and parent logins. I shelved it in writing: it would have turned a seasonal sign-up into a year-round store of children's personal information, with its own login and a retention policy someone must enforce. The program uses a stock self-hosted ticketing tool instead.</p>
+
+<h2>Numbers</h2>
+<p class="numbers">28-file Vitest suite · 355 Typst files in the predecessor</p>
+
+<h2>Live</h2>
+<p>Internal, behind SSO. No public link.</p>
+</main>
+<footer>Danny Yu · <a href="../">yannydu.github.io</a> · updated 2026-09-18</footer>
+</body>
+</html>

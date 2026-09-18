@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spark Gallery — case study — Danny Yu</title>
+<meta name="description" content="A published gallery of summer camp work where no camper's real name ever reaches the cloud." />
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../styles.css" />
+<script src="../themes.js"></script>
+<script>try{var s=localStorage.getItem("theme");if(s&&themes[s])applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}</script>
+</head>
+<body class="page">
+<a class="back" href="../">← back to terminal</a>
+<main>
+<h1>Spark Gallery</h1>
+<p>A published gallery of summer camp work, built so no child's real name ever reaches the cloud.</p>
+
+<h2>What it is</h2>
+<p>Every week of camp produces photos, code projects, and videos. Spark Gallery turns that week into a published issue families can open from a link, with each camper getting their own page. Instructors upload from the camp room as the week runs, and I pull each camp in when it finishes and publish. Live since summer 2026, it now holds 13 camps and 471 camper pages.</p>
+
+<h2>Constraints</h2>
+<p>A privacy ruling meant children's real names could not sit on the cloud provider in any form, not even for the days between upload and publish. Instructors are camp staff, so the upload path had to be a link and a printed sheet. Families needed to browse without an account.</p>
+
+<h2>Architecture</h2>
+<pre class="diagram">
+ instructors                families
+     |                          |
+     v                          v
+[ upload Worker ]        [ gallery site ]
+ separate origin,         Astro on Workers
+ no shared cookies        D1 index + media
+     |                          ^
+     v                          |
+ private inbox  --intake-->  publish
+ UUID folders,    (on my       build
+ handles only     machine)
+</pre>
+<p>The upload tool runs from its own Worker origin, so a session there never shares cookies with the public gallery. Real names stay on my machine and on paper; what travels is a folder named by a random identifier and a friendly pseudonym.</p>
+
+<h2>Decisions I made</h2>
+<ul>
+<li>Pseudonyms are assigned locally before camp starts, so the upload path never receives a name it would have to strip.</li>
+<li>A pre-push git hook fails closed when a real name appears in files headed for the repository. It stops the push rather than warning.</li>
+<li>Video is re-muxed through ffmpeg before publishing, which drops the location and device metadata phones attach. CI installs ffmpeg so that step stays tested.</li>
+<li>gitleaks scans the full history on every CI run, not only the newest changes.</li>
+<li>Test publishes go to a separate sandbox environment, so invented data can never land beside a real camp.</li>
+<li>51 test files run under the Node test runner, including the privacy guards.</li>
+</ul>
+
+<h2>What I decided not to build</h2>
+<p>No accounts, for campers or for families. An account would mean holding family contact details and a password reset path year round, for a site that matters a few weeks each summer. A link and a pseudonym cover what families want, which is seeing their kid's work. No program tool I build gives a child a login.</p>
+
+<h2>Numbers</h2>
+<p class="numbers">13 camps · 471 camper pages · 51-file test suite</p>
+
+<h2>Live</h2>
+<p><a href="https://spark-gallery.saadmin4.workers.dev" target="_blank" rel="noopener noreferrer">https://spark-gallery.saadmin4.workers.dev</a></p>
+</main>
+<footer>Danny Yu · <a href="../">yannydu.github.io</a> · updated 2026-09-18</footer>
+</body>
+</html>

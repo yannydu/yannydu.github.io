@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hello Wattson — case study — Danny Yu</title>
+<meta name="description" content="The curriculum site students follow in class, with a gate that protects teacher material and no student accounts at all." />
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../styles.css" />
+<script src="../themes.js"></script>
+<script>try{var s=localStorage.getItem("theme");if(s&&themes[s])applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}</script>
+</head>
+<body class="page">
+<a class="back" href="../">← back to terminal</a>
+<main>
+<h1>Hello Wattson</h1>
+<p>The curriculum site students read in class, gated by a code instead of an account.</p>
+
+<h2>What it is</h2>
+<p>Hello Wattson holds our workshop programs, the Arduino, web development, LEGO SPIKE and Python material students follow on classroom devices while an instructor runs the room. Public pages describe each program, while lesson pages and teacher files sit behind an access code a teacher hands out. It carries 20 programs and 54 lessons.</p>
+
+<h2>Constraints</h2>
+<p>A classroom is thirty devices sharing one school IP address, often on slow wifi, with no time to install anything. Students cannot have accounts. Program pages label themselves upcoming, running, or finished, and those labels have to be right on a morning when nobody has touched the site in weeks.</p>
+
+<h2>Architecture</h2>
+<pre class="diagram">
+  classroom device
+        |
+        v
+[ gate Worker ] runs before any file
+  checks code, signs a session cookie
+    |  pass              |  fail
+    v                    v
+ lesson pages        code entry page
+ Astro 6 + MDX,      (only failures
+ built to static      count toward
+ files, no JS         the limit)
+        ^
+        |
+  06:00 UTC nightly rebuild keeps
+  program status honest
+</pre>
+<p>The Worker runs ahead of the files it serves, so a gated lesson is never handed out and then hidden. A build served without the Worker would give everything away, which is why the deploy path is fixed.</p>
+
+<h2>Decisions I made</h2>
+<ul>
+<li>The access check happens on the server, before any lesson content leaves it.</li>
+<li>The rate limit counts only failed code attempts. One student mistyping the code cannot lock out the thirty classmates sharing that school IP address.</li>
+<li>Analytics are cookie-free and aggregate. I can see that a lesson gets used without following anyone through it.</li>
+<li>Astro 6 with MDX content collections, hand-written CSS, and no client-side framework, because pages load on whatever hardware the school owns.</li>
+<li>A nightly rebuild at 06:00 UTC regenerates the site, so program status derived from dates stays correct without anyone remembering to edit it.</li>
+<li>gitleaks scans the full history in CI, so a real access code can never be committed by accident.</li>
+</ul>
+
+<h2>What I decided not to build</h2>
+<p>No student accounts, of any kind. That is a standing rule across every tool I build for the program, and this site is where it costs the most. Accounts would give us saved progress, per-student work, and a class view for teachers. They would also make us the keeper of a directory of children, with logins to reset and a breach to plan for. The unit of access is a code a teacher hands out, and the student stays anonymous to us.</p>
+
+<h2>Numbers</h2>
+<p class="numbers">20 programs · 54 lessons</p>
+
+<h2>Live</h2>
+<p><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">https://hellowattson.ca</a></p>
+</main>
+<footer>Danny Yu · <a href="../">yannydu.github.io</a> · updated 2026-09-18</footer>
+</body>
+</html>

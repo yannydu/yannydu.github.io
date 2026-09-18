@@ -17,11 +17,8 @@ runs on Cloudflare Workers. And because the users are children,
 a lot of the real engineering is privacy work — keeping real
 names out of repos, databases, and backups by construction.
 
-Full disclosure: I build with Claude Code, heavily. The
-architecture, the requirements, the privacy decisions, and the
-operations are mine; much of the typing isn't. I think that's
-where this job is going, and I'd rather be honest about it and
-get good at it.
+I build with Claude Code daily. The architecture, privacy model,
+and operations are mine.
 
 Type 'help' to look around.`,
 
@@ -29,20 +26,26 @@ Type 'help' to look around.`,
     {
       name: "spark-gallery",
       description:
-        "The last version of this site listed 'student-showcase-automation (wip)'. It shipped. Every camp week becomes an issue of an online magazine, and the games campers build are playable right in the browser. Astro on Cloudflare Workers, with D1 and R2 behind it. The part I care about most is invisible: real names are pseudonymized before anything touches the repo, and camper-written code is served from its own origin so it can never reach the gallery's cookies. Live now, holding a full summer of camps. Built with Claude Code; the design calls and the operations are mine.",
+        "Every camp week becomes an issue of an online magazine, and the games campers build are playable right in the browser. Astro on Cloudflare Workers, with D1 and R2 behind it. The part I care about most is invisible: real names are pseudonymized before anything touches the repo, and camper-written code is served from its own origin so it can never reach the gallery's cookies. Live through a full summer of camps.",
+      facts: "13 camps · 471 camper pages published",
       link: "https://spark-gallery.saadmin4.workers.dev",
+      page: "projects/spark-gallery.html",
     },
     {
       name: "campkit",
       description:
-        "Our curriculum platform, generation two. Activities are written once and assembled into camps like blocks, with one canonical supply catalogue so 'rubber bands' and 'elastic bands' can never again become two shopping-list line items. Hono + Drizzle on Cloudflare Workers; staff sign in with the university Microsoft accounts they already have. Successor to my Python + Typst pipeline (the one born from fighting Google Docs one time too many). Built with Claude Code. Internal, so no link yet.",
-      link: "#",
+        "Our curriculum platform, generation two, in use by the program's curriculum writers. Activities are written once and assembled into camps like blocks, with one canonical supply catalogue so 'rubber bands' and 'elastic bands' can never again become two shopping-list line items. Hono + Drizzle on Cloudflare Workers; staff sign in with the SFU Microsoft accounts they already have, through Cloudflare Access. Successor to my Python + Typst pipeline (the one born from fighting Google Docs one time too many). Internal, so no public link.",
+      facts: "28-file Vitest suite · CI typecheck, lint, test, deploy on every push",
+      link: null,
+      page: "projects/campkit.html",
     },
     {
       name: "hello-wattson",
       description:
-        "The public lesson site students follow in class: fourteen programs across web dev, Python, Arduino, and LEGO robotics, hosted by Wattson, our electrical mascot. Eleventy on Cloudflare Pages, hand-written CSS, no client-side framework, and a small Workers cron that rebuilds the site every morning so program dates stay honest. Also built with Claude Code.",
-      link: "#",
+        "The public lesson site students follow in class: twenty programs and 54 lessons across web dev, Python, Arduino, LEGO robotics, and AI, hosted by Wattson, our electrical mascot. Astro on Cloudflare Workers, hand-written CSS, no client-side framework, and a nightly GitHub Actions rebuild so program dates stay honest.",
+      facts: "20 programs · 54 lessons · hellowattson.ca",
+      link: "https://hellowattson.ca",
+      page: "projects/hello-wattson.html",
     },
   ],
 
@@ -51,7 +54,7 @@ Type 'help' to look around.`,
     "Ship with (AI-assisted, still internalizing)": [
       "TypeScript",
       "Astro / Hono",
-      "Cloudflare (Workers, Pages, D1, R2)",
+      "Cloudflare (Workers, D1, R2)",
       "Docker",
     ],
     "AI-assisted development": [
@@ -80,10 +83,10 @@ Type 'help' to look around.`,
 
   contact: {
     github: "https://github.com/yannydu",
-    linkedin: "https://www.linkedin.com/in/REPLACE-ME",
     email: "danny_yu_2@sfu.ca",
   },
 
   // compiled from resume/dev.typ — see resume/template.typ
   resumePath: "resume/Danny_Yu_Resume.pdf",
+  updated: "2026-09-18",
 };

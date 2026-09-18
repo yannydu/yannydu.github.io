@@ -153,7 +153,7 @@ const commands = {
       '  <span class="ok">banner</span>        — show the ASCII banner',
       '  <span class="ok">ls</span>            — list sections',
       '  <span class="ok">cat</span> &lt;section&gt; — show a section (e.g. cat about)',
-      '  <span class="ok">open</span> &lt;site&gt;    — opens github / linkedin / email',
+      '  <span class="ok">open</span> &lt;target&gt;  — github / email / a project name (e.g. open spark-gallery)',
       '  <span class="ok">whoami</span>        — a quiet existential moment',
       '  <span class="ok">echo</span> &lt;text&gt;    — repeat after me',
       '  <span class="ok">clear</span>         — clear the screen (or Ctrl+L)',
@@ -170,11 +170,16 @@ const commands = {
   projects() {
     return content.projects
       .map((p) => {
-        const link = escapeHtml(p.link);
+        const page = escapeHtml(p.page);
+        const liveLine = p.link
+          ? `  live: <a href="${escapeHtml(p.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(p.link)}</a>`
+          : `  live: internal, behind SSO`;
         return (
           `<h3>${escapeHtml(p.name)}</h3>` +
           `${escapeHtml(p.description)}\n` +
-          `  <a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a>`
+          `  <span style="color: var(--muted)">${escapeHtml(p.facts)}</span>\n` +
+          `  case study: <a href="${page}">${page}</a>\n` +
+          liveLine
         );
       })
       .join("\n\n");
@@ -204,7 +209,6 @@ const commands = {
     const c = content.contact;
     return [
       `  github    <a href="${escapeHtml(c.github)}"   target="_blank" rel="noopener noreferrer">${escapeHtml(c.github)}</a>`,
-      `  linkedin  <a href="${escapeHtml(c.linkedin)}" target="_blank" rel="noopener noreferrer">${escapeHtml(c.linkedin)}</a>`,
       `  email     <a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`,
     ].join("\n");
   },
@@ -325,13 +329,20 @@ const commands = {
     const c = content.contact;
     const urls = {
       github: c.github,
-      linkedin: c.linkedin,
       email: "mailto:" + c.email,
     };
+    content.projects.forEach((p) => {
+      urls[p.name] = p.page;
+    });
     if (!urls[target]) {
+      const names = content.projects.map((p) => p.name).join(", ");
       return {
-        err: `open: unknown target '${escapeHtml(target || "")}'. try: github, linkedin, email`,
+        err: `open: unknown target '${escapeHtml(target || "")}'. try: github, email, ${names}`,
       };
+    }
+    if (content.projects.some((p) => p.name === target)) {
+      window.location.href = urls[target];
+      return `opening ${escapeHtml(target)}...`;
     }
     window.open(
       urls[target],
@@ -468,7 +479,8 @@ function autocomplete() {
   let pool = null;
   if (cmd === "cat") pool = SECTIONS;
   if (cmd === "theme") pool = Object.keys(themes);
-  if (cmd === "open") pool = ["github", "linkedin", "email"];
+  if (cmd === "open")
+    pool = ["github", "email", ...content.projects.map((p) => p.name)];
 
   if (pool) {
     const matches = pool.filter((n) => n.startsWith(arg));
@@ -572,10 +584,15 @@ function populateStandardView() {
     const strong = document.createElement("strong");
     strong.textContent = p.name;
     li.append(strong, " — " + p.description + " ");
-    if (p.link && p.link !== "#") {
+    const caseStudy = document.createElement("a");
+    caseStudy.href = p.page;
+    caseStudy.textContent = "case study";
+    li.appendChild(caseStudy);
+    if (p.link) {
+      li.append(" ");
       const a = document.createElement("a");
       a.href = p.link;
-      a.textContent = p.link;
+      a.textContent = "live";
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       li.appendChild(a);
@@ -596,7 +613,6 @@ function populateStandardView() {
   const c = content.contact;
   const links = [
     { label: "GitHub", href: c.github },
-    { label: "LinkedIn", href: c.linkedin },
     { label: "Email", href: "mailto:" + c.email, display: c.email },
   ];
   links.forEach((l) => {
@@ -612,6 +628,9 @@ function populateStandardView() {
     li.appendChild(a);
     contactEl.appendChild(li);
   });
+
+  const updatedEl = standardView.querySelector("[data-updated]");
+  if (updatedEl) updatedEl.textContent = "last updated " + content.updated;
 }
 
 // ---------- boot sequence ----------
@@ -659,6 +678,9 @@ async function boot() {
     `<span style="color: var(--accent)">${escapeHtml(content.name)}</span> — ` +
       `<span style="color: var(--muted)">${escapeHtml(content.title)}</span>`,
   );
+  write(
+    `<span style="color: var(--muted)">last updated ${escapeHtml(content.updated)}</span>`,
+  );
   write("");
   write(
     `type <span class="ok">help</span> to see commands, ` +
@@ -686,5 +708,6 @@ async function boot() {
   } catch (_) {
     /* private mode, ignore */
   }
+  populateStandardView();
   boot();
 })();

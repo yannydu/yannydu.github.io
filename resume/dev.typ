@@ -24,7 +24,7 @@ architecture, privacy model, and operations end to end.
   ("Daily drivers", "Python, JavaScript, HTML / CSS, Typst, git, Linux"),
   (
     "Ship with (AI-assisted, still internalizing)",
-    "TypeScript, Astro / Hono, Cloudflare (Workers, Pages, D1, R2), Docker",
+    "TypeScript, Astro / Hono, Cloudflare (Workers, D1, R2), Docker",
   ),
   (
     "AI-assisted development",
@@ -46,12 +46,16 @@ architecture, privacy model, and operations end to end.
 - Designed its privacy model for minors: camper names are pseudonymized
   before anything reaches the repo, and camper-written code is served from an
   isolated origin so it can never touch the gallery's cookies.
+- Ship behind CI on every push: typecheck, lint, node --test and Vitest
+  suites, and a full-history gitleaks scan; a fail-closed pre-push name guard
+  and EXIF/GPS stripping are tested invariants.
 - Built *campkit*, the program's curriculum platform (Hono + Drizzle on
-  Workers, Microsoft SSO): activities are written once and assembled into
-  camps, replacing a Word-document workflow.
-- Run *hello-wattson*, the public lesson site covering fourteen programs
-  (Eleventy on Cloudflare Pages), with a daily cron rebuild that keeps
-  program dates current.
+  Workers; Cloudflare Access with SFU accounts), now in use by curriculum
+  writers: activities are written once and assembled into camps, succeeding
+  my Python + Typst pipeline.
+- Run *hello-wattson* (hellowattson.ca), the public lesson site for twenty
+  programs and 54 lessons (Astro on Cloudflare Workers), with a nightly
+  GitHub Actions rebuild that keeps program dates current.
 - Teach coding camps (Python, web dev, Arduino, LEGO robotics) and authored
   SPARK, the program's workshop-design framework.
 
