@@ -55,7 +55,7 @@ architecture, privacy model, and operations end to end.
   into camps, succeeding my Python + Typst pipeline.
 - Run *hello-wattson* (hellowattson.ca), the public lesson site for twenty
   programs and 54 lessons (Astro on Cloudflare Workers), serving hundreds of
-  classroom visits a month, with a nightly GitHub Actions rebuild that keeps
+  visits a month, with a nightly GitHub Actions rebuild that keeps
   program dates current.
 - Teach coding camps (Python, web dev, Arduino, LEGO robotics) and authored
   SPARK, the program's workshop-design framework.
