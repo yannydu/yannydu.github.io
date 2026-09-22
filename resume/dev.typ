@@ -1,7 +1,7 @@
 #import "template.typ": *
 
 #show: resume.with(
-  name: [Danny #text(weight: "bold")[Yu]],
+  name: [Danny Yu],
   role: "Full-Stack Engineer · Internal Platforms for STEM Education",
   contacts: (
     link("mailto:danny_yu_2@sfu.ca", "danny_yu_2@sfu.ca"),
@@ -15,7 +15,7 @@ Full-stack engineer who builds and operates the internal platforms behind
 SFU's K-12 STEM outreach program: a publishing pipeline for camper projects,
 a curriculum system, and the public lesson sites used in class, running on
 Cloudflare Workers. Because the users are children, much of the engineering
-is privacy work — real names kept out of repos, databases, and backups by
+is privacy work: real names kept out of repos, databases, and backups by
 construction. Ships with Claude Code as a daily tool, owning the
 architecture, privacy model, and operations end to end.
 
@@ -28,7 +28,7 @@ architecture, privacy model, and operations end to end.
   ),
   (
     "AI-assisted development",
-    "Claude Code as a daily tool — custom skills, hooks, and subagents; taking a spec to a deployed system and owning what ships",
+    "Claude Code as a daily tool: custom skills, hooks, and subagents; taking a spec to a deployed system and owning what ships",
   ),
 ))
 
@@ -83,7 +83,7 @@ architecture, privacy model, and operations end to end.
 
 #section("Projects")
 #entry(
-  "ChessMate — A Smart Automated Chessboard",
+  "ChessMate: A Smart Automated Chessboard",
   "SFU ENSC Capstone",
   "Burnaby, BC",
   "Jan. 2024 – Aug. 2024",

@@ -12,7 +12,7 @@
 
 #section("Summary")
 Software developer in test with a foundation in test automation, API
-validation, and CI/CD from SDET and QA co-ops — now building and operating
+validation, and CI/CD from SDET and QA co-ops. Now building and operating
 production web platforms for SFU's STEM outreach program. Comfortable owning
 quality end to end, from Selenium suites and Wiremock stubs to running live
 services with real users.
@@ -30,7 +30,7 @@ services with real users.
   ),
   (
     "AI-assisted development",
-    "Claude Code as a daily tool — custom skills, hooks, and subagents",
+    "Claude Code as a daily tool: custom skills, hooks, and subagents",
   ),
 ))
 
@@ -42,9 +42,9 @@ services with real users.
   "Jun. 2021 – Present",
 )
 - Build and operate the program's production web platforms on Cloudflare
-  Workers — a publishing gallery (509 camper projects from 416 campers), a
+  Workers: a publishing gallery (509 camper projects from 416 campers), a
   curriculum system (356 activities by six writers), and public lesson sites
-  (hundreds of visits a month) — a full summer of camps with zero
+  (hundreds of visits a month), through a full summer of camps with zero
   worker errors.
 - Own quality on all of them: node --test suite (51 files) on the gallery,
   Vitest suite on the curriculum platform, gitleaks full-history scan and
@@ -80,7 +80,7 @@ services with real users.
 
 #section("Projects")
 #entry(
-  "ChessMate — A Smart Automated Chessboard",
+  "ChessMate: A Smart Automated Chessboard",
   "SFU ENSC Capstone",
   "Burnaby, BC",
   "Jan. 2024 – Aug. 2024",

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Campkit — deep dive — Danny Yu</title>
+<title>Campkit - deep dive - Danny Yu</title>
 <meta name="description" content="An internal platform where camp curriculum is written once, assembled into camps, and turned into shopping lists and print packets." />
 <meta name="color-scheme" content="dark light" />
 <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
@@ -21,7 +21,7 @@
 <p>The internal platform where our camp curriculum is written, assembled, and costed.</p>
 
 <h2>What it is</h2>
-<p>Curriculum lived in one large document per camp, so activities were hard to reuse and supply lists drifted. In Campkit, writers author an activity once and build a camp by arranging published activities into days. The site produces the reading view, the print packet, and a shopping list costed from the student count. Our curriculum writers use it.</p>
+<p>Curriculum sat in one large document per camp, so activities were hard to reuse and supply lists drifted. In Campkit, writers author an activity once and build a camp by arranging published activities into days. The site produces the reading view, the print packet, and a shopping list costed from the student count. Our curriculum writers use it.</p>
 <p>It replaced tech-curriculum, a Python and Typst pipeline where 355 Typst files compiled in CI on every push, with a small git-backed web editor so non-technical staff never touched git.</p>
 
 <h2>Constraints</h2>
@@ -55,7 +55,7 @@
 <li>The deployed version is stamped in the footer, so a bug report pins an exact deploy.</li>
 <li>CI runs typecheck, lint, and a 28-file Vitest suite, then deploys on push.</li>
 </ul>
-<p>One habit came from a mistake next door. A strategy PDF reached a funder four hours behind its Markdown source, carrying a grade band we had already changed. A pre-commit hook now blocks a source change committed without its regenerated render.</p>
+<p>One habit came from a mistake next door. A strategy PDF reached a funder four hours behind its Markdown source and still had a grade band we had already changed. A pre-commit hook now blocks a source change committed without its regenerated render.</p>
 
 <h2>What I decided not to build</h2>
 <p>A family portal beside registration, with saved child profiles and parent logins. I shelved it in writing: it would have turned a seasonal sign-up into a year-round store of children's personal information, with its own login and a retention policy someone must enforce. The program uses a stock self-hosted ticketing tool instead.</p>

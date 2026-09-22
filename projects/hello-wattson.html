@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Hello Wattson — deep dive — Danny Yu</title>
+<title>Hello Wattson - deep dive - Danny Yu</title>
 <meta name="description" content="The curriculum site students follow in class, with a gate that protects teacher material and no student accounts at all." />
 <meta name="color-scheme" content="dark light" />
 <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
@@ -21,7 +21,7 @@
 <p>The curriculum site students read in class, gated by a code instead of an account.</p>
 
 <h2>What it is</h2>
-<p>Hello Wattson holds our workshop programs, the Arduino, web development, LEGO SPIKE and Python material students follow on classroom devices while an instructor runs the room. Public pages describe each program, while lesson pages and teacher files sit behind an access code a teacher hands out. It carries 20 programs and 54 lessons.</p>
+<p>Hello Wattson publishes our workshop programs: the Arduino, web development, LEGO SPIKE and Python material students follow on classroom devices while an instructor runs the room. Public pages describe each program, while lesson pages and teacher files sit behind an access code a teacher hands out. It's 20 programs and 54 lessons so far.</p>
 
 <h2>Constraints</h2>
 <p>A classroom is thirty devices sharing one school IP address, often on slow wifi, with no time to install anything. Students cannot have accounts. Program pages label themselves upcoming, running, or finished, and those labels have to be right on a morning when nobody has touched the site in weeks.</p>
@@ -42,7 +42,7 @@
         ^
         |
   06:00 UTC nightly rebuild keeps
-  program status honest
+  program status accurate
 </pre>
 <p>The Worker runs ahead of the files it serves, so a gated lesson is never handed out and then hidden. A build served without the Worker would give everything away, which is why the deploy path is fixed.</p>
 

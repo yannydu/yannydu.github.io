@@ -1,4 +1,4 @@
-// terminal.js — command loop, history, autocomplete, boot sequence.
+// terminal.js - command loop, history, autocomplete, boot sequence.
 // depends on content.js (window.content) and themes.js (window.themes, applyTheme).
 
 // ---------- helpers ----------
@@ -101,32 +101,38 @@ const BANNER = [
 ].join("\n");
 
 // ---------- ASCII portrait ----------
-// pregenerated from profile.png (scripts kept out of the repo);
+// pregenerated from the SFU Science Alive Wattson mascot (scripts kept out of the repo);
 // every line is exactly 40 visible columns so neofetch can pad against it
 const ART_LINES = [
-  '                  <span class="art-y">+</span>   <span class="art-y">++</span>                ',
-  '              <span class="art-y">++</span><span class="art-f">@@@@@@@@@@</span><span class="art-y">+++</span>           ',
-  '           <span class="art-y">+</span><span class="art-f">@@@@@@@@@@@@@@@@@</span><span class="art-y">++</span>         ',
-  '         <span class="art-y">+</span><span class="art-f">@@@@@@@@@@@@@@@@@@@@@@</span>        ',
-  '       <span class="art-y">++</span><span class="art-f">@@@@@@@@@@@@@@@@@@@@@@@</span><span class="art-y">+</span><span class="art-f">@</span><span class="art-y">+</span>     ',
-  '     <span class="art-y">+</span><span class="art-f">@@@@@@@@@@@@</span><span class="art-y">++</span><span class="art-f">@@</span><span class="art-y">+</span><span class="art-f">@</span><span class="art-y">+</span><span class="art-f">@@@@@@@@@</span><span class="art-y">++</span>    ',
-  '     <span class="art-f">@@@@@@@@</span><span class="art-y">+</span><span class="art-f">@</span><span class="art-y">++++++++</span><span class="art-f">@@@@@@@@@@@@</span><span class="art-y">+</span>    ',
-  '   <span class="art-y">+</span><span class="art-f">@@@@@@@</span><span class="art-y">+++++</span><span class="art-f">@</span><span class="art-y">++++</span><span class="art-f">@@</span><span class="art-y">++++</span><span class="art-f">@@@@@@@@@</span><span class="art-y">+</span>   ',
-  '   <span class="art-y">+</span><span class="art-f">@@@@@@@</span><span class="art-y">+++++</span><span class="art-f">@@@@@@</span><span class="art-y">++++++</span><span class="art-f">@@@@@@@@</span><span class="art-y">+</span>   ',
-  '   <span class="art-f">@@@@@@</span><span class="art-y">+</span><span class="art-f">@</span><span class="art-y">+</span><span class="art-f">@@</span><span class="art-y">+</span><span class="art-f">@</span><span class="art-y">++++++</span><span class="art-f">@@</span><span class="art-y">++</span><span class="art-f">@@</span><span class="art-y">++</span><span class="art-f">@@@@@@@</span>   ',
-  '   <span class="art-f">@@@@@</span><span class="art-y">+++++++++++++++++++++++</span><span class="art-f">@@@@@@</span>   ',
-  '   <span class="art-y">+</span><span class="art-f">@@@</span><span class="art-y">+++++++++++++++++++++++++</span><span class="art-f">@@@@@</span>   ',
-  '    <span class="art-f">@@@@</span><span class="art-y">+++++++++++++++++++++++</span><span class="art-f">@@@@@</span>    ',
-  '     <span class="art-f">@@@@</span><span class="art-y">+++++++++++++</span><span class="art-f">@</span><span class="art-y">+++++++</span><span class="art-f">@@@@@@</span>    ',
-  '       <span class="art-f">@@@</span><span class="art-y">++++</span><span class="art-f">@@@@@@@@@</span><span class="art-y">++++++</span><span class="art-f">@@</span><span class="art-y">+</span><span class="art-f">@</span>       ',
-  '         <span class="art-y">+</span><span class="art-f">@</span><span class="art-y">+++++</span><span class="art-f">@@@@@</span><span class="art-y">++++++</span><span class="art-f">@@</span>           ',
-  '          <span class="art-y">+</span><span class="art-f">@</span><span class="art-y">++++++++++++</span><span class="art-f">@@</span>              ',
-  '            <span class="art-y">++++++++++++</span>                ',
-  '               <span class="art-y">+++++</span>                    ',
+  '           <span class="art-f">@@@@@@@@@@@@@@@@@@</span>           ',
+  '       <span class="art-f">@@@@</span><span class="art-y">++++++++++++++++++</span><span class="art-f">@@@@</span>       ',
+  '     <span class="art-f">@@</span><span class="art-y">+++++++++++++++++++++++++</span><span class="art-f">@@@</span>     ',
+  '    <span class="art-f">@</span><span class="art-y">+++++++++++++++++++++++++++++</span><span class="art-f">@@</span>    ',
+  '   <span class="art-f">@@</span><span class="art-y">++++++++++++++++++</span><span class="art-f">@@</span><span class="art-y">++++++++++</span><span class="art-f">@</span>    ',
+  '    <span class="art-f">@</span><span class="art-y">++++++++</span><span class="art-f">@@@</span><span class="art-y">+++++++</span><span class="art-f">@@</span><span class="art-y">++++++++++</span><span class="art-f">@</span>    ',
+  '<span class="art-f">@@@</span> <span class="art-f">@@</span><span class="art-y">++++++</span><span class="art-f">@</span><span class="art-y">+++++++++++++</span><span class="art-f">@</span><span class="art-y">+++++++</span><span class="art-f">@@</span>  <span class="art-f">@</span> ',
+  '<span class="art-f">@@@</span>   <span class="art-f">@@</span><span class="art-y">+++</span><span class="art-f">@@@@@@@@@@@@@@@@@</span><span class="art-y">+++++</span><span class="art-f">@@</span> <span class="art-f">@@@@</span>',
+  '   <span class="art-f">@@</span>  <span class="art-f">@@</span><span class="art-y">+++++++++++++++++++++</span><span class="art-f">@@@</span> <span class="art-f">@@</span>    ',
+  '     <span class="art-f">@@@@@@</span><span class="art-y">+++++</span><span class="art-f">@@@@@@@</span><span class="art-y">+++++</span><span class="art-f">@@@@@@</span>      ',
+  '          <span class="art-f">@@@</span><span class="art-y">+++</span><span class="art-f">@@@@@@@@</span><span class="art-y">+++</span><span class="art-f">@@@</span>          ',
+  '           <span class="art-f">@@</span><span class="art-y">+++</span><span class="art-f">@@@@@@@</span><span class="art-y">++++</span><span class="art-f">@@</span>           ',
+  '            <span class="art-f">@@@@@@@@@@@@@@@@</span>            ',
+  '             <span class="art-f">@@@@@@@@@@@@@@</span>             ',
+  '             <span class="art-f">@@@@@@@@@@@@@@</span>             ',
+  '             <span class="art-f">@@@@@@@@@@@@@@</span>             ',
+  '              <span class="art-f">@</span>         <span class="art-f">@</span>               ',
+  '           <span class="art-f">@@@@</span>         <span class="art-f">@@@@@</span>           ',
 ];
 
 // ---------- command registry ----------
-const SECTIONS = ["about", "projects", "skills", "community", "contact", "resume"];
+const SECTIONS = [
+  "about",
+  "projects",
+  "skills",
+  "community",
+  "contact",
+  "resume",
+];
 
 function currentThemeId() {
   try {
@@ -141,32 +147,36 @@ function currentThemeId() {
 const IMPACT_MIN_WEEKS = 4;
 let impactData = null;
 function impactReady() {
-  return !!impactData && (impactData.event_weeks_logged || 0) >= IMPACT_MIN_WEEKS;
+  return (
+    !!impactData && (impactData.event_weeks_logged || 0) >= IMPACT_MIN_WEEKS
+  );
 }
 
 const commands = {
   help() {
     return [
       "available commands:",
-      '  <span class="ok">about</span>         — who I am',
-      '  <span class="ok">projects</span>      — things I\'ve built',
-      '  <span class="ok">skills</span>        — languages & tools',
-      '  <span class="ok">community</span>     — mentoring & volunteering',
-      '  <span class="ok">contact</span>       — how to reach me',
-      '  <span class="ok">resume</span>        — my resume',
-      '  <span class="ok">theme</span> [name]  — change color theme (try: theme list)',
-      '  <span class="ok">neofetch</span>      — system info, terminal-nerd style',
-      ...(impactReady() ? ['  <span class="ok">impact</span>        — platform usage figures'] : []),
-      '  <span class="ok">crt</span>           — toggle retro CRT mode',
-      '  <span class="ok">banner</span>        — show the ASCII banner',
-      '  <span class="ok">ls</span>            — list sections',
-      '  <span class="ok">cat</span> &lt;section&gt; — show a section (e.g. cat about)',
-      '  <span class="ok">read</span> &lt;project&gt; — deep dive on a project, right here (e.g. read spark-gallery)',
-      '  <span class="ok">open</span> &lt;target&gt;  — github / email / a project page (e.g. open spark-gallery)',
-      '  <span class="ok">whoami</span>        — a quiet existential moment',
-      '  <span class="ok">echo</span> &lt;text&gt;    — repeat after me',
-      '  <span class="ok">clear</span>         — clear the screen (or Ctrl+L)',
-      '  <span class="ok">help</span>          — this menu',
+      '  <span class="ok">about</span>         - who I am',
+      '  <span class="ok">projects</span>      - things I\'ve built',
+      '  <span class="ok">skills</span>        - languages & tools',
+      '  <span class="ok">community</span>     - mentoring & volunteering',
+      '  <span class="ok">contact</span>       - how to reach me',
+      '  <span class="ok">resume</span>        - my resume',
+      '  <span class="ok">theme</span> [name]  - change color theme (try: theme list)',
+      '  <span class="ok">neofetch</span>      - system info, terminal-nerd style',
+      ...(impactReady()
+        ? ['  <span class="ok">impact</span>        - platform usage figures']
+        : []),
+      '  <span class="ok">crt</span>           - toggle retro CRT mode',
+      '  <span class="ok">banner</span>        - show the ASCII banner',
+      '  <span class="ok">ls</span>            - list sections',
+      '  <span class="ok">cat</span> &lt;section&gt; - show a section (e.g. cat about)',
+      '  <span class="ok">read</span> &lt;project&gt; - deep dive on a project, right here (e.g. read spark-gallery)',
+      '  <span class="ok">open</span> &lt;target&gt;  - github / email / a project page (e.g. open spark-gallery)',
+      '  <span class="ok">whoami</span>        - a quiet existential moment',
+      '  <span class="ok">echo</span> &lt;text&gt;    - repeat after me',
+      '  <span class="ok">clear</span>         - clear the screen (or Ctrl+L)',
+      '  <span class="ok">help</span>          - this menu',
       "",
       "tips: ↑/↓ for history, Tab for autocomplete.",
     ].join("\n");
@@ -227,7 +237,7 @@ const commands = {
       const p = escapeHtml(content.resumePath);
       return `<a href="${p}" target="_blank" rel="noopener noreferrer">open resume (${p})</a>`;
     }
-    return "resume coming soon — drop a PDF in the repo and set `resumePath` in content.js.";
+    return "resume coming soon. Drop a PDF in the repo and set `resumePath` in content.js.";
   },
 
   theme(args) {
@@ -265,7 +275,7 @@ const commands = {
       row("Uptime", "20-something years"),
       row("Editor", "Claude Code"),
       row("Theme", escapeHtml(themes[currentThemeId()].name)),
-      row("Hobbies", "climbing, running"),
+      row("Hobbies", "coding, gaming, lounging"),
       "",
       swatch,
     ];
@@ -291,7 +301,7 @@ const commands = {
           typewrite(
             write(
               escapeHtml(
-                `impact: still collecting — ${n} week${n === 1 ? "" : "s"} of usage data so far, ` +
+                `impact: still collecting, ${n} week${n === 1 ? "" : "s"} of usage data so far. ` +
                   `figures publish after ${IMPACT_MIN_WEEKS}.`,
               ),
             ),
@@ -300,7 +310,7 @@ const commands = {
         }
         const approx = (n) => "~" + Number(n).toLocaleString();
         const lines = [
-          `impact — Science Alive platform, cumulative since ${d.since}`,
+          `impact: Science Alive platform, cumulative since ${d.since}`,
           `  apps in production     ${d.apps_in_production}`,
           `  requests served        ${approx(d.requests_served)}`,
           `  error rate             ${d.error_rate_pct} %`,
@@ -323,7 +333,7 @@ const commands = {
       localStorage.setItem("crt", on ? "1" : "");
     } catch (_) {}
     return on
-      ? 'CRT mode <span class="ok">on</span> — hello, 1985.'
+      ? 'CRT mode <span class="ok">on</span>. Hello, 1985.'
       : "CRT mode off.";
   },
 
@@ -343,7 +353,9 @@ const commands = {
     const p = content.projects.find((x) => x.name === name);
     if (!p) {
       const names = content.projects.map((x) => x.name).join(", ");
-      return { err: `read: unknown project '${escapeHtml(name || "")}'. try: ${names}` };
+      return {
+        err: `read: unknown project '${escapeHtml(name || "")}'. try: ${names}`,
+      };
     }
     return fetch(p.page)
       .then((r) => r.text())
@@ -354,23 +366,33 @@ const commands = {
         main.querySelectorAll(":scope > *").forEach((el) => {
           const t = el.textContent.trim();
           if (el.tagName === "H1") lines.push(`<h3>${escapeHtml(t)}</h3>`);
-          else if (el.tagName === "H2") lines.push(`\n<span class="ok">${escapeHtml(t)}</span>`);
-          else if (el.tagName === "PRE") lines.push(`<span style="color: var(--muted)">${escapeHtml(el.textContent)}</span>`);
+          else if (el.tagName === "H2")
+            lines.push(`\n<span class="ok">${escapeHtml(t)}</span>`);
+          else if (el.tagName === "PRE")
+            lines.push(
+              `<span style="color: var(--muted)">${escapeHtml(el.textContent)}</span>`,
+            );
           else if (el.tagName === "UL")
-            [...el.children].forEach((li) => lines.push(`  • ${escapeHtml(li.textContent.trim())}`));
+            [...el.children].forEach((li) =>
+              lines.push(`  • ${escapeHtml(li.textContent.trim())}`),
+            );
           else if (el.querySelector("a")) {
             const a = el.querySelector("a");
-            lines.push(`  <a href="${escapeHtml(a.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(a.textContent)}</a>`);
+            lines.push(
+              `  <a href="${escapeHtml(a.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(a.textContent)}</a>`,
+            );
           } else lines.push(escapeHtml(t));
         });
-        lines.push(`\n<span style="color: var(--muted)">full page: <a href="${escapeHtml(p.page)}">${escapeHtml(p.page)}</a></span>`);
+        lines.push(
+          `\n<span style="color: var(--muted)">full page: <a href="${escapeHtml(p.page)}">${escapeHtml(p.page)}</a></span>`,
+        );
         return lines.join("\n");
       })
       .catch(() => ({ err: `read: could not load ${escapeHtml(p.page)}` }));
   },
 
   whoami() {
-    return "you are a visitor. I am Danny. we are both, statistically, mostly water.";
+    return "you are a visitor. Hopefully you know who you are.";
   },
 
   echo(args) {
@@ -412,7 +434,7 @@ const commands = {
   },
 
   sudo() {
-    return { err: "nice try. permission denied — but I admire the ambition." };
+    return { err: "nice try. permission denied." };
   },
 
   exit() {
@@ -458,7 +480,8 @@ function dispatch(line) {
     const pending = write('<span style="color: var(--muted)">loading…</span>');
     result.then((r) => {
       pending.remove();
-      if (r && typeof r === "object" && "err" in r) typewrite(write(r.err, "error"));
+      if (r && typeof r === "object" && "err" in r)
+        typewrite(write(r.err, "error"));
       else typewrite(write(r));
     });
     return;
@@ -646,7 +669,7 @@ function populateStandardView() {
     const li = document.createElement("li");
     const strong = document.createElement("strong");
     strong.textContent = p.name;
-    li.append(strong, " — " + p.description + " ");
+    li.append(strong, " - " + p.description + " ");
     const caseStudy = document.createElement("a");
     caseStudy.href = p.page;
     caseStudy.textContent = "deep dive";
@@ -702,23 +725,23 @@ const bootLines = [
   { t: 160, text: "[  OK  ] Calibrating personality matrices" },
   {
     t: 160,
-    text: "[  OK  ] attention-to-detail.service — strict mode enabled",
+    text: "[  WARN  ] No where to be found",
   },
-  { t: 160, text: "[  OK  ] continuous-learning.daemon — always-on" },
-  { t: 180, text: "[  OK  ] Mounting climbing.fs, running.fs" },
+  { t: 160, text: "[  OK  ] Brewing morning tea routine" },
+  { t: 180, text: "[  OK  ] Mounting coding.fs, gaming.fs, lounging.fs" },
   {
     t: 220,
-    text: "[ WARN ] knees.daemon below threshold (user approaching 30) — stretching",
+    text: "[ WARN ] knees.daemon below threshold (user is getting old), stretching",
     cls: "warn",
   },
   {
     t: 240,
-    text: "[ FAIL ] impostor-syndrome.service — masking, moving on",
+    text: "[ FAIL ] impostor-syndrome.service, masking, moving on",
     cls: "error",
   },
   {
     t: 180,
-    text: "[  OK  ] /curriculum online — classroom.sock listening on :8080",
+    text: "[  OK  ] /curriculum online, classroom.sock listening on :8080",
   },
   { t: 200, text: "[  OK  ] Portfolio listening on :80" },
   { t: 150, text: "" },
@@ -738,7 +761,7 @@ async function boot() {
   }
   write(`<pre class="banner">${escapeHtml(BANNER)}</pre>`);
   write(
-    `<span style="color: var(--accent)">${escapeHtml(content.name)}</span> — ` +
+    `<span style="color: var(--accent)">${escapeHtml(content.name)}</span> - ` +
       `<span style="color: var(--muted)">${escapeHtml(content.title)}</span>`,
   );
   write(
