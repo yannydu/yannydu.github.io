@@ -706,8 +706,7 @@ html.crt body::after {
   );
   animation: crt-flicker 6s infinite;
 }
-html.crt #terminal-view,
-html.crt #standard-view {
+html.crt main {
   text-shadow: 0 0 4px color-mix(in srgb, currentColor 40%, transparent);
 }
 @keyframes crt-flicker {

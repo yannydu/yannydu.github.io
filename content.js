@@ -1,11 +1,9 @@
 // edit this file to change what the site says.
 // kept separate from terminal.js so you don't have to touch logic
 // to update your bio, projects, or links.
+// resume text (name, role, contacts, skills) lives in resume/resume.json.
 
 const content = {
-  name: "Danny Yu",
-  title: "full-stack engineer · internal platforms for STEM education",
-
   about: `Hey, I'm Danny. I build and run the software behind a university
 STEM outreach program, and I teach the camps it exists for.
 
@@ -68,30 +66,6 @@ Type 'help' to look around.`,
     },
   ],
 
-  skills: {
-    "Daily drivers": [
-      "Python",
-      "JavaScript",
-      "HTML / CSS",
-      "Typst",
-      "git",
-      "linux",
-    ],
-    "Ship with (AI-assisted, still internalizing)": [
-      "TypeScript",
-      "Astro / Hono",
-      "Cloudflare (Workers, D1, R2)",
-      "Docker",
-    ],
-    "AI-assisted development": [
-      "Claude Code as a daily tool, custom skills, hooks, and subagents",
-      "taking a spec to a deployed system, and owning what ships",
-    ],
-    "Currently learning": [
-      "turning AI-scaffolded breadth into first-hand depth, starting with TypeScript and SQL",
-    ],
-  },
-
   community: [
     {
       role: "SFU FAS Student Ambassador",
@@ -106,11 +80,6 @@ Type 'help' to look around.`,
         "helped undergrads untangle course material and problem solving.",
     },
   ],
-
-  contact: {
-    github: "https://github.com/yannydu",
-    email: "danny_yu_2@sfu.ca",
-  },
 
   // compiled from resume/dev.typ, see resume/template.typ
   resumePath: "resume/Danny_Yu_Resume.pdf",

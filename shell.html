@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danny Yu · shell</title>
+    <meta
+      name="description"
+      content="Danny Yu, full-stack engineer building internal platforms for SFU Science AL!VE's K-12 STEM outreach program: publishing, curriculum, and lesson sites on Cloudflare Workers."
+    />
+    <meta property="og:title" content="Danny Yu - Full-Stack Engineer" />
+    <meta
+      property="og:description"
+      content="Danny Yu, full-stack engineer building internal platforms for SFU Science AL!VE's K-12 STEM outreach program: publishing, curriculum, and lesson sites on Cloudflare Workers."
+    />
+    <meta property="og:url" content="https://yannydu.github.io/shell.html" />
+    <meta property="og:image" content="https://yannydu.github.io/profile.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preload" as="fetch" href="resume/resume.json" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="shell.css" />
+    <script src="themes.js"></script>
+    <script>try{var s=localStorage.getItem("theme");if(s&&(s==="auto"||themes[s]))applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}document.documentElement.classList.add("js");</script>
+  </head>
+  <body data-page="shell">
+    <a class="skip" href="#content">Skip to content</a>
+    <header>
+      <div class="man-head">
+        <span>DANNY-YU(1)</span>
+        <span class="man-mid">Portfolio Manual</span>
+        <span aria-hidden="true">DANNY-YU(1)</span>
+      </div>
+      <nav aria-label="Site">
+        <a href="./">resume(1)</a>
+        <a href="projects/spark-gallery.html">projects(7)</a>
+        <a href="shell.html" aria-current="page">shell</a>
+      </nav>
+    </header>
+    <main id="content">
+      <h1 class="sr-only">Danny Yu · shell</h1>
+      <noscript>
+        <p>
+          The shell needs JavaScript. Read the <a href="./">resume page</a> or
+          download the <a href="resume/Danny_Yu_Resume.pdf">PDF</a>.
+        </p>
+      </noscript>
+      <div id="output"></div>
+      <!-- the only live region on this page: reader.js and terminal.js both
+           announce here, one answer at a time -->
+      <div id="sr-log" class="sr-only" aria-live="polite" aria-atomic="false"></div>
+      <form id="prompt-form" autocomplete="off">
+        <label for="cmd-input" class="sr-only"
+          >Enter a command. Type 'help' for a list.</label
+        >
+        <span class="prompt" aria-hidden="true">danny@portfolio:~$</span>
+        <input
+          id="cmd-input"
+          type="text"
+          spellcheck="false"
+          autocapitalize="off"
+          autocorrect="off"
+          aria-describedby="input-hint"
+        />
+      </form>
+      <span id="input-hint" class="sr-only"
+        >Use arrow keys for history. Tab completes a command you have started
+        typing.</span
+      >
+    </main>
+    <script src="content.js"></script>
+    <script src="terminal.js"></script>
+    <script src="reader.js"></script>
+  </body>
+</html>
