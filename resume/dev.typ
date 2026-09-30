@@ -1,101 +1,26 @@
+// all text comes from resume.json (Typst markup; backslash-escape _ @ # $ < * when literal)
 #import "template.typ": *
 
+#let r = json("resume.json")
+#let md(s) = eval(s, mode: "markup")
+
 #show: resume.with(
-  name: [Danny Yu],
-  role: "Full-Stack Engineer · Internal Platforms for STEM Education",
-  contacts: (
-    link("mailto:danny_yu_2@sfu.ca", "danny_yu_2@sfu.ca"),
-    link("https://yannydu.github.io", "yannydu.github.io"),
-    link("https://github.com/yannydu", "github.com/yannydu"),
-  ),
+  name: md(r.name),
+  role: r.role,
+  contacts: r.contacts.map(c => link(c.url, c.label)),
 )
 
 #section("Summary")
-Full-stack engineer who builds and operates the internal platforms behind
-SFU's K-12 STEM outreach program: a publishing pipeline for camper projects,
-a curriculum system, and the public lesson sites used in class, running on
-Cloudflare Workers. Because the users are children, much of the engineering
-is privacy work: real names kept out of repos, databases, and backups by
-construction. Ships with Claude Code as a daily tool, owning the
-architecture, privacy model, and operations end to end.
+#md(r.summary)
 
 #section("Skills")
-#skills((
-  ("Daily drivers", "Python, JavaScript, HTML / CSS, Typst, git, Linux"),
-  (
-    "Ship with (AI-assisted, still internalizing)",
-    "TypeScript, Astro / Hono, Cloudflare (Workers, D1, R2), Docker",
-  ),
-  (
-    "AI-assisted development",
-    "Claude Code as a daily tool: custom skills, hooks, and subagents; taking a spec to a deployed system and owning what ships",
-  ),
-))
+#skills(r.skills.filter(s => s.at("pdf", default: true)).map(s => (s.label, s.items)))
 
 #section("Work Experience")
-#entry(
-  "SFU Science Alive (Faculty of Applied Sciences Outreach)",
-  "School Programs and Instructional Lead",
-  "Burnaby, BC",
-  "Jun. 2021 – Present",
-)
-- Built *spark-gallery*, a publishing platform that turns each camp week into
-  an issue of an online magazine, with camper-built games playable in the
-  browser (Astro on Cloudflare Workers, D1, R2). Live through a full summer
-  of camps: 509 camper projects from 416 campers, zero worker errors.
-- Designed its privacy model for minors: camper names are pseudonymized
-  before anything reaches the repo, and camper-written code is served from an
-  isolated origin so it can never touch the gallery's cookies.
-- Ship behind CI on every push: typecheck, lint, node --test and Vitest
-  suites, and a full-history gitleaks scan; a fail-closed pre-push name guard
-  and EXIF/GPS stripping are tested invariants.
-- Built *campkit*, the program's curriculum platform (Hono + Drizzle on
-  Workers; Cloudflare Access with SFU accounts): 356 activities and 25 camps
-  authored by six curriculum writers, activities written once and assembled
-  into camps, succeeding my Python + Typst pipeline.
-- Run *hello-wattson* (hellowattson.ca), the public lesson site for twenty
-  programs and 54 lessons (Astro on Cloudflare Workers), serving hundreds of
-  visits a month, with a nightly GitHub Actions rebuild that keeps
-  program dates current.
-- Teach coding camps (Python, web dev, Arduino, LEGO robotics) and authored
-  SPARK, the program's workshop-design framework.
-
-#entry(
-  "Global Relay",
-  "Software Development Engineer in Test (Co-op)",
-  "Vancouver, BC",
-  "Jan. 2023 – Aug. 2023",
-)
-- Built a Java JSON response builder for API validation and generated Java
-  bindings from Thrift IDLs, integrating them with Wiremock containers for
-  test stubs.
-- Implemented a single source of truth for regression tests using the Trino
-  REST API.
-
-#entry(
-  "Incognito Software Systems Inc.",
-  "QA Engineer Intern",
-  "Vancouver, BC",
-  "Jan. 2022 – Aug. 2022",
-)
-- Wrote automated GUI tests in Java and Selenium and set up a Docker +
-  Jenkins continuous-testing environment.
+#for e in r.experience { entry-from(e) }
 
 #section("Projects")
-#entry(
-  "ChessMate: A Smart Automated Chessboard",
-  "SFU ENSC Capstone",
-  "Burnaby, BC",
-  "Jan. 2024 – Aug. 2024",
-)
-- Built the human-move detection module with a Raspberry Pi camera and
-  OpenCV, comparing board states to identify the moved piece; drove an
-  electromagnetic trolley in Python to execute the machine's moves.
+#for e in r.projects { entry-from(e) }
 
 #section("Education")
-#entry(
-  "Simon Fraser University",
-  "BASc in Computer Engineering",
-  "Burnaby, BC",
-  "Graduated 2025",
-)
+#for e in r.education { entry-from(e) }
