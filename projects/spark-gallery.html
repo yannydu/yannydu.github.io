@@ -5,18 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Spark Gallery - deep dive - Danny Yu</title>
 <meta name="description" content="A published gallery of summer camp work where no camper's real name ever reaches the cloud." />
-<meta name="color-scheme" content="dark light" />
+<meta name="color-scheme" content="light dark" />
 <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../styles.css" />
 <script src="../themes.js"></script>
-<script>try{var s=localStorage.getItem("theme");if(s&&themes[s])applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}</script>
+<script>try{var s=localStorage.getItem("theme");if(s&&(s==="auto"||themes[s]))applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}document.documentElement.classList.add("js");</script>
 </head>
-<body class="page">
-<a class="back" href="../">← back to terminal</a>
-<main>
+<body data-page="spark-gallery(7)">
+<a class="skip" href="#content">Skip to content</a>
+<header>
+<div class="man-head">
+<span>DANNY-YU(1)</span>
+<span class="man-mid">Portfolio Manual</span>
+<span aria-hidden="true">DANNY-YU(1)</span>
+</div>
+<nav aria-label="Site">
+<a href="../">resume(1)</a>
+<a href="spark-gallery.html" aria-current="true">projects(7)</a>
+<a href="../shell.html">shell</a>
+</nav>
+</header>
+<div class="layout">
+<aside class="sidebar" id="sidebar" aria-label="Contents">
+<nav aria-labelledby="pages-label"><p class="side-label" id="pages-label">PAGES</p>
+<ul class="side-list" role="list">
+<li><a href="spark-gallery.html" aria-current="page">spark-gallery(7)</a></li>
+<li><a href="campkit.html">campkit(7)</a></li>
+<li><a href="hello-wattson.html">hello-wattson(7)</a></li>
+<li>chessmate(7)</li>
+</ul></nav>
+<p class="side-meta">status <strong class="ok">live</strong><br><a href="https://sparkgallery.ca" target="_blank" rel="noopener noreferrer">sparkgallery.ca&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a><br>page updated 2026-09-18</p>
+</aside>
+<main id="content">
 <h1>Spark Gallery</h1>
 <p>A published gallery of summer camp work, built so no child's real name ever reaches the cloud.</p>
 
@@ -27,23 +50,22 @@
 <p>A privacy ruling meant children's real names could not sit on the cloud provider in any form, not even for the days between upload and publish. Instructors are camp staff, so the upload path had to be a link and a printed sheet. Families needed to browse without an account.</p>
 
 <h2>Architecture</h2>
-<pre class="diagram">
- instructors                families
-     |                          |
-     v                          v
-[ upload Worker ]        [ gallery site ]
- separate origin,         Astro on Workers
- no shared cookies        D1 index + media
-     |                          ^
-     v                          |
- private inbox  --intake-->  publish
- UUID folders,    (on my       build
- handles only     machine)
-</pre>
+<figure class="flow" style="--flow-cols: minmax(0,1fr) 12ch minmax(0,1fr)">
+<ol role="list">
+<li style="--r:1;--c:1" data-to="down"><strong>instructors</strong><span>upload from the camp room</span></li>
+<li style="--r:2;--c:1" data-to="down"><strong>upload Worker</strong><span>separate origin, no shared cookies</span></li>
+<li class="quiet" style="--r:3;--c:1" data-to="right"><strong>private inbox</strong><span>UUID folders, handles only</span></li>
+<li class="step" style="--r:3;--c:2" data-to="right"><strong>intake</strong><span>on Danny&rsquo;s machine</span></li>
+<li class="quiet" style="--r:3;--c:3" data-to="up"><strong>publish build</strong><span>pseudonyms only</span></li>
+<li style="--r:2;--c:3"><strong>gallery site</strong><span>Astro on Workers, D1 index + media</span></li>
+<li style="--r:1;--c:3" data-to="down"><strong>families</strong><span>browse from a link</span></li>
+</ol>
+<figcaption>Figure 1. Instructors upload through a Worker on its own origin into a private inbox of UUID-named folders. Intake runs on Danny&rsquo;s machine, where real names stay; a publish build then feeds the gallery site that families browse.</figcaption>
+</figure>
 <p>The upload tool runs from its own Worker origin, so a session there never shares cookies with the public gallery. Real names stay on my machine and on paper; what travels is a folder named by a random identifier and a friendly pseudonym.</p>
 
 <h2>Decisions I made</h2>
-<ul>
+<ul role="list">
 <li>Pseudonyms are assigned locally before camp starts, so the upload path never receives a name it would have to strip.</li>
 <li>A pre-push git hook fails closed when a real name appears in files headed for the repository. It stops the push rather than warning.</li>
 <li>Video is re-muxed through ffmpeg before publishing, which drops the location and device metadata phones attach. CI installs ffmpeg so that step stays tested.</li>
@@ -56,11 +78,13 @@
 <p>I didn't build accounts for campers or for families, since the site only runs a few weeks each summer and an account would mean holding family contact details and a password reset path year round for that. A link and a pseudonym cover what families want, which is seeing their kid's work. No program tool I build gives a child a login.</p>
 
 <h2>Numbers</h2>
-<p class="numbers">13 camps · 509 projects from 416 campers · 51-file test suite</p>
+<p>13 camps · 509 projects from 416 campers · 51-file test suite</p>
 
 <h2>Live</h2>
 <p><a href="https://sparkgallery.ca" target="_blank" rel="noopener noreferrer">https://sparkgallery.ca</a></p>
 </main>
-<footer>Danny Yu · <a href="../">yannydu.github.io</a> · updated 2026-09-18</footer>
+</div>
+<script src="../content.js"></script>
+<script src="../reader.js"></script>
 </body>
 </html>
