@@ -98,7 +98,9 @@
         frag.append(document.createElement("br"));
       } else {
         flush();
-        frag.append(el(m[2] != null ? "strong" : "code", "", m[2] != null ? m[2] : m[3]));
+        // *509*, a bare number in stars, is a 32px stat (styles.css .big)
+        const big = m[2] != null && /^\d[\d,.]*\+?$/.test(m[2]);
+        frag.append(el(m[2] != null ? "strong" : "code", big ? "big" : "", m[2] != null ? m[2] : m[3]));
       }
     }
     buf += str.slice(last);
@@ -253,12 +255,11 @@
   function setThemeLabel() {
     if (themeName) themeName.textContent = curTheme();
   }
+  document.addEventListener("themechange", (e) => { themeNow = e.detail; setThemeLabel(); });
   function setTheme(id) {
     if (typeof applyTheme !== "function") return false;
     const ok = applyTheme(id);
     if (ok) {
-      themeNow = id;
-      setThemeLabel();
       announce("theme: " + id);
     }
     return ok;

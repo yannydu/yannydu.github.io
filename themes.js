@@ -3,6 +3,7 @@
 // so styles.css stays theme-agnostic.
 
 const themes = {
+  __proto__: null, // ids come from links and storage: themes["constructor"] must not resolve
   latte: {
     name: "Catppuccin Latte",
     scheme: "light",
@@ -137,6 +138,7 @@ function applyTheme(id) {
     });
     root.style.removeProperty("color-scheme");
     try { localStorage.removeItem("theme"); } catch (_) {}
+    document.dispatchEvent(new CustomEvent("themechange", { detail: id }));
     return true;
   }
   const t = themes[id];
@@ -147,5 +149,6 @@ function applyTheme(id) {
   });
   root.style.colorScheme = t.scheme;
   try { localStorage.setItem("theme", id); } catch (_) {}
+  document.dispatchEvent(new CustomEvent("themechange", { detail: id }));
   return true;
 }

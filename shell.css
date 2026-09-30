@@ -15,10 +15,10 @@ main#content {
   word-break: break-word;
 }
 
-#output .entry {
+#output .term-line {
   margin-bottom: 0.15rem;
 }
-#output .entry:empty {
+#output .term-line:empty {
   height: 1em;
 }
 

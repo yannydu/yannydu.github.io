@@ -87,6 +87,7 @@
      big number: <strong class="num">509</strong> (yellow); .big = 32px stat
      figure.flow: <figure class="flow"><ol><li style="--r:1;--c:1" data-to="down"><strong>name</strong><span>detail</span></li>
                   <li class="step" style="--r:3;--c:2" data-to="right">..</li></ol><figcaption>Figure 1. ..</figcaption></figure>
+                  data-to: down, up, right, or fork (↙ ↘ to the two boxes below)
                   per-figure columns: style="--flow-cols: minmax(0,1fr) 12ch minmax(0,1fr)" on the figure
    --------------------------------------------------------------------------- */
 
@@ -132,7 +133,7 @@
   :root { --status-h: 4.5rem; }
 }
 @media (max-width: 800px) {
-  :root { --header-h: 0px; --status-h: 7rem; }
+  :root { --header-h: 0px; --status-h: 5.0625rem; }
 }
 @media (max-height: 480px) {
   :root { --header-h: 0px; --status-h: 0px; }
@@ -501,6 +502,12 @@ figure.flow li[data-to="up"]::after {
 figure.flow li[data-to="right"]::after {
   content: "→"; content: "→" / "";
   left: 100%; top: 50%; width: 4ch; text-align: center; transform: translateY(-50%);
+}
+/* a fork: ↙ into the box below-left, ↘ into the box below-right */
+figure.flow li[data-to="fork"]::after {
+  content: "↙ ↘"; content: "↙ ↘" / "";
+  top: 100%; left: 0; right: 0;
+  text-align: justify; text-align-last: justify;
 }
 /* one column in flow order, ↓ between boxes; text stays at body size */
 @media (max-width: 40rem) {

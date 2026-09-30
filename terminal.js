@@ -26,7 +26,7 @@ const form = document.getElementById("prompt-form");
 // page doesn't hold every answer twice.
 function write(html, cls, srText) {
   const div = document.createElement("div");
-  div.className = "entry" + (cls ? " " + cls : "");
+  div.className = "term-line" + (cls ? " " + cls : "");
   div.innerHTML = html;
   output.appendChild(div);
   const text = srText === undefined ? div.textContent : srText;
@@ -186,6 +186,7 @@ function impactReady() {
 }
 
 const commands = {
+  __proto__: null, // ?run= comes from a link: commands["constructor"] must not resolve to Object
   help() {
     return [
       "available commands:",
