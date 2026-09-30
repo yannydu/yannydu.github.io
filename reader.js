@@ -72,29 +72,37 @@
     return resumeP;
   }
 
-  // Typst markup subset: *bold*, `code`, backslash escapes. Numbers go bold.
+  // Typst markup subset: *bold*, `code`, backslash escapes (the escaped char is
+  // literal). Numbers go bold. "\n" becomes a line break.
   function markup(str) {
     const frag = document.createDocumentFragment();
-    const plain = (s) => {
-      s = s.replace(/\\/g, "");
-      s.split(/(\d[\d,.]*\+?)/).forEach((part, i) => {
+    let buf = "";
+    const flush = () => {
+      buf.split(/(\d[\d,.]*\+?)/).forEach((part, i) => {
         if (i % 2 === 0) return part && frag.append(part);
         const m = part.match(/^(.*?)([.,]*)$/);
         frag.append(el("strong", "", m[1]));
         if (m[2]) frag.append(m[2]);
       });
+      buf = "";
     };
+    const re = /\\(.)|\*([^*]+)\*|`([^`]+)`|\n/g;
     let last = 0;
-    const re = /\*([^*]+)\*|`([^`]+)`/g;
     let m;
     while ((m = re.exec(str))) {
-      plain(str.slice(last, m.index));
-      const t = el(m[1] != null ? "strong" : "code");
-      t.textContent = (m[1] != null ? m[1] : m[2]).replace(/\\/g, "");
-      frag.append(t);
+      buf += str.slice(last, m.index);
       last = re.lastIndex;
+      if (m[1] != null) buf += m[1];
+      else if (m[0] === "\n") {
+        flush();
+        frag.append(document.createElement("br"));
+      } else {
+        flush();
+        frag.append(el(m[2] != null ? "strong" : "code", "", m[2] != null ? m[2] : m[3]));
+      }
     }
-    plain(str.slice(last));
+    buf += str.slice(last);
+    flush();
     return frag;
   }
 
@@ -129,8 +137,7 @@
   }
 
   function projectEntry(p) {
-    const status = el("p", "date", el("span", p.status === "live" ? "ok" : "", p.status));
-    status.firstChild.style.fontWeight = "700";
+    const status = el("p", "date", el("strong", p.status === "live" ? "ok" : "", p.status));
     const head = el("div", "head");
     if (p.image) {
       const img = el("img");
@@ -192,25 +199,13 @@
     return out;
   }
 
-  // "\n" in a sidenote becomes a line break
-  const _markup = markup;
-  markup = function (s) {
-    if (s.indexOf("\n") < 0) return _markup(s);
-    const f = document.createDocumentFragment();
-    s.split("\n").forEach((line, i) => {
-      if (i) f.append(document.createElement("br"));
-      f.append(_markup(line));
-    });
-    return f;
-  };
-
   function renderResume() {
     const box = document.getElementById("resume");
     const main = document.querySelector("main");
-    return getResume().then(
-      (r) => {
+    return getResume()
+      .then((r) => {
         const anchor = document.getElementById("see-also");
-        buildSections(r).forEach((s) => main.insertBefore(s, anchor));
+        buildSections(r).forEach((sec) => main.insertBefore(sec, anchor));
         box.remove();
         const role = document.querySelector(".role");
         if (role && r.role) role.textContent = r.role;
@@ -227,22 +222,13 @@
             });
           list.prepend(...items);
         }
-      },
-      () => {
-        box.replaceChildren(
-          el(
-            "p",
-            "",
-            "The resume didn't load. ",
-            (() => {
-              const a = link(new URL(PDF_PATH, ROOT).href, "Download the PDF (resume.pdf)");
-              a.setAttribute("download", "");
-              return a;
-            })()
-          )
-        );
-      }
-    );
+      })
+      .catch(() => {
+        if (!box.isConnected) main.insertBefore(box, document.getElementById("see-also"));
+        const a = link(new URL(PDF_PATH, ROOT).href, "Download the PDF (resume.pdf)");
+        a.setAttribute("download", "");
+        box.replaceChildren(el("p", "", "The resume didn't load. ", a));
+      });
   }
 
   // ---------- header / status-bar heights ----------
@@ -261,7 +247,8 @@
   // ---------- keys, actions ----------
   let keysOn = store("keys") !== "off";
   const THEMES = ["auto", "latte", "mocha"];
-  const curTheme = () => store("theme") || "auto";
+  let themeNow = store("theme") || "auto";
+  const curTheme = () => themeNow;
 
   function setThemeLabel() {
     if (themeName) themeName.textContent = curTheme();
@@ -270,6 +257,7 @@
     if (typeof applyTheme !== "function") return false;
     const ok = applyTheme(id);
     if (ok) {
+      themeNow = id;
       setThemeLabel();
       announce("theme: " + id);
     }
@@ -295,7 +283,9 @@
     const hs = headings();
     const top = headerH();
     let t = null;
-    if (dir > 0) t = hs.find((h) => h.getBoundingClientRect().top > top + 4);
+    const at = hs.indexOf(document.activeElement);
+    if (at >= 0) t = hs[at + dir];
+    else if (dir > 0) t = hs.find((h) => h.getBoundingClientRect().top > top + 4);
     else t = [...hs].reverse().find((h) => h.getBoundingClientRect().top < top - 4);
     if (!t) return announce(dir > 0 ? "last section" : "first section");
     t.focus({ preventScroll: true });
@@ -306,13 +296,14 @@
   const search = { ranges: [], i: -1, active: false };
   const hasHL = typeof CSS !== "undefined" && CSS.highlights && typeof Highlight !== "undefined";
   function clearSearch() {
+    const was = search.active;
     search.active = false;
     search.ranges = [];
     search.i = -1;
     if (hasHL) {
       CSS.highlights.delete("search");
       CSS.highlights.delete("search-current");
-    }
+    } else if (was) getSelection().removeAllRanges();
   }
   function collect(q) {
     const main = document.querySelector("main");
@@ -323,7 +314,7 @@
       acceptNode(n) {
         if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
         const p = n.parentElement;
-        if (!p || p.closest('[aria-hidden="true"],script,style,noscript,[hidden]'))
+        if (!p || p.closest('[aria-hidden="true"],script,style,noscript,[hidden],.sr-only'))
           return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       },
@@ -550,7 +541,7 @@
   }
   function openLine(mode) {
     closeLine(false);
-    if (mode === "command") clearSearch();
+    clearSearch();
     const input = el("input");
     input.id = "sb-cmd";
     input.type = "text";
@@ -635,6 +626,7 @@
 
   // ---------- position, heights ----------
   let raf = 0;
+  let updateCurrent = null;
   function updatePos() {
     raf = 0;
     const lh = lineH();
@@ -643,6 +635,7 @@
     const n = Math.min(total, Math.floor(y / lh) + 1);
     const range = root.scrollHeight - innerHeight;
     const pct = range > 0 ? Math.round((y / range) * 100) : 100;
+    if (updateCurrent) updateCurrent();
     pos.textContent = "line " + n + "/" + total + " " + Math.min(100, pct) + "%";
   }
   const queue = () => {
@@ -668,53 +661,54 @@
   function setupSections() {
     const hs = headings();
     hs.forEach((h) => h.setAttribute("tabindex", "-1"));
-    if (!sidebar) return;
-    const secs = hs.map((h) => h.closest("section")).filter((s) => s && s.id);
-    if (!secs.length) return;
+    if (!sidebar || !hs.length) return;
+    const used = new Set([...document.querySelectorAll("[id]")].map((n) => n.id));
+    const targets = hs.map((h) => {
+      const t = h.closest("section[id]") || h;
+      if (!t.id) {
+        const base = h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "section";
+        let id = base;
+        for (let n = 2; used.has(id); n++) id = base + "-" + n;
+        used.add(id);
+        t.id = id;
+      }
+      return t;
+    });
     const pagesNav = sidebar.querySelector('nav[aria-labelledby="pages-label"]');
     const nav = el("nav");
     nav.setAttribute("aria-label", "Sections");
     const ul = el("ul", "side-list");
     ul.setAttribute("role", "list");
-    const links = new Map();
-    secs.forEach((s) => {
-      const a = el("a", "", s.querySelector("h2").textContent);
-      a.href = "#" + s.id;
-      links.set(s, a);
+    const links = targets.map((t, i) => {
+      const a = el("a", "", hs[i].textContent);
+      a.href = "#" + t.id;
       ul.append(el("li", "", a));
+      return a;
     });
     nav.append(el("p", "side-label", pagesNav ? "THIS PAGE" : "SECTIONS"), ul);
     if (pagesNav) pagesNav.after(nav);
     else sidebar.prepend(nav);
 
-    let current = null;
-    const setCurrent = (s) => {
-      if (s === current) return;
-      if (current) links.get(current).removeAttribute("aria-current");
-      current = s;
-      if (s) links.get(s).setAttribute("aria-current", "location");
+    let current = -1;
+    updateCurrent = () => {
+      const limit = headerH() + innerHeight * 0.25;
+      let idx = 0;
+      targets.forEach((t, i) => {
+        if (t.getBoundingClientRect().top <= limit) idx = i;
+      });
+      if (innerHeight + window.scrollY >= root.scrollHeight - 2) idx = targets.length - 1;
+      if (idx === current) return;
+      if (current >= 0) links[current].removeAttribute("aria-current");
+      current = idx;
+      links[idx].setAttribute("aria-current", "location");
     };
-    if (typeof IntersectionObserver !== "undefined") {
-      const seen = new Set();
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((en) => (en.isIntersecting ? seen.add(en.target) : seen.delete(en.target)));
-          const first = secs.find((s) => seen.has(s));
-          if (first) setCurrent(first);
-        },
-        { rootMargin: "-" + (headerH() + 1) + "px 0px -60% 0px" }
-      );
-      secs.forEach((s) => io.observe(s));
-      addEventListener(
-        "scroll",
-        () => {
-          if (innerHeight + window.scrollY >= root.scrollHeight - 2) setCurrent(secs[secs.length - 1]);
-        },
-        { passive: true }
-      );
-    }
+    updateCurrent();
     if (location.hash) {
-      const t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      let id = location.hash.slice(1);
+      try {
+        id = decodeURIComponent(id);
+      } catch (_) {}
+      const t = document.getElementById(id);
       if (t) t.scrollIntoView();
     }
     queue();

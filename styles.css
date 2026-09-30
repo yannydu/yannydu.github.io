@@ -301,6 +301,7 @@ body > header nav a[aria-current="true"]::before {
   gap: 4px;
 }
 .sidebar nav .side-list { margin: 0; }
+.sidebar nav[aria-label="Sections"] a { text-transform: uppercase; }
 .side-list a {
   display: flex;
   align-items: center;
