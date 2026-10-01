@@ -597,18 +597,25 @@ figure.flow li[data-to="fork"]::after {
 @media (max-width: 800px) {
   .statusbar {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    /* a column never gets narrower than its button's label */
+    grid-template-columns: repeat(5, minmax(min-content, 1fr));
     gap: 4px;
     padding: 4px 8px 8px;
   }
   .sb-page { grid-column: 1 / -1; white-space: normal; }
   .sb-keys, .sb-right { display: contents; }
   .sb-key, .sb-toggle, .sb-pdf { display: none; }
+  /* wrap lets "theme:" and the theme name stack when the column is narrow;
+     column-gap is the space flex layout drops between them */
   .sb-sections, .sb-search, .sb-top, .sb-theme, .sb-cmd-btn {
     display: flex;
+    flex-wrap: wrap;
+    align-content: center;
     justify-content: center;
+    column-gap: 1ch;
     min-height: 44px;
     padding: 0;
+    line-height: 1.25;
     border: 1px solid var(--muted);
     border-radius: 3px;
   }
