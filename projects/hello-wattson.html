@@ -5,18 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Hello Wattson - deep dive - Danny Yu</title>
 <meta name="description" content="The curriculum site students follow in class, with a gate that protects teacher material and no student accounts at all." />
-<meta name="color-scheme" content="dark light" />
+<meta name="color-scheme" content="light dark" />
 <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../styles.css" />
 <script src="../themes.js"></script>
-<script>try{var s=localStorage.getItem("theme");if(s&&themes[s])applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}</script>
+<script>try{var s=localStorage.getItem("theme");if(s&&(s==="auto"||themes[s]))applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}document.documentElement.classList.add("js");</script>
 </head>
-<body class="page">
-<a class="back" href="../">← back to terminal</a>
-<main>
+<body data-page="hello-wattson(7)">
+<a class="skip" href="#content">Skip to content</a>
+<header>
+<div class="man-head">
+<span>DANNY-YU(1)</span>
+<span class="man-mid">Portfolio Manual</span>
+<span aria-hidden="true">DANNY-YU(1)</span>
+</div>
+<nav aria-label="Site">
+<a href="../">resume(1)</a>
+<a href="spark-gallery.html" aria-current="true">projects(7)</a>
+<a href="../shell.html">shell</a>
+</nav>
+</header>
+<div class="layout">
+<aside class="sidebar" id="sidebar" aria-label="Contents">
+<nav aria-labelledby="pages-label"><p class="side-label" id="pages-label">PAGES</p>
+<ul class="side-list" role="list">
+<li><a href="spark-gallery.html">spark-gallery(7)</a></li>
+<li><a href="campkit.html">campkit(7)</a></li>
+<li><a href="hello-wattson.html" aria-current="page">hello-wattson(7)</a></li>
+<li>chessmate(7)</li>
+</ul></nav>
+<p class="side-meta">status <strong class="ok">live</strong><br><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">hellowattson.ca&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a><br>page updated 2026-09-18</p>
+</aside>
+<main id="content">
 <h1>Hello Wattson</h1>
 <p>The curriculum site students read in class, gated by a code instead of an account.</p>
 
@@ -27,27 +50,20 @@
 <p>A classroom is thirty devices sharing one school IP address, often on slow wifi, with no time to install anything. Students cannot have accounts. Program pages label themselves upcoming, running, or finished, and those labels have to be right on a morning when nobody has touched the site in weeks.</p>
 
 <h2>Architecture</h2>
-<pre class="diagram">
-  classroom device
-        |
-        v
-[ gate Worker ] runs before any file
-  checks code, signs a session cookie
-    |  pass              |  fail
-    v                    v
- lesson pages        code entry page
- Astro 6 + MDX,      (only failures
- built to static      count toward
- files, no JS         the limit)
-        ^
-        |
-  06:00 UTC nightly rebuild keeps
-  program status accurate
-</pre>
+<figure class="flow">
+<ol role="list">
+<li style="--r:1;--c:2" data-to="down"><strong>classroom device</strong><span>a student opens a lesson</span></li>
+<li style="--r:2;--c:2" data-to="fork"><strong>gate Worker</strong><span>runs before any file; checks the code, signs a session cookie</span></li>
+<li style="--r:3;--c:1"><strong>lesson pages</strong><span>on pass: Astro 6 + MDX, built to static files, no JS</span></li>
+<li class="quiet" style="--r:3;--c:3"><strong>code entry page</strong><span>on fail: only failures count toward the limit</span></li>
+<li style="--r:4;--c:1" data-to="up"><strong>nightly rebuild</strong><span>06:00 UTC, keeps program status accurate</span></li>
+</ol>
+<figcaption>Figure 1. A classroom device hits the gate Worker first. A correct code gets the static lesson pages; a wrong one gets the code entry page, and only those failures count toward the rate limit. A 06:00 UTC rebuild keeps program status current.</figcaption>
+</figure>
 <p>The Worker runs ahead of the files it serves, so a gated lesson is never handed out and then hidden. A build served without the Worker would give everything away, which is why the deploy path is fixed.</p>
 
 <h2>Decisions I made</h2>
-<ul>
+<ul role="list">
 <li>The access check happens on the server, before any lesson content leaves it.</li>
 <li>The rate limit counts only failed code attempts. One student mistyping the code cannot lock out the thirty classmates sharing that school IP address.</li>
 <li>Analytics are cookie-free and aggregate. I can see that a lesson gets used without following anyone through it.</li>
@@ -60,11 +76,13 @@
 <p>No student accounts, of any kind. That is a standing rule across every tool I build for the program, and this site is where it costs the most. Accounts would give us saved progress, per-student work, and a class view for teachers. They would also make us the keeper of a directory of children, with logins to reset and a breach to plan for. The unit of access is a code a teacher hands out, and the student stays anonymous to us.</p>
 
 <h2>Numbers</h2>
-<p class="numbers">20 programs · 54 lessons</p>
+<p>20 programs · 54 lessons</p>
 
 <h2>Live</h2>
 <p><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">https://hellowattson.ca</a></p>
 </main>
-<footer>Danny Yu · <a href="../">yannydu.github.io</a> · updated 2026-09-18</footer>
+</div>
+<script src="../content.js"></script>
+<script src="../reader.js"></script>
 </body>
 </html>

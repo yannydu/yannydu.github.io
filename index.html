@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Danny Yu - Terminal Portfolio</title>
+    <title>Danny Yu · Full-stack engineer</title>
     <meta
       name="description"
       content="Danny Yu, full-stack engineer building internal platforms for SFU Science AL!VE's K-12 STEM outreach program: publishing, curriculum, and lesson sites on Cloudflare Workers."
@@ -17,7 +17,7 @@
     <meta property="og:image" content="https://yannydu.github.io/profile.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,80 +25,77 @@
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="preload" as="fetch" href="resume/resume.json" crossorigin />
     <link rel="stylesheet" href="styles.css" />
+    <script src="themes.js"></script>
+    <script>try{var s=localStorage.getItem("theme");if(s&&(s==="auto"||themes[s]))applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}document.documentElement.classList.add("js");</script>
   </head>
-  <body>
-    <a href="#standard-view" class="skip-link" id="skip-link"
-      >Skip to standard (non-terminal) view</a
-    >
+  <body data-page="resume(1)">
+    <a class="skip" href="#content">Skip to content</a>
+    <header>
+      <div class="man-head">
+        <span>DANNY-YU(1)</span>
+        <span class="man-mid">Portfolio Manual</span>
+        <span aria-hidden="true">DANNY-YU(1)</span>
+      </div>
+      <nav aria-label="Site">
+        <a href="./" aria-current="page">resume(1)</a>
+        <a href="projects/spark-gallery.html">projects(7)</a>
+        <a href="shell.html">shell</a>
+      </nav>
+    </header>
 
-    <noscript>
-      <h1>Danny Yu</h1>
-      <p>full-stack engineer · internal platforms for STEM education</p>
-      <ul>
-        <li><a href="projects/spark-gallery.html">spark-gallery</a></li>
-        <li><a href="projects/campkit.html">campkit</a></li>
-        <li><a href="projects/hello-wattson.html">hello-wattson</a></li>
-        <li><a href="mailto:danny_yu_2@sfu.ca">email</a></li>
-        <li><a href="https://github.com/yannydu">github</a></li>
-      </ul>
-    </noscript>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar" aria-label="Contents">
+        <figure class="profile">
+          <img
+            src="profile.png"
+            alt="Hand-drawn sketch of Danny: a smiling round face with round glasses, headphones and scribbled dark hair"
+            width="160"
+            height="160"
+          />
+          <figcaption>$ kitten icat ~/danny.jpg</figcaption>
+        </figure>
+        <p class="side-label" id="contact-label">CONTACT</p>
+        <ul class="side-list side-contact" role="list" aria-labelledby="contact-label">
+          <li><a href="resume/Danny_Yu_Resume.pdf" download>resume.pdf&nbsp;↓</a></li>
+        </ul>
+      </aside>
 
-    <main
-      id="terminal-view"
-      role="application"
-      aria-label="Interactive terminal portfolio"
-    >
-      <div id="output"></div>
-      <!-- screen readers hear responses here, in full and only once;
-           the visual #output animates character-by-character -->
-      <div
-        id="sr-log"
-        class="sr-only"
-        aria-live="polite"
-        aria-atomic="false"
-      ></div>
-      <form id="prompt-form" autocomplete="off">
-        <label for="cmd-input" class="sr-only"
-          >Enter a command. Type 'help' for a list.</label
-        >
-        <span class="prompt" aria-hidden="true">danny@portfolio:~$</span>
-        <input
-          id="cmd-input"
-          type="text"
-          spellcheck="false"
-          autocapitalize="off"
-          autocorrect="off"
-          aria-describedby="input-hint"
-        />
-      </form>
-      <span id="input-hint" class="sr-only"
-        >Use arrow keys for history, Tab for autocomplete.</span
-      >
-    </main>
+      <main id="content">
+        <section id="name">
+          <div>
+            <h1>Danny Yu</h1>
+            <p class="role">Full-Stack Engineer · Internal Platforms for STEM Education</p>
+            <p class="muted">Burnaby, BC</p>
+          </div>
+          <p class="sidenote" id="updated">page updated</p>
+        </section>
 
-    <section id="standard-view" hidden aria-label="Standard portfolio view">
-      <button type="button" id="back-to-terminal">← Back to terminal</button>
-      <h1 tabindex="-1" data-name>Danny Yu</h1>
-      <p class="tagline"><span data-title></span></p>
+        <div id="resume">
+          <noscript>
+            <p>
+              The resume needs JavaScript to display here.
+              <a href="resume/Danny_Yu_Resume.pdf" download>Download the PDF (resume.pdf)</a>.
+            </p>
+          </noscript>
+        </div>
 
-      <h2>About</h2>
-      <p data-about></p>
-
-      <h2>Projects</h2>
-      <ul data-projects></ul>
-
-      <h2>Skills</h2>
-      <dl data-skills></dl>
-
-      <h2>Contact</h2>
-      <ul data-contact></ul>
-
-      <p class="updated" data-updated></p>
-    </section>
+        <section id="see-also">
+          <h2>See also</h2>
+          <p>
+            <a href="projects/spark-gallery.html">spark-gallery(7)</a>,
+            <a href="projects/campkit.html">campkit(7)</a>,
+            <a href="projects/hello-wattson.html">hello-wattson(7)</a>,
+            <a href="https://github.com/yannydu" target="_blank" rel="noopener noreferrer">github.com/yannydu&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a>,
+            <a href="resume/Danny_Yu_Resume.pdf" download>resume.pdf&nbsp;↓</a>
+          </p>
+          <p class="muted">(END)</p>
+        </section>
+      </main>
+    </div>
 
     <script src="content.js"></script>
-    <script src="themes.js"></script>
-    <script src="terminal.js"></script>
+    <script src="reader.js"></script>
   </body>
 </html>

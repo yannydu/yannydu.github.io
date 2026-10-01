@@ -1,11 +1,9 @@
 // edit this file to change what the site says.
 // kept separate from terminal.js so you don't have to touch logic
 // to update your bio, projects, or links.
+// resume text (name, role, contacts, skills) lives in resume/resume.json.
 
 const content = {
-  name: "Danny Yu",
-  title: "full-stack engineer · internal platforms for STEM education",
-
   about: `Hey, I'm Danny. I build and run the software behind a university
 STEM outreach program, and I teach the camps it exists for.
 
@@ -34,6 +32,7 @@ Type 'help' to look around.`,
       facts: "13 camps · 509 projects from 416 campers · 0 worker errors",
       link: "https://sparkgallery.ca",
       page: "projects/spark-gallery.html",
+      status: "live",
     },
     {
       name: "campkit",
@@ -42,6 +41,8 @@ Type 'help' to look around.`,
       facts: "356 activities · 25 camps · 6 writers · 28-file Vitest suite",
       link: null,
       page: "projects/campkit.html",
+      status: "internal",
+      image: { src: "images/campkit.svg", alt: "campkit logo", width: 2000, height: 500 },
     },
     {
       name: "hello-wattson",
@@ -51,32 +52,19 @@ Type 'help' to look around.`,
         "20 programs · 54 lessons · hundreds of visits a month · hellowattson.ca",
       link: "https://hellowattson.ca",
       page: "projects/hello-wattson.html",
+      status: "live",
+      image: { src: "images/hello-wattson.svg", alt: "hello-wattson logo", width: 2000, height: 650 },
+    },
+    {
+      name: "ChessMate",
+      description:
+        "A smart automated chessboard, built as my SFU ENSC capstone. I built the human-move detection module with a Raspberry Pi camera and OpenCV, comparing board states to identify the moved piece, and drove an electromagnetic trolley in Python to execute the machine's moves.",
+      facts: "SFU ENSC capstone · Jan. 2024 – Aug. 2024",
+      link: null,
+      page: null,
+      status: "capstone",
     },
   ],
-
-  skills: {
-    "Daily drivers": [
-      "Python",
-      "JavaScript",
-      "HTML / CSS",
-      "Typst",
-      "git",
-      "linux",
-    ],
-    "Ship with (AI-assisted, still internalizing)": [
-      "TypeScript",
-      "Astro / Hono",
-      "Cloudflare (Workers, D1, R2)",
-      "Docker",
-    ],
-    "AI-assisted development": [
-      "Claude Code as a daily tool, custom skills, hooks, and subagents",
-      "taking a spec to a deployed system, and owning what ships",
-    ],
-    "Currently learning": [
-      "turning AI-scaffolded breadth into first-hand depth, starting with TypeScript and SQL",
-    ],
-  },
 
   community: [
     {
@@ -92,11 +80,6 @@ Type 'help' to look around.`,
         "helped undergrads untangle course material and problem solving.",
     },
   ],
-
-  contact: {
-    github: "https://github.com/yannydu",
-    email: "danny_yu_2@sfu.ca",
-  },
 
   // compiled from resume/dev.typ, see resume/template.typ
   resumePath: "resume/Danny_Yu_Resume.pdf",

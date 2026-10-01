@@ -21,18 +21,29 @@ const srLog = document.getElementById("sr-log");
 const input = document.getElementById("cmd-input");
 const form = document.getElementById("prompt-form");
 
-function write(html, cls) {
+// srText: what screen readers hear. undefined = the entry's own text,
+// "" = nothing. Each mirrored write replaces the older log children, so the
+// page doesn't hold every answer twice.
+function write(html, cls, srText) {
   const div = document.createElement("div");
-  div.className = "entry" + (cls ? " " + cls : "");
+  div.className = "term-line" + (cls ? " " + cls : "");
   div.innerHTML = html;
   output.appendChild(div);
-  // mirror to the aria-live log immediately, so screen readers get each
-  // response once in full even while the visual copy is still typing out
-  const sr = document.createElement("div");
-  sr.textContent = div.textContent;
-  srLog.appendChild(sr);
+  const text = srText === undefined ? div.textContent : srText;
+  if (text) {
+    const sr = document.createElement("div");
+    sr.textContent = text;
+    srLog.replaceChildren(sr);
+  }
   window.scrollTo(0, document.body.scrollHeight);
   return div;
+}
+
+// plain text of an HTML string
+function textOf(html) {
+  const d = document.createElement("div");
+  d.innerHTML = html;
+  return d.textContent;
 }
 
 // ---------- typewriter ----------
@@ -136,11 +147,33 @@ const SECTIONS = [
 
 function currentThemeId() {
   try {
-    return localStorage.getItem("theme") || "kanagawa";
+    return localStorage.getItem("theme") || "auto";
   } catch (_) {
-    return "kanagawa";
+    return "auto";
   }
 }
+const hasTheme = (id) => Object.prototype.hasOwnProperty.call(themes, id);
+function themeName(id) {
+  if (id === "auto") {
+    const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+    return "auto (" + (dark ? "Mocha" : "Latte") + ")";
+  }
+  return hasTheme(id) ? themes[id].name : id;
+}
+
+// resume/resume.json is fetched once at boot. Typst markup in its strings:
+// *x* is bold, `x` is code, backslashes are escapes.
+let resumeData = null;
+const resumeP = fetch("resume/resume.json")
+  .then((r) => (r.ok ? r.json() : null))
+  .catch(() => null)
+  .then((d) => (resumeData = d));
+function typst(str) {
+  return escapeHtml(String(str).replace(/\\/g, ""))
+    .replace(/\*([^*]+)\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
+}
+const noResume = (cmd) => ({ err: `${cmd}: resume data didn't load.` });
 
 // impact.json is fetched once at boot; `impact` only advertises itself in
 // help once a few weeks of event data exist (see scripts/impact-summary.py).
@@ -153,6 +186,7 @@ function impactReady() {
 }
 
 const commands = {
+  __proto__: null, // ?run= comes from a link: commands["constructor"] must not resolve to Object
   help() {
     return [
       "available commands:",
@@ -189,7 +223,6 @@ const commands = {
   projects() {
     return content.projects
       .map((p) => {
-        const page = escapeHtml(p.page);
         const liveLine = p.link
           ? `  live: <a href="${escapeHtml(p.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(p.link)}</a>`
           : `  live: internal, behind SSO`;
@@ -197,7 +230,9 @@ const commands = {
           `<h3>${escapeHtml(p.name)}</h3>` +
           `${escapeHtml(p.description)}\n` +
           `  <span style="color: var(--muted)">${escapeHtml(p.facts)}</span>\n` +
-          `  deep dive: <span class="ok">read ${escapeHtml(p.name)}</span> · <a href="${page}">${page}</a>\n` +
+          (p.page
+            ? `  deep dive: <span class="ok">read ${escapeHtml(p.name)}</span> · <a href="${escapeHtml(p.page)}">${escapeHtml(p.page)}</a>\n`
+            : `  no deep dive yet\n`) +
           liveLine
         );
       })
@@ -205,13 +240,12 @@ const commands = {
   },
 
   skills() {
-    return Object.entries(content.skills)
-      .map(
-        ([cat, items]) =>
-          `<h3>${escapeHtml(cat)}</h3>` +
-          items.map((i) => `  • ${escapeHtml(i)}`).join("\n"),
-      )
-      .join("\n\n");
+    return resumeP.then((d) => {
+      if (!d || !d.skills) return noResume("skills");
+      return d.skills
+        .map((g) => `<h3>${typst(g.label)}</h3>  ${typst(g.items)}`)
+        .join("\n\n");
+    });
   },
 
   community() {
@@ -225,40 +259,47 @@ const commands = {
   },
 
   contact() {
-    const c = content.contact;
-    return [
-      `  github    <a href="${escapeHtml(c.github)}"   target="_blank" rel="noopener noreferrer">${escapeHtml(c.github)}</a>`,
-      `  email     <a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`,
-    ].join("\n");
+    return resumeP.then((d) => {
+      if (!d || !d.contacts) return noResume("contact");
+      return d.contacts
+        .map((c) => {
+          const ext = !c.url.startsWith("mailto:");
+          return `  <a href="${escapeHtml(c.url)}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ""}>${escapeHtml(c.label)}</a>`;
+        })
+        .join("\n");
+    });
   },
 
   resume() {
-    if (content.resumePath) {
-      const p = escapeHtml(content.resumePath);
-      return `<a href="${p}" target="_blank" rel="noopener noreferrer">open resume (${p})</a>`;
-    }
-    return "resume coming soon. Drop a PDF in the repo and set `resumePath` in content.js.";
+    const p = escapeHtml(content.resumePath);
+    return `<a href="./">resume page</a> · <a href="${p}" target="_blank" rel="noopener noreferrer">PDF (${p})</a>`;
   },
 
   theme(args) {
     const arg = args[0];
     const current = currentThemeId();
     if (!arg || arg === "list") {
-      const lines = Object.entries(themes).map(([id, t]) => {
+      const lines = [
+        ["auto", "follow the system light/dark setting"],
+        ...Object.entries(themes).map(([id, t]) => [id, t.name]),
+      ].map(([id, name]) => {
         const marker = id === current ? "•" : " ";
-        return `  ${marker} ${id.padEnd(10)} ${escapeHtml(t.name)}`;
+        return `  ${marker} ${id.padEnd(10)} ${escapeHtml(name)}`;
       });
       return (
         "available themes:\n" + lines.join("\n") + "\n\nusage: theme <name>"
       );
     }
-    if (applyTheme(arg))
-      return `theme set to <span class="ok">${escapeHtml(themes[arg].name)}</span>.`;
+    if ((arg === "auto" || hasTheme(arg)) && applyTheme(arg))
+      return `theme set to <span class="ok">${escapeHtml(arg === "auto" ? "auto" : themes[arg].name)}</span>.`;
     return { err: `unknown theme: ${escapeHtml(arg)}. try 'theme list'.` };
   },
 
   banner() {
-    return `<pre class="banner">${escapeHtml(BANNER)}</pre>`;
+    return {
+      html: `<pre class="banner">${escapeHtml(BANNER)}</pre>`,
+      sr: "Danny Yu",
+    };
   },
 
   neofetch() {
@@ -274,7 +315,7 @@ const commands = {
       row("Shell", "bash (human)"),
       row("Uptime", "20-something years"),
       row("Editor", "Claude Code"),
-      row("Theme", escapeHtml(themes[currentThemeId()].name)),
+      row("Theme", escapeHtml(themeName(currentThemeId()))),
       row("Hobbies", "coding, gaming, lounging"),
       "",
       swatch,
@@ -285,7 +326,10 @@ const commands = {
     for (let r = 0; r < rows; r++) {
       lines.push((ART_LINES[r] || blank) + "   " + (info[r] || ""));
     }
-    return `<pre class="neofetch">${lines.join("\n")}</pre>`;
+    return {
+      html: `<pre class="neofetch">${lines.join("\n")}</pre>`,
+      sr: info.slice(0, -2).map(textOf).join("\n"),
+    };
   },
 
   impact() {
@@ -357,6 +401,7 @@ const commands = {
         err: `read: unknown project '${escapeHtml(name || "")}'. try: ${names}`,
       };
     }
+    if (!p.page) return "no deep dive yet";
     return fetch(p.page)
       .then((r) => r.text())
       .then((html) => {
@@ -371,6 +416,25 @@ const commands = {
           else if (el.tagName === "PRE")
             lines.push(
               `<span style="color: var(--muted)">${escapeHtml(el.textContent)}</span>`,
+            );
+          else if (el.tagName === "FIGURE") {
+            el.querySelectorAll("ol > li").forEach((li) => {
+              const name = li.querySelector("strong");
+              const detail = li.querySelector("span");
+              lines.push(
+                `  → ${escapeHtml((name || li).textContent.trim())}` +
+                  (detail ? `: ${escapeHtml(detail.textContent.trim())}` : ""),
+              );
+            });
+            const cap = el.querySelector("figcaption");
+            if (cap)
+              lines.push(
+                `<span style="color: var(--muted)">${escapeHtml(cap.textContent.trim())}</span>`,
+              );
+          }
+          else if (el.tagName === "P" && el.classList.contains("sidenote"))
+            lines.push(
+              `<span style="color: var(--muted)">  note: ${escapeHtml(t)}</span>`,
             );
           else if (el.tagName === "UL")
             [...el.children].forEach((li) =>
@@ -401,30 +465,32 @@ const commands = {
 
   open(args) {
     const target = args[0];
-    const c = content.contact;
-    const urls = {
-      github: c.github,
-      email: "mailto:" + c.email,
-    };
-    content.projects.forEach((p) => {
-      urls[p.name] = p.page;
-    });
-    if (!urls[target]) {
-      const names = content.projects.map((p) => p.name).join(", ");
-      return {
-        err: `open: unknown target '${escapeHtml(target || "")}'. try: github, email, ${names}`,
-      };
-    }
-    if (content.projects.some((p) => p.name === target)) {
-      window.location.href = urls[target];
+    const project = content.projects.find((p) => p.name === target);
+    if (project) {
+      if (!project.page) return "no deep dive yet";
+      window.location.href = project.page;
       return `opening ${escapeHtml(target)}...`;
     }
-    window.open(
-      urls[target],
-      target === "email" ? "_self" : "_blank",
-      "noopener,noreferrer",
-    );
-    return `opening ${escapeHtml(target)}...`;
+    const names = content.projects.map((p) => p.name).join(", ");
+    const unknown = {
+      err: `open: unknown target '${escapeHtml(target || "")}'. try: github, email, ${names}`,
+    };
+    if (target !== "github" && target !== "email") return unknown;
+    return resumeP.then((d) => {
+      if (!d || !d.contacts) return noResume("open");
+      const c = d.contacts.find((x) =>
+        target === "email"
+          ? x.url.startsWith("mailto:")
+          : x.url.includes("github.com"),
+      );
+      if (!c) return unknown;
+      window.open(
+        c.url,
+        target === "email" ? "_self" : "_blank",
+        "noopener,noreferrer",
+      );
+      return `opening ${escapeHtml(target)}...`;
+    });
   },
 
   clear() {
@@ -475,22 +541,27 @@ function dispatch(line) {
     );
     return;
   }
+  const show = (r) => {
+    if (r && typeof r === "object" && "err" in r)
+      typewrite(write(r.err, "error"));
+    else if (r && typeof r === "object" && "html" in r)
+      typewrite(write(r.html, null, r.sr));
+    else if (r) typewrite(write(r));
+  };
   const result = fn(args);
   if (result && typeof result.then === "function") {
-    const pending = write('<span style="color: var(--muted)">loading…</span>');
+    const pending = write(
+      '<span style="color: var(--muted)">loading…</span>',
+      null,
+      "",
+    );
     result.then((r) => {
       pending.remove();
-      if (r && typeof r === "object" && "err" in r)
-        typewrite(write(r.err, "error"));
-      else typewrite(write(r));
+      show(r);
     });
     return;
   }
-  if (result && typeof result === "object" && "err" in result) {
-    typewrite(write(result.err, "error"));
-  } else if (result) {
-    typewrite(write(result));
-  }
+  show(result);
 }
 
 // ---------- input handling ----------
@@ -520,9 +591,9 @@ input.addEventListener("keydown", (e) => {
       input.value = draft;
     }
     moveCursorToEnd();
-  } else if (e.key === "Tab") {
-    e.preventDefault();
-    autocomplete();
+  } else if (e.key === "Tab" && !e.shiftKey && input.value.trim()) {
+    // only swallow Tab when there is something to complete
+    if (autocomplete()) e.preventDefault();
   } else if (e.ctrlKey && e.key.toLowerCase() === "l") {
     e.preventDefault();
     output.innerHTML = "";
@@ -545,6 +616,7 @@ function moveCursorToEnd() {
   );
 }
 
+// returns true when a completion or a list of candidates was shown
 function autocomplete() {
   const v = input.value;
   const parts = v.split(/\s+/);
@@ -556,14 +628,14 @@ function autocomplete() {
     );
     if (matches.length === 1) input.value = matches[0] + " ";
     else if (matches.length > 1) write(matches.join("  "));
-    return;
+    return matches.length > 0;
   }
 
   // context-aware second-token completion
   const [cmd, arg = ""] = parts;
   let pool = null;
   if (cmd === "cat") pool = SECTIONS;
-  if (cmd === "theme") pool = Object.keys(themes);
+  if (cmd === "theme") pool = ["auto", ...Object.keys(themes)];
   if (cmd === "open")
     pool = ["github", "email", ...content.projects.map((p) => p.name)];
   if (cmd === "read") pool = content.projects.map((p) => p.name);
@@ -572,7 +644,9 @@ function autocomplete() {
     const matches = pool.filter((n) => n.startsWith(arg));
     if (matches.length === 1) input.value = `${cmd} ${matches[0]}`;
     else if (matches.length > 1) write(matches.join("  "));
+    return matches.length > 0;
   }
+  return false;
 }
 
 // ---------- block caret ----------
@@ -608,8 +682,21 @@ function updateCaret() {
   caret.style.width = charWidth + "px";
 }
 
+// stop blinking after 5s without typing (kitty's cursor_stop_blinking_after)
+let idleTimer = 0;
+function wakeCaret() {
+  form.classList.remove("caret-idle");
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => form.classList.add("caret-idle"), 5000);
+}
+wakeCaret();
+
 ["input", "keydown", "keyup", "click", "focus", "blur", "select"].forEach(
-  (ev) => input.addEventListener(ev, () => setTimeout(updateCaret, 0)),
+  (ev) =>
+    input.addEventListener(ev, () => {
+      if (ev === "input" || ev === "keydown" || ev === "focus") wakeCaret();
+      setTimeout(updateCaret, 0);
+    }),
 );
 window.addEventListener("resize", () => {
   measureCharWidth();
@@ -622,102 +709,14 @@ if (document.fonts && document.fonts.ready) {
   });
 }
 
-// keep focus on the input unless user is clicking a link / button / skip-link
+// clicks in the terminal area return focus to the prompt; controls, the
+// status bar (reader.js) and text selections keep theirs
 document.addEventListener("click", (e) => {
-  if (e.target.closest("a, button, .skip-link")) return;
-  const sv = document.getElementById("standard-view");
-  if (sv && !sv.hidden) return;
+  if (!e.target.closest("#content")) return;
+  if (e.target.closest("a, button, input, label, dialog")) return;
+  if (String(window.getSelection())) return;
   input.focus();
 });
-
-// ---------- standard-view toggle ----------
-const terminalView = document.getElementById("terminal-view");
-const standardView = document.getElementById("standard-view");
-const skipLink = document.getElementById("skip-link");
-
-function showStandardView() {
-  terminalView.hidden = true;
-  standardView.hidden = false;
-  populateStandardView();
-  const h1 = standardView.querySelector("h1");
-  h1.focus();
-}
-function showTerminalView() {
-  standardView.hidden = true;
-  terminalView.hidden = false;
-  input.focus();
-}
-skipLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  showStandardView();
-});
-document
-  .getElementById("back-to-terminal")
-  .addEventListener("click", showTerminalView);
-
-let standardViewPopulated = false;
-function populateStandardView() {
-  if (standardViewPopulated) return;
-  standardViewPopulated = true;
-
-  standardView.querySelector("[data-name]").textContent = content.name;
-  standardView.querySelector("[data-title]").textContent = content.title;
-  standardView.querySelector("[data-about]").textContent = content.about;
-
-  const projectsEl = standardView.querySelector("[data-projects]");
-  content.projects.forEach((p) => {
-    const li = document.createElement("li");
-    const strong = document.createElement("strong");
-    strong.textContent = p.name;
-    li.append(strong, " - " + p.description + " ");
-    const caseStudy = document.createElement("a");
-    caseStudy.href = p.page;
-    caseStudy.textContent = "deep dive";
-    li.appendChild(caseStudy);
-    if (p.link) {
-      li.append(" ");
-      const a = document.createElement("a");
-      a.href = p.link;
-      a.textContent = "live";
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      li.appendChild(a);
-    }
-    projectsEl.appendChild(li);
-  });
-
-  const skillsEl = standardView.querySelector("[data-skills]");
-  Object.entries(content.skills).forEach(([cat, items]) => {
-    const dt = document.createElement("dt");
-    dt.textContent = cat;
-    const dd = document.createElement("dd");
-    dd.textContent = items.join(", ");
-    skillsEl.append(dt, dd);
-  });
-
-  const contactEl = standardView.querySelector("[data-contact]");
-  const c = content.contact;
-  const links = [
-    { label: "GitHub", href: c.github },
-    { label: "Email", href: "mailto:" + c.email, display: c.email },
-  ];
-  links.forEach((l) => {
-    const li = document.createElement("li");
-    li.append(l.label + ": ");
-    const a = document.createElement("a");
-    a.href = l.href;
-    a.textContent = l.display || l.href;
-    if (!l.href.startsWith("mailto:")) {
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-    }
-    li.appendChild(a);
-    contactEl.appendChild(li);
-  });
-
-  const updatedEl = standardView.querySelector("[data-updated]");
-  if (updatedEl) updatedEl.textContent = "last updated " + content.updated;
-}
 
 // ---------- boot sequence ----------
 const bootLines = [
@@ -756,32 +755,33 @@ async function boot() {
   if (!reduced) {
     for (const line of bootLines) {
       await sleep(line.t);
-      write(escapeHtml(line.text), (line.cls || "ok") + " boot-line");
+      write(escapeHtml(line.text), (line.cls || "ok") + " boot-line", "");
     }
   }
-  write(`<pre class="banner">${escapeHtml(BANNER)}</pre>`);
-  write(
-    `<span style="color: var(--accent)">${escapeHtml(content.name)}</span> - ` +
-      `<span style="color: var(--muted)">${escapeHtml(content.title)}</span>`,
-  );
+  const d = await resumeP;
+  write(`<pre class="banner">${escapeHtml(BANNER)}</pre>`, null, "Danny Yu");
+  if (d) {
+    write(
+      `<span style="color: var(--accent)">${typst(d.name)}</span> - ` +
+        `<span style="color: var(--muted)">${typst(d.role)}</span>`,
+    );
+  } else {
+    write(
+      `<span style="color: var(--muted)">resume data didn't load; skills, contact and open github/email are unavailable.</span>`,
+    );
+  }
   write(
     `<span style="color: var(--muted)">last updated ${escapeHtml(content.updated)}</span>`,
   );
   write("");
   write(
     `type <span class="ok">help</span> to see commands, ` +
-      `or <span class="ok">about</span> to start. ` +
-      `screen-reader users: <a href="#standard-view" id="sr-hint-link">switch to standard view</a>.`,
+      `or <span class="ok">about</span> to start.`,
   );
   write("");
-  // wire the inline "switch to standard view" link we just rendered
-  const inlineLink = document.getElementById("sr-hint-link");
-  if (inlineLink)
-    inlineLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      showStandardView();
-    });
   input.focus();
+  const run = new URLSearchParams(location.search).get("run");
+  if (run) dispatch(run);
 }
 
 // ---------- init ----------
@@ -794,7 +794,6 @@ async function boot() {
   } catch (_) {
     /* private mode, ignore */
   }
-  populateStandardView();
   fetch("impact.json", { cache: "no-store" })
     .then((r) => (r.ok ? r.json() : null))
     .then((d) => {

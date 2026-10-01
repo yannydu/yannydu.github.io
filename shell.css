@@ -1,0 +1,178 @@
+/* shell page only; shared tokens and chrome live in styles.css */
+main#content {
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+#output {
+  min-width: 0;
+}
+
+#output {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#output .term-line {
+  margin-bottom: 0.15rem;
+}
+#output .term-line:empty {
+  height: 1em;
+}
+
+#output .prompt-echo {
+  color: var(--green);
+}
+#output .cmd-echo {
+  color: var(--fg);
+}
+#output .error {
+  color: var(--red);
+}
+#output .warn {
+  color: var(--yellow);
+}
+#output .ok {
+  color: var(--green);
+}
+
+#output a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+#output a:hover,
+#output a:focus {
+  color: var(--yellow);
+}
+#output a:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
+#output .muted {
+  color: var(--muted);
+}
+
+#output h3 {
+  color: var(--yellow);
+  margin: 0.5rem 0 0.1rem;
+  font-size: 1em;
+  font-weight: 700;
+}
+
+#output .banner {
+  color: var(--accent);
+  margin: 0.25rem 0;
+  line-height: 1.15;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* ---------- neofetch / ASCII portrait ---------- */
+#output .neofetch {
+  color: var(--muted);
+  margin: 0.25rem 0;
+  line-height: 1.15;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.art-y {
+  color: var(--yellow);
+}
+.art-f {
+  color: var(--fg);
+}
+
+#prompt-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  position: relative;
+}
+
+.prompt {
+  color: var(--green);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#cmd-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg);
+  font: inherit;
+  padding: 0;
+  caret-color: transparent;
+  min-width: 0;
+}
+
+/* ---------- block caret ---------- */
+.block-caret {
+  position: absolute;
+  background: transparent;
+  border: 1px solid var(--fg);
+  opacity: 0.7;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+#prompt-form:focus-within .block-caret {
+  background: var(--fg);
+  border: none;
+  animation: caret-blink 1s infinite;
+}
+/* terminal.js adds .caret-idle after 5s without typing */
+#prompt-form.caret-idle .block-caret {
+  animation: none;
+  opacity: 0.85;
+}
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 0.85;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #prompt-form:focus-within .block-caret {
+    animation: none;
+  }
+}
+
+/* ---------- boot sequence fade ---------- */
+.boot-line {
+  animation: fade-in 0.18s ease both;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(1px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .block-caret {
+    display: none;
+  }
+  #cmd-input {
+    caret-color: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-line {
+    animation: none;
+  }
+}

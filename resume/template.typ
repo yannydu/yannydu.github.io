@@ -1,9 +1,10 @@
 // shared layout for dev.typ and qa.typ
-// compile: typst compile dev.typ Danny_Yu_Resume.pdf
+// compile: typst compile --pdf-standard ua-1 dev.typ Danny_Yu_Resume.pdf
 
 #let accent = rgb("#2b7a4b")
 
 #let resume(name: [], role: "", contacts: (), body) = {
+  set document(title: name + [ · Resume], author: "Danny Yu")
   set page(paper: "us-letter", margin: (x: 1.5cm, y: 1.0cm))
   set text(size: 10pt)
   set par(justify: true, leading: 0.5em)
@@ -51,7 +52,17 @@
   ..rows
     .map(((label, items)) => (
       align(right, text(size: 9.5pt, weight: "bold", label)),
-      text(size: 9.5pt, items),
+      text(size: 9.5pt, eval(items, mode: "markup")),
     ))
     .flatten(),
 )
+
+// print an entry from a resume.json object; bullets defaults to the object's own
+// (strings or {text, note}; markup, notes ignored), or pass strings to override
+#let entry-from(e, bullets: auto) = {
+  entry(e.org, e.role, e.place, e.dates)
+  let bs = if bullets == auto { e.bullets } else { bullets }
+  if bs.len() > 0 {
+    list(..bs.map(b => eval(if type(b) == dictionary { b.text } else { b }, mode: "markup")))
+  }
+}
