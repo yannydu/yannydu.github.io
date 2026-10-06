@@ -1,12 +1,12 @@
 {
   "apps_in_production": 4,
   "error_rate_pct": 0.0,
-  "event_weeks_logged": 4,
-  "gallery_pages_viewed": 180,
-  "lessons_served": 1400,
-  "requests_served": 210000,
+  "event_weeks_logged": 5,
+  "gallery_pages_viewed": 250,
+  "lessons_served": 1900,
+  "requests_served": 230000,
   "since": "2026-06-25",
   "sponsor_pages_viewed": 4,
-  "updated": "2026-09-28",
-  "weeks_logged": 16
+  "updated": "2026-10-05",
+  "weeks_logged": 17
 }
