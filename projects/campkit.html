@@ -9,8 +9,10 @@
 <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400..800&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../readability.css" />
+<link rel="stylesheet" href="../project.css" />
 <script src="../themes.js"></script>
 <script>try{var s=localStorage.getItem("theme");if(s&&(s==="auto"||themes[s]))applyTheme(s);if(localStorage.getItem("crt"))document.documentElement.classList.add("crt");}catch(e){}document.documentElement.classList.add("js");</script>
 </head>
@@ -40,17 +42,21 @@
 <p class="side-meta">status <strong>internal</strong><br>behind SSO, no public link<br>page updated 2026-09-18</p>
 </aside>
 <main id="content">
-<h1>Campkit</h1>
-<p>The internal platform where our camp curriculum is written, assembled, and costed.</p>
+<div class="page-head"><h1>Campkit</h1><p class="lede">The internal platform where our camp curriculum is written, assembled, and costed.</p></div>
 
-<h2>What it is</h2>
+<section>
+<h2 id="what-it-is" tabindex="-1">What it is</h2>
 <p>Curriculum sat in one large document per camp, so activities were hard to reuse and supply lists drifted. In Campkit, writers author an activity once and build a camp by arranging published activities into days. The site produces the reading view, the print packet, and a shopping list costed from the student count. Our curriculum writers use it.</p>
 <p>It replaced tech-curriculum, a Python and Typst pipeline where 355 Typst files compiled in CI on every push, with a small git-backed web editor so non-technical staff never touched git.</p>
+</section>
 
-<h2>Constraints</h2>
+<section>
+<h2 id="constraints" tabindex="-1">Constraints</h2>
 <p>Built for about ten writers and twenty instructors, with no budget and no appetite for another password. Past camps have to stay as they ran, even after their activities are edited for next year.</p>
+</section>
 
-<h2>Architecture</h2>
+<section>
+<h2 id="architecture" tabindex="-1">Architecture</h2>
 <figure class="flow">
 <ol role="list">
 <li style="--r:1;--c:2" data-to="down"><strong>staff browser</strong><span>SFU Microsoft sign-in</span></li>
@@ -64,8 +70,10 @@
 <figcaption>Figure 1. Staff sign in and reach a Hono app on Workers, which reads and writes a D1 database and R2 storage. Publishing turns an activity draft into a frozen revision, and a camp pins that revision rather than the draft.</figcaption>
 </figure>
 <p>Platform-specific calls sit behind a single module, so a later move to university servers rewrites that module, not the app.</p>
+</section>
 
-<h2>Decisions I made</h2>
+<section>
+<h2 id="decisions-i-made" tabindex="-1">Decisions I made</h2>
 <ul role="list">
 <li>Publishing freezes a copy of the activity, and camps point at that copy, so an edit never rewrites a camp that already ran.</li>
 <li>Materials come from one catalogue with alias matching and a single unit per item, so "rubber band" and "elastic band" cannot drift apart. Free-text supply names are impossible to type.</li>
@@ -75,15 +83,22 @@
 <li>CI runs typecheck, lint, and a 28-file Vitest suite, then deploys on push.</li>
 </ul>
 <p>One habit came from a mistake next door. A strategy PDF reached a funder four hours behind its Markdown source and still had a grade band we had already changed. A pre-commit hook now blocks a source change committed without its regenerated render.</p>
+</section>
 
-<h2>What I decided not to build</h2>
+<section>
+<h2 id="what-i-decided-not-to-build" tabindex="-1">What I decided not to build</h2>
 <p>A family portal beside registration, with saved child profiles and parent logins. I shelved it in writing: it would have turned a seasonal sign-up into a year-round store of children's personal information, with its own login and a retention policy someone must enforce. The program uses a stock self-hosted ticketing tool instead.</p>
+</section>
 
-<h2>Numbers</h2>
-<p>28-file Vitest suite · 355 Typst files in the predecessor</p>
+<section>
+<h2 id="numbers" tabindex="-1">Numbers</h2>
+<ul class="tally" role="list"><li><strong class="n">28</strong>-file Vitest suite</li><li><strong class="n">355</strong> Typst files in the predecessor</li></ul>
+</section>
 
-<h2>Live</h2>
+<section>
+<h2 id="live" tabindex="-1">Live</h2>
 <p>Internal, behind SSO. No public link.</p>
+</section>
 </main>
 </div>
 <script src="../content.js"></script>

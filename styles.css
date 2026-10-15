@@ -81,9 +81,8 @@
      main children: h1, h2, p, ul, dl, figure, figure.flow, p.sidenote, section, .entry
      section headings: <h2>, shown in capitals by CSS
      .entry  = date gutter + body:  <article class="entry"><p class="date">Jun 2021<br>– present</p>
-                <div class="head">[<figure class="logo">..</figure> floats here, first]<h3>role</h3>
+                <div class="head"><h3>role</h3>
                 <p><span class="org">..</span> <span class="muted">..</span></p></div><ul>..</ul></article>
-     figure.logo = plate + caption: <figure class="logo"><div class="plate"><img></div><figcaption>$ kitten icat ..</figcaption></figure>
      big number: <strong class="num">509</strong> (yellow); .big = 32px stat
      figure.flow: <figure class="flow"><ol><li style="--r:1;--c:1" data-to="down"><strong>name</strong><span>detail</span></li>
                   <li class="step" style="--r:3;--c:2" data-to="right">..</li></ol><figcaption>Figure 1. ..</figcaption></figure>
@@ -106,7 +105,6 @@
   --blue: #167080;
   --purple: #8537ea;
   --line: color-mix(in srgb, var(--fg) 22%, var(--bg));
-  --plate: #f1efe8;
 
   --header-h: 77px;
   --status-h: 2.5rem;
@@ -439,22 +437,8 @@ main dd { margin: 0 0 12px 2ch; }
   main h1 { font-size: 2rem; }
 }
 
-/* ---------- figures, logo plate ---------- */
+/* ---------- figures ---------- */
 figure { margin: 0 0 16px; }
-.plate {
-  background: var(--plate);
-  border-radius: 4px;
-  padding: 16px;
-  max-width: 512px;
-}
-.plate img { display: block; max-width: 100%; height: auto; }
-figure.logo { width: 176px; margin: 0 0 8px; }
-@media (min-width: 801px) {
-  .entry figure.logo { float: right; margin: 0 0 8px 2ch; }
-}
-@media (max-width: 800px) {
-  figure.logo { width: auto; }
-}
 
 /* ---------- .flow figure: CSS boxes laid out on a grid ---------- */
 figure.flow { margin: 0 0 16px; }
@@ -686,7 +670,7 @@ figure.flow li[data-to="fork"]::after {
   }
 }
 @media (forced-colors: active) {
-  body > header, .sidebar, .statusbar, .plate, .sb-toggle, .help,
+  body > header, .sidebar, .statusbar, .sb-toggle, .help,
   figure.flow li, .sb-cmdform input, .sb-key, .help-do, .help-close {
     border-color: CanvasText;
   }
@@ -698,7 +682,6 @@ figure.flow li[data-to="fork"]::after {
     color: HighlightText;
     forced-color-adjust: none;
   }
-  .plate { forced-color-adjust: none; }
   :focus-visible { outline-color: Highlight; }
   ::highlight(search) { background-color: Mark; color: MarkText; }
   ::highlight(search-current) { background-color: Highlight; color: HighlightText; }
