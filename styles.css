@@ -282,6 +282,9 @@ body > header nav a[aria-current="true"]::before {
   align-self: start;
   max-height: calc(100vh - var(--header-h) - var(--status-h));
   max-height: calc(100dvh - var(--header-h) - var(--status-h));
+  /* fill the viewport so the border-right runs full height on short sidebars */
+  min-height: calc(100vh - var(--header-h) - var(--status-h));
+  min-height: calc(100dvh - var(--header-h) - var(--status-h));
   overflow: auto;
   padding: 24px 16px 32px;
   border-right: 1px solid var(--line);
@@ -333,6 +336,7 @@ figcaption { margin-top: 4px; font-size: 0.875rem; color: var(--muted); }
   .sidebar {
     position: static;
     max-height: none;
+    min-height: 0;
     padding: 8px 16px;
     border-right: 0;
     border-bottom: 1px solid var(--line);
@@ -490,7 +494,8 @@ figure.flow li[data-to="right"]::after {
 /* a fork: ↙ into the box below-left, ↘ into the box below-right */
 figure.flow li[data-to="fork"]::after {
   content: "↙ ↘"; content: "↙ ↘" / "";
-  top: 100%; left: 0; right: 0;
+  /* reach into the column gaps so each arrow points at its target box */
+  top: 100%; left: calc(var(--flow-gap, 4ch) / -2); right: calc(var(--flow-gap, 4ch) / -2);
   text-align: justify; text-align-last: justify;
 }
 /* one column in flow order, ↓ between boxes; text stays at body size */
