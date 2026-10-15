@@ -691,17 +691,42 @@
     else sidebar.prepend(nav);
 
     let current = -1;
+    const mark = (idx) => {
+      if (idx === current) return;
+      if (current >= 0) links[current].removeAttribute("aria-current");
+      current = idx;
+      links[idx].setAttribute("aria-current", "location");
+    };
+    // A jump to a section (sidebar click or #hash) keeps that section marked
+    // until the jump's scroll settles and the reader scrolls again: short
+    // sections near the end can't reach the top, so position alone would
+    // mark a neighbour.
+    let pin = -1;
+    let settled = false;
+    let settleTimer = 0;
+    const settleSoon = () => {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(() => (settled = true), 150);
+    };
+    const pinTo = (idx) => {
+      pin = idx;
+      settled = false;
+      settleSoon();
+      mark(idx);
+    };
+    links.forEach((a, i) => a.addEventListener("click", () => pinTo(i)));
     updateCurrent = () => {
-      const limit = headerH() + innerHeight * 0.25;
+      if (pin >= 0) {
+        if (!settled) return settleSoon();
+        pin = -1;
+      }
+      const limit = headerH() + lineH();
       let idx = 0;
       targets.forEach((t, i) => {
         if (t.getBoundingClientRect().top <= limit) idx = i;
       });
       if (innerHeight + window.scrollY >= root.scrollHeight - 2) idx = targets.length - 1;
-      if (idx === current) return;
-      if (current >= 0) links[current].removeAttribute("aria-current");
-      current = idx;
-      links[idx].setAttribute("aria-current", "location");
+      mark(idx);
     };
     updateCurrent();
     if (location.hash) {
@@ -710,7 +735,11 @@
         id = decodeURIComponent(id);
       } catch (_) {}
       const t = document.getElementById(id);
-      if (t) t.scrollIntoView();
+      if (t) {
+        t.scrollIntoView();
+        const i = targets.indexOf(t);
+        if (i >= 0) pinTo(i);
+      }
     }
     queue();
   }
