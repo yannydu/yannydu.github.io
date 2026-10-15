@@ -100,7 +100,8 @@
         flush();
         // *509*, a bare number in stars, is a 32px stat (styles.css .big)
         const big = m[2] != null && /^\d[\d,.]*\+?$/.test(m[2]);
-        frag.append(el(m[2] != null ? "strong" : "code", big ? "big" : "", m[2] != null ? m[2] : m[3]));
+        const prog = m[2] != null && !big;
+        frag.append(el(m[2] != null ? "strong" : "code", big ? "big" : prog ? "prog" : "", m[2] != null ? m[2] : m[3]));
       }
     }
     buf += str.slice(last);
@@ -110,9 +111,19 @@
 
   function dateEl(s) {
     const p = el("p", "date");
-    const parts = String(s).split(" – ");
-    if (parts.length > 1) p.append(parts[0], document.createElement("br"), "– " + parts[1]);
-    else p.textContent = s;
+    const str = String(s);
+    let a = str;
+    let b = "";
+    const i = str.indexOf(" – ");
+    if (i >= 0) {
+      a = str.slice(0, i) + " –";
+      b = str.slice(i + 3);
+    } else if (str.lastIndexOf(" ") > 0) {
+      a = str.slice(0, str.lastIndexOf(" "));
+      b = str.slice(str.lastIndexOf(" ") + 1);
+    }
+    p.append(el("span", "", a));
+    if (b) p.append(" ", el("span", "", b));
     return p;
   }
 
@@ -130,7 +141,7 @@
 
   function resumeEntry(e) {
     const head = el("div", "head", el("h3", "", e.role));
-    const line = el("p", "", el("span", "org", e.org));
+    const line = el("p", "where", el("span", "org", e.org));
     if (e.place) line.append(" ", el("span", "muted", "· " + e.place));
     head.append(line);
     const art = el("article", "entry", dateEl(e.dates), head);
@@ -138,19 +149,32 @@
     return art;
   }
 
+  // "13 camps · 509 projects from 416 campers" -> ul.stats; a leading number is
+  // strong.n, later numbers plain strong, "28-file" gets a .hy hyphen.
+  function statList(str) {
+    const ul = el("ul", "stats");
+    ul.setAttribute("role", "list");
+    str.split(" · ").forEach((part) => {
+      const li = el("li");
+      const hy = part.match(/^(\d+)-(.*)$/);
+      if (hy) {
+        li.append(el("strong", "n", hy[1]), el("span", "hy", "-"), hy[2]);
+      } else {
+        part.split(/(\d[\d,.]*\+?)/).forEach((t, i) => {
+          if (i % 2 === 0) return t && li.append(t);
+          const m = t.match(/^(.*?)([.,]*)$/);
+          li.append(el("strong", i === 1 && !li.firstChild ? "n" : "", m[1]));
+          if (m[2]) li.append(m[2]);
+        });
+      }
+      ul.append(li);
+    });
+    return ul;
+  }
+
   function projectEntry(p) {
     const status = el("p", "date", el("strong", p.status === "live" ? "ok" : "", p.status));
     const head = el("div", "head");
-    if (p.image) {
-      const img = el("img");
-      img.src = new URL(p.image.src, ROOT).href;
-      img.alt = p.image.alt;
-      if (p.image.width) img.width = p.image.width;
-      if (p.image.height) img.height = p.image.height;
-      img.loading = "lazy";
-      const cap = el("figcaption", "", "$ kitten icat " + p.image.src.split("/").pop());
-      head.append(el("figure", "logo", el("div", "plate", img), cap));
-    }
     const title = p.name.toLowerCase() + "(7)";
     const h3 = el("h3");
     if (p.page) h3.append(link(new URL(p.page, ROOT).href, title));
@@ -159,7 +183,7 @@
     if (p.link) desc.append(" ", link(p.link, p.link.replace(/^https?:\/\//, ""), true));
     head.append(h3, desc);
     const art = el("article", "entry", status, head);
-    if (p.facts) art.append(el("p", "sidenote", markup(p.facts.split(" · ").join("\n"))));
+    if (p.facts) art.append(el("div", "sidenote facts", statList(p.facts)));
     return art;
   }
 
