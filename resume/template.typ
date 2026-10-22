@@ -3,20 +3,23 @@
 
 #let accent = rgb("#2b7a4b")
 
-#let resume(name: [], role: "", contacts: (), body) = {
-  set document(title: name + [ · Resume], author: "Danny Yu")
+// name / role / contacts block; also reused by cover letters
+#let header(name, role, contacts) = align(center)[
+  #text(size: 23pt, name)
+  #v(-6pt)
+  #smallcaps(text(size: 10.5pt, tracking: 0.6pt, fill: accent, role))
+  #v(-4pt)
+  #text(size: 9pt, contacts.join([#h(5pt)·#h(5pt)]))
+]
+
+#let resume(name: [], role: "", contacts: (), title: [Resume], body) = {
+  set document(title: name + [ · ] + title, author: "Danny Yu")
   set page(paper: "us-letter", margin: (x: 1.5cm, y: 1.0cm))
   set text(size: 10pt)
   set par(justify: true, leading: 0.5em)
   set list(indent: 0.5em, spacing: 0.45em, body-indent: 0.5em)
 
-  align(center)[
-    #text(size: 23pt, name)
-    #v(-6pt)
-    #smallcaps(text(size: 10.5pt, tracking: 0.6pt, fill: accent, role))
-    #v(-4pt)
-    #text(size: 9pt, contacts.join([#h(5pt)·#h(5pt)]))
-  ]
+  header(name, role, contacts)
   body
 }
 
