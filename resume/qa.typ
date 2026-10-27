@@ -36,7 +36,7 @@ services with real users.
 #section("Work Experience")
 #entry-from(by-id("sfu"), bullets: (
   "Build and operate the program's production web platforms on Cloudflare Workers: a publishing gallery (509 camper projects from 416 campers), a curriculum system (356 activities by six writers), and public lesson sites (hundreds of visits a month), through a full summer of camps with zero worker errors.",
-  "Own quality on all of them: `node --test` suite (51 files) on the gallery, Vitest suite on the curriculum platform, gitleaks full-history scan and typecheck/lint gates in CI on every push.",
+  "Own quality on all of them: `node --test` suites (59 and 45 files) on the gallery and lesson site, Vitest suite (58 files) on the curriculum platform, gitleaks full-history scan and typecheck/lint gates in CI on every push.",
   "Enforce privacy constraints as tested invariants: camper names pseudonymized before data reaches repos or backups, a fail-closed pre-push name guard, EXIF/GPS stripping verified in CI, camper-written code isolated on its own origin. Also teach K-8 coding camps.",
 ))
 

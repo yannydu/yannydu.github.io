@@ -39,14 +39,14 @@
 <li><a href="hello-wattson.html" aria-current="page">hello-wattson(7)</a></li>
 <li>chessmate(7)</li>
 </ul></nav>
-<p class="side-meta">status <strong class="ok">live</strong><br><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">hellowattson.ca&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a><br>page updated 2026-09-18</p>
+<p class="side-meta">status <strong class="ok">live</strong><br><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">hellowattson.ca&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a><br>page updated 2026-10-26</p>
 </aside>
 <main id="content">
-<div class="page-head"><h1>Hello Wattson</h1><p class="lede">The curriculum site students read in class, gated by a code instead of an account.</p></div>
+<div class="page-head"><h1>Hello Wattson</h1><p class="lede">Lessons and coding tools for classrooms, opened by an access code instead of an account.</p></div>
 
 <section>
 <h2 id="what-it-is" tabindex="-1">What it is</h2>
-<p>Hello Wattson publishes our workshop programs: the Arduino, web development, LEGO SPIKE and Python material students follow on classroom devices while an instructor runs the room. Public pages describe each program, while lesson pages and teacher files sit behind an access code a teacher hands out. It's 20 programs and 54 lessons so far.</p>
+<p>Hello Wattson is where we publish our teaching material: 22 programs of Arduino, web development, LEGO SPIKE and Python lessons, plus the coding tools students use beside them. A teacher anywhere can browse the public catalogue, then unlock the lessons with an access code they hand to the class. The site stores nothing about students: no accounts, no names, and no saved work on our side.</p>
 <div class="shots">
 <figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hello-wattson-home.webp"><img src="img/hello-wattson-home.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Hello Wattson home page with the Wattson mascot and cards for each program"></a></div></div><figcaption>The home page: students pick their program from a card.</figcaption></figure>
 <figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hello-wattson-catalog.webp"><img src="img/hello-wattson-catalog.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Catalogue page listing Gadget Lab and Pixel Lab modules for teachers"></a></div></div><figcaption>The catalogue lets other teachers use the modules, with no student accounts.</figcaption></figure>
@@ -54,8 +54,22 @@
 </section>
 
 <section>
+<h2 id="how-it-grew" tabindex="-1">How it grew</h2>
+<p>It started as an internal Eleventy site our own instructors projected in class. Over 2026 it became something teachers outside the program can run themselves.</p>
+<ul role="list">
+<li><strong>July 2026.</strong> I moved the site from Eleventy to Astro 6, keeping every existing URL, and put a Cloudflare Worker in front of it that checks the access code on the server before any lesson leaves.</li>
+<li><strong>July.</strong> A public catalogue and undated tracks, so a teacher outside our program can preview a module and run it on their own schedule, plus a plain-language privacy page.</li>
+<li><strong>September.</strong> Classroom codes moved out of git into Workers KV. Each code lists its modules, a label and an optional expiry, and one command-line tool issues, lists or revokes codes without a redeploy.</li>
+<li><strong>September 20.</strong> A LiveCodes playground on its own origin, play.hellowattson.ca. Student code runs entirely in the browser and saves to the device.</li>
+<li><strong>October.</strong> Pixel Club and Gadget Club, weekly Saturday clubs whose sessions open on their own dates. Reading pages became idea-card decks that show one idea at a time.</li>
+<li><strong>October 24.</strong> An Arduino editor in the browser, with a compile service behind it, launched with Gadget Club&rsquo;s first session.</li>
+</ul>
+</section>
+
+<section>
 <h2 id="constraints" tabindex="-1">Constraints</h2>
 <p>A classroom is thirty devices sharing one school IP address, often on slow wifi, with no time to install anything. Students cannot have accounts. Program pages label themselves upcoming, running, or finished, and those labels have to be right on a morning when nobody has touched the site in weeks.</p>
+<p>The no-accounts rule is also what lets the site reach outside our own rooms. BC public schools work under FIPPA, the provincial privacy law, and a tool that stores student personal information brings privacy-impact paperwork before a teacher can use it. A site that stores nothing about students gives a district privacy officer one page to read instead of a review. Accounts would give us saved progress and a class view for teachers. They would also make us the keeper of a directory of children. The unit of access is a code, and the student stays anonymous to us.</p>
 </section>
 
 <section>
@@ -63,36 +77,33 @@
 <figure class="flow">
 <ol role="list">
 <li style="--r:1;--c:2" data-to="down"><strong>classroom device</strong><span>a student opens a lesson</span></li>
+<li class="quiet" style="--r:1;--c:3"><strong>play.hellowattson.ca</strong><span>playground on its own Worker; no gate, code runs in the browser</span></li>
+<li class="quiet" style="--r:2;--c:1" data-to="right"><strong>KV codes</strong><span>modules, label, optional expiry</span></li>
 <li style="--r:2;--c:2" data-to="fork"><strong>gate Worker</strong><span>runs before any file; checks the code, signs a session cookie</span></li>
-<li style="--r:3;--c:1"><strong>lesson pages</strong><span>on pass: Astro 6 + MDX, built to static files, no JS</span></li>
-<li class="quiet" style="--r:3;--c:3"><strong>code entry page</strong><span>on fail: only failures count toward the limit</span></li>
-<li style="--r:4;--c:1" data-to="up"><strong>nightly rebuild</strong><span>06:00 UTC, keeps program status accurate</span></li>
+<li style="--r:3;--c:1"><strong>lesson pages</strong><span>Astro 6 + MDX, built to static files</span></li>
+<li style="--r:3;--c:3" data-to="down"><strong>compile Durable Object</strong><span>needs a session; queues a class&rsquo;s sketches</span></li>
+<li style="--r:4;--c:1" data-to="up"><strong>weekly rebuild</strong><span>Saturday 06:00 UTC, updates program status and opens club sessions</span></li>
+<li class="quiet" style="--r:4;--c:3"><strong>compile container</strong><span>arduino-cli, internet off, one sketch at a time</span></li>
 </ol>
-<figcaption>Figure 1. A classroom device hits the gate Worker first. A correct code gets the static lesson pages; a wrong one gets the code entry page, and only those failures count toward the rate limit. A 06:00 UTC rebuild keeps program status current.</figcaption>
+<figcaption>Figure 1. A classroom device hits the gate Worker first, which checks the code against KV. A correct code gets the static lesson pages; a wrong one gets the code entry page, and only those failures count toward the rate limit. Arduino compiles pass through a Durable Object to a single container. The playground lives on its own origin. A weekly rebuild, plus a manual deploy when a program starts midweek, keeps program status current.</figcaption>
 </figure>
-<p>The Worker runs ahead of the files it serves, so a gated lesson is never handed out and then hidden. A build served without the Worker would give everything away, which is why the deploy path is fixed.</p>
+<p>The Worker runs ahead of the files it serves, so a gated lesson is never handed out and then hidden. A build served without the Worker would give everything away, which is why every deploy goes through it. The rate limit counts only failed code attempts, so one student mistyping cannot lock out the classmates sharing that school IP address. The playground is a separate Worker with no gate and no secrets, and a first-party subdomain is less likely to be blocked by a school content filter than a third-party domain.</p>
 </section>
 
 <section>
-<h2 id="decisions-i-made" tabindex="-1">Decisions I made</h2>
-<ul role="list">
-<li>The access check happens on the server, before any lesson content leaves it.</li>
-<li>The rate limit counts only failed code attempts. One student mistyping the code cannot lock out the thirty classmates sharing that school IP address.</li>
-<li>Analytics are cookie-free and aggregate. I can see that a lesson gets used without following anyone through it.</li>
-<li>Astro 6 with MDX content collections, hand-written CSS, and no client-side framework, because pages load on whatever hardware the school owns.</li>
-<li>A nightly rebuild at 06:00 UTC regenerates the site, so program status derived from dates stays correct without anyone remembering to edit it.</li>
-<li>gitleaks scans the full history in CI, so a real access code can never be committed by accident.</li>
-</ul>
+<h2 id="arduino" tabindex="-1">Arduino in the browser</h2>
+<p>School laptops can&rsquo;t install the Arduino IDE, so Gadget Club students write sketches in a browser editor with Verify and Upload buttons, the IDE&rsquo;s own words. Verify sends the sketch to a compile route that needs an unlocked session and is rate-limited per IP address. A Durable Object holds up to 30 waiting compiles in front of a container running arduino-cli with internet off, and accepts only a short list of libraries. Upload flashes the result to the board over Web Serial with our own uploader, so the editor needs Chrome or Edge. Common compiler errors come back as one plain line naming the line number, with the raw text folded underneath.</p>
+<p>Before launch I tested it at class size on staging: 25 compiles sent at once waited at most 44 seconds, because one instance compiles one sketch at a time. A hardware flash test on a real Uno passed on Linux. The Windows club laptop and a Chromebook are next.</p>
 </section>
 
 <section>
-<h2 id="what-i-decided-not-to-build" tabindex="-1">What I decided not to build</h2>
-<p>No student accounts, of any kind. That is a standing rule across every tool I build for the program, and this site is where it costs the most. Accounts would give us saved progress, per-student work, and a class view for teachers. They would also make us the keeper of a directory of children, with logins to reset and a breach to plan for. The unit of access is a code a teacher hands out, and the student stays anonymous to us.</p>
+<h2 id="whats-next" tabindex="-1">What&rsquo;s next (planned)</h2>
+<p>None of this is built yet. In order: a teacher layer, with a &ldquo;For teachers&rdquo; section per module, teacher downloads scoped to the module a code unlocks, and free preview lessons; self-check quizzes that grade in the browser and store nothing; JupyterLite notebooks for Python; and simulator embeds for the hardware modules.</p>
 </section>
 
 <section>
 <h2 id="numbers" tabindex="-1">Numbers</h2>
-<ul class="tally" role="list"><li><strong class="n">20</strong> programs</li><li><strong class="n">54</strong> lessons</li></ul>
+<ul class="tally" role="list"><li><strong class="n">22</strong> programs</li><li><strong class="n">45</strong> test files</li></ul>
 </section>
 
 <section>
