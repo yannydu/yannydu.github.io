@@ -2,11 +2,20 @@
   "name": "Danny Yu",
   "role": "Full-Stack Engineer · Internal Platforms for STEM Education",
   "contacts": [
-    { "label": "danny_yu_2@sfu.ca", "url": "mailto:danny_yu_2@sfu.ca" },
-    { "label": "yannydu.github.io", "url": "https://yannydu.github.io" },
-    { "label": "github.com/yannydu", "url": "https://github.com/yannydu" }
+    {
+      "label": "danny_yu_2@sfu.ca",
+      "url": "mailto:danny_yu_2@sfu.ca"
+    },
+    {
+      "label": "yannydu.github.io",
+      "url": "https://yannydu.github.io"
+    },
+    {
+      "label": "github.com/yannydu",
+      "url": "https://github.com/yannydu"
+    }
   ],
-  "summary": "Full-stack engineer who builds and operates the internal platforms behind SFU's K-12 STEM outreach program: a publishing pipeline for camper projects, a curriculum system, and the public lesson sites used in class, running on Cloudflare Workers. Because the users are children, much of the engineering is privacy work: real names kept out of repos, databases, and backups by construction. Ships with Claude Code as a daily tool, owning the architecture, privacy model, and operations end to end.",
+  "summary": "Full-stack engineer who builds and operates the internal platforms behind SFU's K-12 STEM outreach program: a publishing pipeline for camper projects, a curriculum system, and the lesson site and code playground used in class, running on Cloudflare Workers. Because the users are children, much of the engineering is privacy work: real names kept out of repos, databases, and backups by construction. Ships with Claude Code as a daily tool, owning the architecture, privacy model, and operations end to end.",
   "skills": [
     {
       "label": "Daily drivers",
@@ -36,9 +45,9 @@
       "bullets": [
         "Built *spark-gallery*, a publishing platform that turns each camp week into an issue of an online magazine, with camper-built games playable in the browser (Astro on Cloudflare Workers, D1, R2). Live through a full summer of camps: 509 camper projects from 416 campers, zero worker errors.",
         "Designed its privacy model for minors: camper names are pseudonymized before anything reaches the repo, and camper-written code is served from an isolated origin so it can never touch the gallery's cookies.",
-        "Ship behind CI on every push: typecheck, lint, `node --test` and Vitest suites, and a full-history gitleaks scan; a fail-closed pre-push name guard and EXIF/GPS stripping are tested invariants.",
-        "Built *campkit*, the program's curriculum platform (Hono + Drizzle on Workers; Cloudflare Access with SFU accounts): 356 activities and 25 camps authored by six curriculum writers, activities written once and assembled into camps, succeeding my Python + Typst pipeline.",
-        "Run *hello-wattson* (hellowattson.ca), the public lesson site for twenty programs and 54 lessons (Astro on Cloudflare Workers), serving hundreds of visits a month, with a nightly GitHub Actions rebuild that keeps program dates current.",
+        "Ship behind checks on every PR: typecheck, lint, `node --test` and Vitest suites (160+ test files), and a full-history gitleaks scan; a fail-closed pre-push name guard and EXIF/GPS stripping are tested invariants.",
+        "Built *campkit*, the program's curriculum platform (Hono + Drizzle on Workers, D1, R2): 356 activities and 25 camps by six writers, written once, assembled into camps and costed into shopping lists.",
+        "Grew *hello-wattson* (hellowattson.ca) from an internal lesson site into a code-gated teaching platform for outside teachers with zero student data: 22 programs, an in-browser Arduino compiler (Durable Object fronting a toolchain container), and *wattsons-playground*, a LiveCodes fork.",
         "Teach coding camps (Python, web dev, Arduino, LEGO robotics) and authored SPARK, the program's workshop-design framework."
       ]
     },

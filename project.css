@@ -51,3 +51,9 @@ main .tally .n{font-size:2rem;line-height:1.1;letter-spacing:-.02em}
   main > section > figure.flow{grid-column:1 / -1}
   main > section > .shots{grid-column:1 / -1}
 }
+
+/* dev log: one article per dated entry */
+main .log{margin:0 0 2.5rem}
+main .log:last-child{margin-bottom:0}
+main .log h3{margin:0 0 .5rem}
+main .log h3 time{color:var(--yellow)}
