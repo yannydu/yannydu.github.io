@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Hello Wattson - deep dive - Danny Yu</title>
-<meta name="description" content="The curriculum site students follow in class, with a gate that protects teacher material and no student accounts at all." />
+<meta name="description" content="The curriculum site students follow in class, with a gate that protects teacher material, no accounts for classroom students, and club logins on the way." />
 <meta name="color-scheme" content="light dark" />
 <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,37 +39,79 @@
 <li><a href="hello-wattson.html" aria-current="page">hello-wattson(7)</a></li>
 <li>chessmate(7)</li>
 </ul></nav>
-<p class="side-meta">status <strong class="ok">live</strong><br><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">hellowattson.ca&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a><br>page updated 2026-10-26</p>
+<p class="side-meta">status <strong class="ok">live</strong><br><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">hellowattson.ca&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a><br>page updated 2026-11-02</p>
 </aside>
 <main id="content">
-<div class="page-head"><h1>Hello Wattson</h1><p class="lede">Lessons and coding tools for classrooms, opened by an access code instead of an account.</p></div>
+<div class="page-head"><h1>Hello Wattson</h1><p class="lede">Lessons and coding tools for classrooms, opened by an access code in class, with logins coming for our own clubs.</p></div>
 
 <section>
 <h2 id="what-it-is" tabindex="-1">What it is</h2>
-<p>Hello Wattson is where we publish our teaching material: 22 programs of Arduino, web development, LEGO SPIKE and Python lessons, plus the coding tools students use beside them. A teacher anywhere can browse the public catalogue, then unlock the lessons with an access code they hand to the class. The site stores nothing about students: no accounts, no names, and no saved work on our side.</p>
-<div class="shots">
-<figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hello-wattson-home.webp"><img src="img/hello-wattson-home.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Hello Wattson home page with the Wattson mascot and cards for each program"></a></div></div><figcaption>The home page: students pick their program from a card.</figcaption></figure>
-<figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hello-wattson-catalog.webp"><img src="img/hello-wattson-catalog.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Catalogue page listing Gadget Lab and Pixel Lab modules for teachers"></a></div></div><figcaption>The catalogue lets other teachers use the modules, with no student accounts.</figcaption></figure>
-</div>
+<p>Hello Wattson is where we publish our teaching material: 22 programs of Arduino, web development, LEGO SPIKE and Python lessons, plus the coding tools students use beside them. A teacher anywhere can browse the public catalogue, then unlock the lessons with an access code they hand to the class. For classroom students the site stores nothing: no accounts, no names, and no saved work on our side. Our own clubs are moving to logins, so we control who gets into each club and members can save their work and take it home. Over 2026 it went from a static notes site, to coding tools in the browser, to a picture-book format with our mascots.</p>
 </section>
 
 <section>
-<h2 id="how-it-grew" tabindex="-1">How it grew</h2>
-<p>It started as an internal Eleventy site our own instructors projected in class. Over 2026 it became something teachers outside the program can run themselves.</p>
-<ul role="list">
-<li><strong>July 2026.</strong> I moved the site from Eleventy to Astro 6, keeping every existing URL, and put a Cloudflare Worker in front of it that checks the access code on the server before any lesson leaves.</li>
-<li><strong>July.</strong> A public catalogue and undated tracks, so a teacher outside our program can preview a module and run it on their own schedule, plus a plain-language privacy page.</li>
-<li><strong>September.</strong> Classroom codes moved out of git into Workers KV. Each code lists its modules, a label and an optional expiry, and one command-line tool issues, lists or revokes codes without a redeploy.</li>
-<li><strong>September 20.</strong> A LiveCodes playground on its own origin, play.hellowattson.ca. Student code runs entirely in the browser and saves to the device.</li>
-<li><strong>October.</strong> Pixel Club and Gadget Club, weekly Saturday clubs whose sessions open on their own dates. Reading pages became idea-card decks that show one idea at a time.</li>
-<li><strong>October 24.</strong> An Arduino editor in the browser, with a compile service behind it, launched with Gadget Club&rsquo;s first session.</li>
-</ul>
+<h2 id="dev-log" tabindex="-1">Dev log</h2>
+
+<article class="log">
+<h3><time datetime="2026-10-31">Oct 31, 2026</time>: three doors</h3>
+<p>During the summer camps I noticed the home page getting cluttered once we also offered classroom workshops and camps. I wanted it to be clearer. The program board became three doors, Clubs, Camps and Workshops, each opening its own page. A door shows what is running now, or else what is coming next. Every listed program now names its format and pathway, and the build fails if one is missing a start date or grade band.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-31.webp"><img src="img/hw-log-10-31.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Hello Wattson home page greeting &ldquo;Hello, I&rsquo;m Wattson&rdquo; above three illustrated doors: Clubs, Camps and Workshops"></a></div></div><figcaption>The home page after the change: one door per format.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-10-22">Oct 22</time> to <time datetime="2026-11-01">Nov 1, 2026</time>: a picture-book session format</h3>
+<p>I wanted the site to have a design of its own, with more of the Science Alive mascots in it, giving them more life and stories. Each club session now opens with a story and a mission card, and the idea decks carry concept pictures: small drawings of pins, parts and direction, most of them short animations with a still version. The sessions moved over to this format one at a time.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-11-01.webp"><img src="img/hw-log-11-01.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Gadget Club mission card with a concept picture of a breadboard, a glowing LED, a resistor and wires"></a></div></div><figcaption>A session card in the picture-book format.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-10-18">Oct 18</time> to <time datetime="2026-10-24">Oct 24, 2026</time>: Arduino in the browser</h3>
+<p>Once the LiveCodes playground was part of the site, we wanted the same consistency for hardware, and an easier way to run hardware workshops in schools, offsite and on other devices. School laptops can&rsquo;t install the Arduino IDE (integrated development environment), so the editor uses the IDE&rsquo;s own Verify and Upload buttons. Verify sends the sketch to a compile route that needs an unlocked session and is rate-limited per IP address. A Durable Object holds up to 30 waiting compiles in front of a container running arduino-cli with internet off, and accepts only a short list of libraries. Upload flashes the board over Web Serial with our own uploader, so the editor needs Chrome or Edge. Common compiler errors come back as one plain line naming the line number, with the raw text folded underneath.</p>
+<p>I built it Oct 18 to 21. On staging, 25 compiles sent at once waited at most 44 seconds, because one instance compiles one sketch at a time. A flash test on a real Uno passed on Linux; the Windows club laptop and a Chromebook are next. Gadget Club&rsquo;s first session used it on Oct 24.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-21.webp"><img src="img/hw-log-10-21.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Gadget Club Light Test lesson beside the Arduino editor, with Verify and Upload buttons and a serial monitor"></a></div></div><figcaption>The Arduino editor, with the IDE&rsquo;s Verify and Upload buttons.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-10-15">Oct 15</time> to <time datetime="2026-10-18">Oct 18, 2026</time>: idea cards, playground first</h3>
+<p>Pixel Club and Gadget Club are weekly Saturday clubs whose sessions open on their own dates. Their reading pages became idea-card decks: one card shows at a time, with Back and Next, and each card holds at most 40 words. Our lead picked this layout, &ldquo;One idea at a time&rdquo;, from several versions. The software clubs also went playground-first: lesson steps no longer mention a local editor, and taking the project home moved to a section at the end of the lesson.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-18.webp"><img src="img/hw-log-10-18.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Pixel Lab idea card, What You&rsquo;ll Make Today, with two turtle-graphics previews and a card counter"></a></div></div><figcaption>An idea-card deck: one short card at a time.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-10-07">Oct 7, 2026</time>: the Workbench</h3>
+<p>The Workbench puts the playground beside a Pixel Lab lesson. On screens 1200 pixels wide and up, the lesson takes 42% of the width and the playground the rest. Smaller screens keep a link out to the playground, and phones get no embed. If the embed hasn&rsquo;t loaded in 8 seconds, the page shows a plain message and the link instead.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-07.webp"><img src="img/hw-log-10-07.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Workbench layout: a Pixel Lab lesson, First Traces, with its contents list beside the playground"></a></div></div><figcaption>The Workbench: lesson and playground side by side.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-09-20">Sep 20, 2026</time>: classroom codes and a playground</h3>
+<p>Classroom codes moved out of git into Workers KV, Cloudflare&rsquo;s key-value store. Each code lists its modules, a label and an optional expiry, and one command-line tool issues, lists or revokes codes without a redeploy. A LiveCodes playground went up on its own origin, play.hellowattson.ca. Student code runs entirely in the browser and saves to the device.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-09-20.webp"><img src="img/hw-log-09-20.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Playground page with a form for a title, description, tags and starter code"></a></div></div><figcaption>The playground page, which builds a link to a playground with starter code.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-07-10">Jul 10, 2026</time>: Astro 6 and a public catalogue</h3>
+<p>I moved the site from Eleventy to Astro 6, keeping every existing URL. Our plan called for auto-graded quizzes, interactive lesson widgets and a public catalogue, which Astro handles better, and moving first meant building the catalogue and track templates once. A Cloudflare Worker in front checks the access code on the server before any lesson leaves. The catalogue and undated tracks let a teacher outside our program preview a module and run it on their own schedule, and a plain-language privacy page went up with them.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca/catalog/</div><div class="shot-img"><a href="img/hw-log-07-10.webp"><img src="img/hw-log-07-10.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Teach with our materials catalogue page with a Web Development module card"></a></div></div><figcaption>The first public catalogue.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-03-09">Mar 9, 2026</time>: a notes site</h3>
+<p>It started as an Eleventy site, a static site generator, holding notes our own instructors projected in class. I wanted students to have notes they could reach outside camps and classes if they wanted to keep studying, and to give instructors more resources to point students to.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">notes site, March 2026</div><div class="shot-img"><a href="img/hw-log-03-09.webp"><img src="img/hw-log-03-09.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="The early notes site: an Intro to the Web page with a diagram of clients, the Internet and a server"></a></div></div><figcaption>Where it began: a static page of notes.</figcaption></figure></div>
+</article>
+</section>
+
+
+<section>
+<h2 id="whats-next" tabindex="-1">What&rsquo;s next (planned)</h2>
+<p>Club logins come first: club members sign in to save a session&rsquo;s work to our gallery and load it again at home. They work on staging and launch after a privacy review. The rest is not built yet. In order: a teacher layer, with a &ldquo;For teachers&rdquo; section per module, teacher downloads scoped to the module a code unlocks, and free preview lessons; self-check quizzes that grade in the browser and store nothing; JupyterLite notebooks for Python; and simulator embeds for the hardware modules.</p>
 </section>
 
 <section>
 <h2 id="constraints" tabindex="-1">Constraints</h2>
-<p>A classroom is thirty devices sharing one school IP address, often on slow wifi, with no time to install anything. Students cannot have accounts. Program pages label themselves upcoming, running, or finished, and those labels have to be right on a morning when nobody has touched the site in weeks.</p>
-<p>The no-accounts rule is also what lets the site reach outside our own rooms. BC public schools work under FIPPA, the provincial privacy law, and a tool that stores student personal information brings privacy-impact paperwork before a teacher can use it. A site that stores nothing about students gives a district privacy officer one page to read instead of a review. Accounts would give us saved progress and a class view for teachers. They would also make us the keeper of a directory of children. The unit of access is a code, and the student stays anonymous to us.</p>
+<p>A classroom is thirty devices sharing one school IP address, often on slow wifi, with no time to install anything. Classroom students cannot have accounts. Program pages label themselves upcoming, running, or finished, and those labels have to be right on a morning when nobody has touched the site in weeks.</p>
+<p>The no-accounts rule for classrooms is also what lets the site reach outside our own rooms. BC public schools work under FIPPA, the provincial privacy law, and a tool that stores student personal information brings privacy-impact paperwork before a teacher can use it. A site that stores nothing about students gives a district privacy officer one page to read instead of a review. Accounts would give us saved progress and a class view for teachers. They would also make us the keeper of a directory of children. In a classroom the unit of access is a code, and the student stays anonymous to us. Our own clubs are where we take on accounts, because there a login controls who gets into each club and lets members take their work home.</p>
 </section>
 
 <section>
@@ -88,17 +130,6 @@
 <figcaption>Figure 1. A classroom device hits the gate Worker first, which checks the code against KV. A correct code gets the static lesson pages; a wrong one gets the code entry page, and only those failures count toward the rate limit. Arduino compiles pass through a Durable Object to a single container. The playground lives on its own origin. A weekly rebuild, plus a manual deploy when a program starts midweek, keeps program status current.</figcaption>
 </figure>
 <p>The Worker runs ahead of the files it serves, so a gated lesson is never handed out and then hidden. A build served without the Worker would give everything away, which is why every deploy goes through it. The rate limit counts only failed code attempts, so one student mistyping cannot lock out the classmates sharing that school IP address. The playground is a separate Worker with no gate and no secrets, and a first-party subdomain is less likely to be blocked by a school content filter than a third-party domain.</p>
-</section>
-
-<section>
-<h2 id="arduino" tabindex="-1">Arduino in the browser</h2>
-<p>School laptops can&rsquo;t install the Arduino IDE, so Gadget Club students write sketches in a browser editor with Verify and Upload buttons, the IDE&rsquo;s own words. Verify sends the sketch to a compile route that needs an unlocked session and is rate-limited per IP address. A Durable Object holds up to 30 waiting compiles in front of a container running arduino-cli with internet off, and accepts only a short list of libraries. Upload flashes the result to the board over Web Serial with our own uploader, so the editor needs Chrome or Edge. Common compiler errors come back as one plain line naming the line number, with the raw text folded underneath.</p>
-<p>Before launch I tested it at class size on staging: 25 compiles sent at once waited at most 44 seconds, because one instance compiles one sketch at a time. A hardware flash test on a real Uno passed on Linux. The Windows club laptop and a Chromebook are next.</p>
-</section>
-
-<section>
-<h2 id="whats-next" tabindex="-1">What&rsquo;s next (planned)</h2>
-<p>None of this is built yet. In order: a teacher layer, with a &ldquo;For teachers&rdquo; section per module, teacher downloads scoped to the module a code unlocks, and free preview lessons; self-check quizzes that grade in the browser and store nothing; JupyterLite notebooks for Python; and simulator embeds for the hardware modules.</p>
 </section>
 
 <section>
