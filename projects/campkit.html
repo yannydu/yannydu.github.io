@@ -55,225 +55,113 @@
             <li>chessmate(7)</li>
           </ul>
         </nav>
-        <p class="side-meta">
-          status <strong>internal</strong><br />behind SSO, no public link<br />page
-          updated 2026-09-18
-        </p>
+        <p class="side-meta">status <strong>internal</strong><br />behind Cloudflare Access, no public link<br />page updated 2026-11-02</p>
       </aside>
       <main id="content">
-        <div class="page-head">
-          <h1>Campkit</h1>
-          <p class="lede">
-            The internal platform where our camp curriculum is written,
-            assembled, and costed.
-          </p>
-        </div>
+<div class="page-head"><h1>Campkit</h1><p class="lede">The internal platform where our camp curriculum is written, assembled, and costed.</p></div>
 
-        <section>
-          <h2 id="what-it-is" tabindex="-1">What it is</h2>
-          <p>
-            Curriculum sat in one large word document per camp, so activities
-            were hard to reuse and supply lists drifted. What's also worse is
-            that copies of draft documents were Sprawn across OneDrive with no
-            clear indication, which put more overhead on organization and keep
-            track of works done. Originally, I didn't plan on creating an app of
-            this scale. I was fighting with Words formatting when writing our
-            tech curriculum and was lacking features such as implementing code
-            blocks (I think there are plugins for this, but I couldn't install
-            them on our university accounts) and having easy template structures
-            to repeatedly add for the next activities. That first led to me
-            using Typst to automate things like creating schedules based of the
-            activities I made, as well as having better control over the
-            formatting and design of the curriculum docs. I shared it with my
-            fellow tech curriculum writers and the consensus was positive.
-            However Typst was not something that our Science curriculum writers
-            could easily adopt so they stuck to their word docs. When our summer
-            camps started, that's when I noticed more problems with our
-            workflows. People were hand writing in the supplies and amounts
-            needed for each camp, and each camp could have hundreds of supplies.
-            What's worse is that there were many different naming
-            inconsistencies between writers and even within the same documents.
-            Think white paper vs printer paper vs paper. This led to much
-            headache and inconsistencies, as well as not being a good use of
-            time. This inspired a better web application that would combine a
-            single source of truth for the supply lists, as well as storing all
-            future curriculum written for the Science AL!VE events. Furthermore
-            there were a wide range of quality consistencies between the
-            curriculum writers. This got me in the idea to create a standardized
-            framework of structuring our events to provide a more consistent and
-            elevated experience to our participants. The core of the curriculum
-            templates are based of this SPARK framework. In Campkit, writers
-            author an activity once and build a camp by arranging published
-            activities into days. The site produces the reading view, the print
-            packet, and a shopping list costed from the student count. Our
-            curriculum writers use it.
-          </p>
-          <p>
-            It replaced tech-curriculum, a Python and Typst pipeline where 355
-            Typst files compiled in CI on every push, with a small git-backed
-            web editor so non-technical staff never touched git.
-          </p>
-          <div class="shots">
-            <figure class="shot">
-              <div class="shot-frame">
-                <div class="shot-bar" aria-hidden="true">
-                  campkit (staff only)
-                </div>
-                <div class="shot-img">
-                  <a href="img/campkit-camp-build.webp"
-                    ><img
-                      src="img/campkit-camp-build.webp"
-                      width="1600"
-                      height="1000"
-                      loading="lazy"
-                      decoding="async"
-                      alt="Camp builder with session columns beside a searchable activity library"
-                  /></a>
-                </div>
-              </div>
-              <figcaption>
-                The camp builder: activities from the library are placed into
-                sessions.
-              </figcaption>
-            </figure>
-            <figure class="shot">
-              <div class="shot-frame">
-                <div class="shot-bar" aria-hidden="true">
-                  campkit (staff only)
-                </div>
-                <div class="shot-img">
-                  <a href="img/campkit-activity.webp"
-                    ><img
-                      src="img/campkit-activity.webp"
-                      width="1600"
-                      height="1000"
-                      loading="lazy"
-                      decoding="async"
-                      alt="Activity editor showing an activity's outline and details form"
-                  /></a>
-                </div>
-              </div>
-              <figcaption>
-                The activity editor: an activity is written once and reused
-                across camps.
-              </figcaption>
-            </figure>
-          </div>
-        </section>
+<section>
+<h2 id="what-it-is" tabindex="-1">What it is</h2>
+<p>Campkit is where our camp curriculum is written, assembled into camps, and prepared for class. Writers author an activity once and arrange published activities into days; the site produces the reading view, the print packet, and a shopping list costed from the student count. It replaced one large Word document per camp, with draft copies spread across OneDrive and supply names typed by hand: white paper, printer paper, paper. The activity templates follow SPARK, a standard structure I created so quality stays consistent between writers.</p>
+</section>
 
-        <section>
-          <h2 id="constraints" tabindex="-1">Constraints</h2>
-          <p>
-            Built for about ten writers and twenty instructors, with no budget
-            and no appetite for another password. Past camps have to stay as
-            they ran, even after their activities are edited for next year.
-          </p>
-        </section>
+<section>
+<h2 id="dev-log" tabindex="-1">Dev log</h2>
 
-        <section>
-          <h2 id="architecture" tabindex="-1">Architecture</h2>
-          <figure class="flow">
-            <ol role="list">
-              <li style="--r: 1; --c: 2" data-to="down">
-                <strong>staff browser</strong><span>SFU Microsoft sign-in</span>
-              </li>
-              <li style="--r: 2; --c: 2" data-to="fork">
-                <strong>Hono app on Workers</strong
-                ><span>server-rendered HTML + HTMX</span>
-              </li>
-              <li style="--r: 3; --c: 1" data-to="down">
-                <strong>D1 database</strong><span>Drizzle</span>
-              </li>
-              <li style="--r: 3; --c: 3">
-                <strong>R2 storage</strong><span>images, files</span>
-              </li>
-              <li style="--r: 4; --c: 1" data-to="right">
-                <strong>activity draft</strong><span>lives in D1</span>
-              </li>
-              <li style="--r: 4; --c: 2" data-to="down">
-                <strong>frozen revision</strong><span>made on publish</span>
-              </li>
-              <li class="step" style="--r: 5; --c: 2">
-                <strong>a camp pins a revision</strong><span>not a draft</span>
-              </li>
-            </ol>
-            <figcaption>
-              Figure 1. Staff sign in and reach a Hono app on Workers, which
-              reads and writes a D1 database and R2 storage. Publishing turns an
-              activity draft into a frozen revision, and a camp pins that
-              revision rather than the draft.
-            </figcaption>
-          </figure>
-          <p>
-            Platform-specific calls sit behind a single module, so a later move
-            to university servers rewrites that module, not the app.
-          </p>
-        </section>
+<article class="log">
+<h3><time datetime="2026-10-11">Oct 11</time> to <time datetime="2026-10-13">Oct 13, 2026</time>: one editor by default</h3>
+<p>On Oct 11 the guided writer became the single editor: opening an activity went to it, with a Basics step for title, grades, duration and tags first. On Oct 13 activities started opening in the one-page editor instead. The guided writer stayed, as Guided writer in the More menu.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-10-13.webp"><img src="img/ck-log-10-13.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="One-page activity editor with an outline sidebar, details form, Published badge and Publish button"></a></div></div><figcaption>The one-page editor.</figcaption></figure></div>
+</article>
 
-        <section>
-          <h2 id="decisions-i-made" tabindex="-1">Decisions I made</h2>
-          <ul role="list">
-            <li>
-              Publishing freezes a copy of the activity, and camps point at that
-              copy, so an edit never rewrites a camp that already ran.
-            </li>
-            <li>
-              Materials come from one catalogue with alias matching and a single
-              unit per item, so "rubber band" and "elastic band" cannot drift
-              apart. Free-text supply names are impossible to type.
-            </li>
-            <li>
-              Staff sign in with the SFU Microsoft accounts they already have,
-              and the app never sees a password. Roles are granted by invite,
-              never on first arrival.
-            </li>
-            <li>
-              The programmatic interface is rate limited per caller, so one bad
-              script cannot drain the day's budget.
-            </li>
-            <li>
-              The deployed version is stamped in the footer, so a bug report
-              pins an exact deploy.
-            </li>
-            <li>
-              CI runs typecheck, lint, and a 28-file Vitest suite, then deploys
-              on push.
-            </li>
-          </ul>
-          <p>
-            One habit came from a mistake next door. A strategy PDF reached a
-            funder four hours behind its Markdown source and still had a grade
-            band we had already changed. A pre-commit hook now blocks a source
-            change committed without its regenerated render.
-          </p>
-        </section>
+<article class="log">
+<h3><time datetime="2026-09-25">Sep 25, 2026</time>: weekly manual deploys</h3>
+<p>Merges to main stopped deploying. Production, code and database migrations together, now updates when someone runs the Deploy workflow, usually on Fridays. A manual run was chosen over a schedule so migrations never apply unwatched. Each deploy is named by its date and gets a GitHub Release listing the merged pull requests. The footer shows the same name, so a bug report pins an exact deploy.</p>
+</article>
 
-        <section>
-          <h2 id="what-i-decided-not-to-build" tabindex="-1">
-            What I decided not to build
-          </h2>
-          <p>
-            A family portal beside registration, with saved child profiles and
-            parent logins. I shelved it in writing: it would have turned a
-            seasonal sign-up into a year-round store of children's personal
-            information, with its own login and a retention policy someone must
-            enforce. The program uses a stock self-hosted ticketing tool
-            instead.
-          </p>
-        </section>
+<article class="log">
+<h3><time datetime="2026-09-22">Sep 22</time> to <time datetime="2026-09-25">Sep 25, 2026</time>: a prep dashboard</h3>
+<p>I wanted instructors to have a better landing page, where they see what they need to do at a glance. Instructors mark each activity they teach as not started, in progress or prepped, and the prep dashboard shows that as a grid per camp, opening on an overview with one row per instructor and program. Instructor notes gained edit, delete, step pins and printing.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-09-22.webp"><img src="img/ck-log-09-22.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Prep dashboard showing its empty state, No instructors yet"></a></div></div><figcaption>The prep dashboard, before any instructors were added (sample data).</figcaption></figure></div>
+</article>
 
-        <section>
-          <h2 id="numbers" tabindex="-1">Numbers</h2>
-          <ul class="tally" role="list">
-            <li><strong class="n">356</strong> activities</li>
-            <li><strong class="n">25</strong> camps</li>
-          </ul>
-        </section>
+<article class="log">
+<h3><time datetime="2026-09-15">Sep 15, 2026</time>: a rich-text editor</h3>
+<p>I wanted curriculum writers to be able to format their text better. Text fields now open in Toast UI Editor, a WYSIWYG (what you see is what you get) editor with a formatting toolbar. Each field is still stored as Markdown.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-09-15.webp"><img src="img/ck-log-09-15.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Activity form with the rich-text editor open, showing its formatting toolbar and a sample line"></a></div></div><figcaption>The rich-text editor.</figcaption></figure></div>
+</article>
 
-        <section>
-          <h2 id="live" tabindex="-1">Live</h2>
-          <p>Internal, behind SSO. No public link.</p>
-        </section>
+<article class="log">
+<h3><time datetime="2026-09-10">Sep 10, 2026</time>: an API</h3>
+<p>I wanted better AI integration for my own workflows. The API (application programming interface) at /api/v1 lets a script work with programs and activities and upload files, signed in with a Cloudflare Access service token instead of a person&rsquo;s login. It is rate limited per caller, at 600 requests a minute, so one runaway script cannot flood it.</p>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-08-14">Aug 14, 2026</time>: Day Board v3</h3>
+<p>With a five-day camp and a full library, dragging a card in meant scrolling the page. Day Board v3 docks the library as a shelf under the board and fits it all on one screen: each day scrolls its own list, and five days fit side by side.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-08-14.webp"><img src="img/ck-log-08-14.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Day Board v3 with day columns side by side and the activity library shelf below"></a></div></div><figcaption>Day Board v3 with its library shelf.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-07-06">Jul 6, 2026</time>: drag and drop, and an importer</h3>
+<p>The first builder had only an Add activity button, which made moving activities around hard, so the board became drag and drop. I also wrote an importer from the Typst curriculum; by Jul 5 it had brought in the Summer 2026 programs: 175 activities, 10 camps and 143 supplies.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-07-06.webp"><img src="img/ck-log-07-06.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Camp builder with day cards, activity rows with move buttons, a search box and Add day"></a></div></div><figcaption>The drag-and-drop camp builder.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-07-01">Jul 1, 2026</time>: the first app, in a day</h3>
+<p>Word fought me on our tech curriculum: no code blocks, no repeatable template. I moved it to Typst, a typesetting language. That pipeline compiled 355 files in CI (continuous integration) on every push, with a small web editor so staff never touched git. The science writers stayed on Word, and summer camps showed the supply-list mess. In one day I built the first Campkit: authoring, a camp builder, supplies, the print packet and a costed shopping list.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-07-01.webp"><img src="img/ck-log-07-01.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="The first version, then called Spark Writer: a plain camp page with a Day 1 activity table"></a></div></div><figcaption>The first camp page.</figcaption></figure></div>
+</article>
+</section>
+
+<section>
+<h2 id="constraints" tabindex="-1">Constraints</h2>
+<p>Built for about ten writers and twenty instructors, with no budget and no appetite for another password. Past camps have to stay as they ran, even after their activities are edited for next year.</p>
+</section>
+
+<section>
+<h2 id="architecture" tabindex="-1">Architecture</h2>
+<figure class="flow">
+<ol role="list">
+<li style="--r:1;--c:2" data-to="down"><strong>staff browser</strong><span>Cloudflare Access, one-time PIN by email</span></li>
+<li style="--r:2;--c:2" data-to="fork"><strong>Hono app on Workers</strong><span>server-rendered HTML + HTMX</span></li>
+<li style="--r:3;--c:1" data-to="down"><strong>D1 database</strong><span>Drizzle</span></li>
+<li style="--r:3;--c:3"><strong>R2 storage</strong><span>images, files</span></li>
+<li style="--r:4;--c:1" data-to="right"><strong>activity draft</strong><span>lives in D1</span></li>
+<li style="--r:4;--c:2" data-to="down"><strong>frozen revision</strong><span>made on publish</span></li>
+<li class="step" style="--r:5;--c:2"><strong>a camp pins a revision</strong><span>not a draft</span></li>
+</ol>
+<figcaption>Figure 1. Staff sign in through Cloudflare Access and reach a Hono app on Workers, which reads and writes a D1 database and R2 storage. Publishing turns an activity draft into a frozen revision, and a camp pins that revision rather than the draft.</figcaption>
+</figure>
+<p>Platform-specific calls sit behind a single module, so a later move to university servers rewrites that module, not the app.</p>
+</section>
+
+<section>
+<h2 id="decisions-i-made" tabindex="-1">Decisions I made</h2>
+<ul role="list">
+<li>Publishing freezes a copy of the activity, and camps point at that copy, so an edit never rewrites a camp that already ran.</li>
+<li>Materials come from one catalogue with alias matching and a single unit per item, so &ldquo;rubber band&rdquo; and &ldquo;elastic band&rdquo; cannot drift apart. Free-text supply names are impossible to type.</li>
+<li>Staff sign in through Cloudflare Access with a one-time PIN sent to their email, and the app never sees a password. Roles are granted by invite, never on first arrival.</li>
+<li>Every change passes typecheck, lint and a 62-file Vitest suite before it merges. Since Oct 11 those checks run on my laptop instead of GitHub Actions, because our free plan&rsquo;s 2,000 monthly minutes were running out.</li>
+</ul>
+<p>One habit came from a mistake next door. A strategy PDF reached a funder four hours behind its Markdown source and still had a grade band we had already changed. A pre-commit hook now blocks a source change committed without its regenerated render.</p>
+</section>
+
+<section>
+<h2 id="what-i-decided-not-to-build" tabindex="-1">What I decided not to build</h2>
+<p>A family portal beside registration, with saved child profiles and parent logins. I shelved it in writing: it would have turned a seasonal sign-up into a year-round store of children&rsquo;s personal information, with its own login and a retention policy someone must enforce. The program uses a stock self-hosted ticketing tool instead.</p>
+</section>
+
+<section>
+<h2 id="numbers" tabindex="-1">Numbers</h2>
+<ul class="tally" role="list"><li><strong class="n">405</strong> published activities and lessons</li><li><strong class="n">41</strong> programs (camps, workshops, clubs, events)</li></ul>
+</section>
+
+<section>
+<h2 id="live" tabindex="-1">Live</h2>
+<p>Internal, behind Cloudflare Access. No public link.</p>
+</section>
       </main>
     </div>
     <script src="../content.js"></script>
