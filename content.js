@@ -17,7 +17,7 @@ Type 'help' to look around.`,
       name: "spark-gallery",
       description:
         "Every camp week becomes an issue of an online magazine, featuring games that campers build and that are playable directly in the browser, powered by Astro on Cloudflare Workers with D1 and R2. Real names are pseudonymized before any data touches the repository, and camper-written code is served from its own origin to ensure it can never access the gallery's cookies. It ran through a full summer of camps, and now takes fall club work too; instructors upload photos and projects from their phones after signing in with their SFU email.",
-      facts: "13 camps · 509 projects from 416 campers",
+      facts: "13 camps · 509 projects from 471 campers",
       link: "https://sparkgallery.ca",
       page: "projects/spark-gallery.html",
       status: "live",

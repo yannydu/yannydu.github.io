@@ -149,7 +149,7 @@
     return art;
   }
 
-  // "13 camps · 509 projects from 416 campers" -> ul.stats; a leading number is
+  // "13 camps · 509 projects from 471 campers" -> ul.stats; a leading number is
   // strong.n, later numbers plain strong, "28-file" gets a .hy hyphen.
   function statList(str) {
     const ul = el("ul", "stats");

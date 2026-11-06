@@ -1,15 +1,14 @@
 // shared layout for dev.typ and qa.typ
 // compile: typst compile --pdf-standard ua-1 dev.typ Danny_Yu_Resume.pdf
 
-#let accent = rgb("#2b7a4b")
 
 // name / role / contacts block; also reused by cover letters
-#let header(name, role, contacts) = align(center)[
+#let header(name, role, contacts, location: "Vancouver, BC") = align(center)[
   #text(size: 23pt, name)
   #v(-6pt)
-  #smallcaps(text(size: 10.5pt, tracking: 0.6pt, fill: accent, role))
+  #smallcaps(text(size: 10.5pt, tracking: 0.6pt, role))
   #v(-4pt)
-  #text(size: 9pt, contacts.join([#h(5pt)·#h(5pt)]))
+  #text(size: 9pt, (location, ..contacts).join([#h(5pt)·#h(5pt)]))
 ]
 
 #let resume(name: [], role: "", contacts: (), title: [Resume], body) = {
@@ -28,7 +27,7 @@
   block(
     text(size: 11.5pt, weight: "bold", smallcaps(title)) +
     v(-8pt) +
-    line(length: 100%, stroke: 0.6pt + luma(120)),
+    line(length: 100%, stroke: 0.6pt + black),
   )
   v(-2pt)
 }
@@ -40,7 +39,7 @@
     columns: (1fr, auto),
     row-gutter: 4pt,
     text(size: 10.5pt, weight: "bold", org),
-    align(right, text(size: 9pt, style: "italic", fill: accent, location)),
+    align(right, text(size: 9pt, style: "italic", location)),
     smallcaps(text(size: 9.5pt, role)),
     align(right, text(size: 9pt, style: "italic", dates)),
   )
@@ -54,7 +53,7 @@
   row-gutter: 6pt,
   ..rows
     .map(((label, items)) => (
-      align(right, text(size: 9.5pt, weight: "bold", label)),
+      align(right, text(size: 9.5pt, weight: "bold", label + ":")),
       text(size: 9.5pt, eval(items, mode: "markup")),
     ))
     .flatten(),

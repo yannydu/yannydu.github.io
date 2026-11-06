@@ -5,39 +5,45 @@
 
 #show: resume.with(
   name: [Danny #text(weight: "bold")[Yu]],
-  role: "SDET · QA Automation",
+  role: "QA · AI Applications",
   contacts: r.contacts.map(c => link(c.url, c.label)),
 )
 
 #section("Summary")
-Software developer in test with a foundation in test automation, API
-validation, and CI/CD from SDET and QA co-ops. Now building and operating
-production web platforms for SFU's STEM outreach program. Comfortable owning
-quality end to end, from Selenium suites and Wiremock stubs to running live
-services with real users.
+Computer Engineering graduate (SFU, 2025) who started and leads the internal
+web platforms at SFU Science Alive, built by directing AI coding agents: I
+define what each change must do, check each release against what staff need, and refine from user
+feedback. I write the prompts and agent instructions that steer the model and
+review its output against requirements. The platforms serve real users: 509 camper projects published in one
+summer and a curriculum platform holding 356 activities and 25 camps for a
+six-person staff team. Earlier: two QA and
+test-automation co-ops.
 
 #section("Skills")
 #skills((
   (
-    "Test automation (co-op experience)",
-    "Java, Selenium, Wiremock, Jenkins, Docker, SQL / Trino",
-  ),
-  ("Daily drivers", "Python, JavaScript, HTML / CSS, git, Linux"),
-  (
-    "Current tooling",
-    "`node --test`, Vitest, gitleaks, GitHub Actions, Cloudflare Workers / D1",
+    "Languages",
+    "Python, JavaScript, HTML / CSS",
   ),
   (
-    "AI-assisted development",
-    "Claude Code as a daily tool: custom skills, hooks, and subagents",
+    "LLM workflows",
+    "prompt engineering (Claude Code skills, agent instructions, hooks), reviewing LLM output against requirements",
+  ),
+  (
+    "Product leadership",
+    "requirements and priorities, privacy rules for minors, user support, documentation",
   ),
 ))
 
 #section("Work Experience")
 #entry-from(by-id("sfu"), bullets: (
-  "Build and operate the program's production web platforms on Cloudflare Workers: a publishing gallery (509 camper projects from 416 campers), a curriculum system (356 activities by six writers), and public lesson sites (hundreds of visits a month), through a full summer of camps with zero worker errors.",
-  "Own quality on all of them: `node --test` suites (59 and 45 files) on the gallery and lesson site, Vitest suite (58 files) on the curriculum platform, gitleaks full-history scan and typecheck/lint gates in CI on every push.",
-  "Enforce privacy constraints as tested invariants: camper names pseudonymized before data reaches repos or backups, a fail-closed pre-push name guard, EXIF/GPS stripping verified in CI, camper-written code isolated on its own origin. Also teach K-8 coding camps.",
+  "Started and lead the program's internal web platforms, built with Claude Code: I set the requirements and priorities, and check each release against what staff need.",
+  "Designed the AI workflow behind the build: Claude Code skills that take a request from board item to merged change, hooks that block risky actions, and specialized agents for building, review, and QA. Analyzed 365 AI-agent runs to find what drove cost and turn count, then changed brief limits and model settings from the results.",
+  "Launched *spark-gallery*, an online magazine of camper projects published each camp week: 509 projects from 471 campers through a full summer of camps.",
+  "Introduced *campkit*, a shared curriculum platform that replaced my earlier document pipeline, holding 356 activities and 25 camps for a six-person staff team.",
+  "Set privacy rules for products used by children: camper names become pseudonyms before anything is stored, and camper code runs apart from the main site.",
+  "Keep refining the platforms from feedback: triage problems reported by writers and instructors into tracked issues, document them, and decide what ships next.",
+  "Wrote SPARK, the program's 22-page workshop-design framework; teach coding camps (Python, web, Arduino, LEGO robotics).",
 ))
 
 #entry-from(by-id("globalrelay"), bullets: (
