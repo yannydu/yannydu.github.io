@@ -143,7 +143,7 @@
 <li>Publishing freezes a copy of the activity, and camps point at that copy, so an edit never rewrites a camp that already ran.</li>
 <li>Materials come from one catalogue with alias matching and a single unit per item, so &ldquo;rubber band&rdquo; and &ldquo;elastic band&rdquo; cannot drift apart. Free-text supply names are impossible to type.</li>
 <li>Staff sign in through Cloudflare Access with a one-time PIN sent to their email, and the app never sees a password. Roles are granted by invite, never on first arrival.</li>
-<li>Every change passes typecheck, lint and a 62-file Vitest suite before it merges. Since Oct 11 those checks run on my laptop instead of GitHub Actions, because our free plan&rsquo;s 2,000 monthly minutes were running out.</li>
+<li>Every change has to pass automated checks (type and style checks plus the test suite the build agents maintain) before it merges. Since Oct 11 those checks run on my laptop instead of GitHub Actions, because our free plan&rsquo;s 2,000 monthly minutes were running out.</li>
 </ul>
 <p>One habit came from a mistake next door. A strategy PDF reached a funder four hours behind its Markdown source and still had a grade band we had already changed. A pre-commit hook now blocks a source change committed without its regenerated render.</p>
 </section>

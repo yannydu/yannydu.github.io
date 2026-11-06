@@ -128,10 +128,10 @@
 <ul role="list">
 <li>Nicknames are assigned locally before camp starts, so the upload path never receives a name it would have to strip.</li>
 <li>A pre-push git hook fails closed when a real name appears in files headed for the repository. It stops the push rather than warning.</li>
-<li>Video is re-muxed through ffmpeg before publishing, which drops the location and device metadata phones attach. CI installs ffmpeg so that step stays tested.</li>
-<li>gitleaks scans the full history on every CI run, not only the newest changes.</li>
+<li>Video is re-muxed through ffmpeg before publishing, which drops the location and device metadata phones attach.</li>
+<li>Every update scans the repository&rsquo;s full history for leaked passwords and keys, not only the newest changes.</li>
 <li>Test publishes go to a separate sandbox environment, so invented data can never land beside a real camp.</li>
-<li>63 test files, including the privacy guards.</li>
+<li>The privacy guards sit behind automated checks that every change must pass before it ships.</li>
 </ul>
 </section>
 
