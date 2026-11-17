@@ -50,58 +50,6 @@
 </section>
 
 <section>
-<h2 id="dev-log" tabindex="-1">Dev log</h2>
-
-<article class="log">
-<h3><time datetime="2026-10-21">Oct 21</time> to <time datetime="2026-10-28">Oct 28, 2026</time>: club saving</h3>
-<p>Gadget Club and Pixel Lab students can now save their work to the gallery, signing in with a code from a printed club card, one card for both clubs. The hello-wattson Worker checks the club session and forwards each save server to server to a write-only club route. I set it up this way because a gallery upload token can also read the roster and delete files, so no token could sit on a student laptop.</p>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-09-11">Sep 11, 2026</time>: a camera in the upload tool</h3>
-<p>The upload page gained a camera mode, so a camp laptop takes photos directly instead of going through a file picker. Scanning a QR code jumps to a camper's upload link, and photos taken before a camper is picked wait in an unsorted tray. I wanted instructors to be able to upload their photos easily.</p>
-<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">sparkgallery.ca/upload (sample roster)</div><div class="shot-img"><a href="img/sg-log-09-11.webp"><img src="img/sg-log-09-11.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Upload page in camera mode, with a camera test pattern in the viewfinder over the camper card form"></a></div></div><figcaption>Camera mode on the upload page (sample data).</figcaption></figure></div>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-07-30">Jul 30</time> to <time datetime="2026-08-05">Aug 5, 2026</time>: privacy checks that stop the run</h3>
-<p>A review of the publish and ingest path, split into six work packages, turned the privacy checks into gates that fail closed: a scan for personal information, a name guard, a publish gate, cleanup of orphaned files in storage, and a written runbook for when a family withdraws. A failed check now stops the publish instead of letting it through.</p>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-07-12">Jul 12, 2026</time>: a name-free pipeline</h3>
-<p>Campers now get their nicknames on my computer before camp starts, so the upload area only ever holds nicknames and random codes, and file names are replaced with random codes on arrival. The same day, the curator tools merged into one app, Curator Studio, and the instructor upload page went behind an access gate. I made the change after a privacy consultation, which held that a first name and last initial is personal information for children. Afterward, as our response memo put it, nothing name-bearing remains online.</p>
-<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">sparkgallery.ca/upload (sample roster)</div><div class="shot-img"><a href="img/sg-log-07-12.webp"><img src="img/sg-log-07-12.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Instructor upload page showing camper cards labelled with random nicknames instead of names"></a></div></div><figcaption>The upload page with nickname cards (sample data).</figcaption></figure></div>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-06-28">Jun 28, 2026</time>: the archive out of reach</h3>
-<p>The internet-facing upload code could reach the bucket holding the permanent camp archive, held back only by checks in the code. I moved the upload inbox to its own bucket and bound only that one, so the public surface cannot reach the archive at all.</p>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-06-16">Jun 16</time> to <time datetime="2026-06-27">Jun 27, 2026</time>: a sandbox for test data</h3>
-<p>Test and training camps moved to a sandbox environment with its own database and storage. By Jun 27 production and sandbox shared no resource, and a one-time script purged test data that had reached production. I wanted production to hold only real camp data.</p>
-<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">sandbox build</div><div class="shot-img"><a href="img/sg-log-06-16.webp"><img src="img/sg-log-06-16.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Gallery home page in the sandbox environment, filled with invented training camps"></a></div></div><figcaption>The sandbox home page, with invented training camps.</figcaption></figure></div>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-06-12">Jun 12, 2026</time>: projects on their own origin</h3>
-<p>Camper projects moved to a separate origin, spark-projects, and instructors got an upload page. Before, an iframe sandbox gave each game an opaque origin where localStorage throws, so every game crashed before it loaded. On its own origin a game runs as a normal website and its saves persist.</p>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-06-08">Jun 8, 2026</time>: a magazine on Cloudflare</h3>
-<p>The site moved from GitHub Pages to Astro on Cloudflare Workers with a D1 database, and took a magazine layout: each camp week is an issue with a cover, and each camper has a page. A day later one command published a camp from the private archive. It was our first app open to the public, so I wanted it to have its own style that matched our programs.</p>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-04-23">Apr 23, 2026</time>: the first design</h3>
-<p>I had an idea for a place that shows what kids build at camp, where families can share the work and people curious about our programs can see past camps. The first commit was a design for it.</p>
-</article>
-</section>
-
-<section>
 <h2 id="constraints" tabindex="-1">Constraints</h2>
 <p>A privacy ruling meant children's real names could not sit on the cloud provider in any form, not even for the days between upload and publish. Instructors are camp staff, so the upload path had to be a link and a printed sheet. Families needed to browse without an account.</p>
 </section>
@@ -148,6 +96,61 @@
 <section>
 <h2 id="live" tabindex="-1">Live</h2>
 <p><a class="url" href="https://sparkgallery.ca" target="_blank" rel="noopener noreferrer">https://sparkgallery.ca</a></p>
+</section>
+
+<section>
+<h2 id="dev-log" tabindex="-1">Dev log</h2>
+
+<article class="log">
+<h3><time datetime="2026-10-21">Oct 21</time> to <time datetime="2026-10-28">Oct 28, 2026</time>: club saving</h3>
+<p>Gadget Club and Pixel Lab students can now save their work to the gallery, signing in with a code from a printed club card, one card for both clubs. The hello-wattson Worker checks the club session and forwards each save server to server to a write-only club route. I set it up this way because a gallery upload token can also read the roster and delete files, so no token could sit on a student laptop.</p>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-09-11">Sep 11, 2026</time>: a camera in the upload tool</h3>
+<p>The upload page gained a camera mode, so a camp laptop takes photos directly instead of going through a file picker. Scanning a QR code jumps to a camper's upload link, and photos taken before a camper is picked wait in an unsorted tray. I wanted instructors to be able to upload their photos easily.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">sparkgallery.ca/upload (sample roster)</div><div class="shot-img"><a href="img/sg-log-09-11.webp"><img src="img/sg-log-09-11.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Upload page in camera mode, with a camera test pattern in the viewfinder over the camper card form"></a></div></div><figcaption>Camera mode on the upload page (sample data).</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-07-30">Jul 30</time> to <time datetime="2026-08-05">Aug 5, 2026</time>: privacy checks that stop the run</h3>
+<p>A review of the publish and ingest path, split into six work packages, turned the privacy checks into gates that fail closed: a scan for personal information, a name guard, a publish gate, cleanup of orphaned files in storage, and a written runbook for when a family withdraws. A failed check now stops the publish instead of letting it through.</p>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-07-12">Jul 12, 2026</time>: a name-free pipeline</h3>
+<p>Campers now get their nicknames on my computer before camp starts, so the upload area only ever holds nicknames and random codes, and file names are replaced with random codes on arrival. The same day, the curator tools merged into one app, Curator Studio, and the instructor upload page went behind an access gate. I made the change after a privacy consultation, which held that a first name and last initial is personal information for children. Afterward, as our response memo put it, nothing name-bearing remains online.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">sparkgallery.ca/upload (sample roster)</div><div class="shot-img"><a href="img/sg-log-07-12.webp"><img src="img/sg-log-07-12.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Instructor upload page showing camper cards labelled with random nicknames instead of names"></a></div></div><figcaption>The upload page with nickname cards (sample data).</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-06-28">Jun 28, 2026</time>: the archive out of reach</h3>
+<p>The internet-facing upload code could reach the bucket holding the permanent camp archive, held back only by checks in the code. I moved the upload inbox to its own bucket and bound only that one, so the public surface cannot reach the archive at all.</p>
+</article>
+
+<details class="log-older">
+<summary>Show earlier entries (4)</summary>
+<article class="log">
+<h3><time datetime="2026-06-16">Jun 16</time> to <time datetime="2026-06-27">Jun 27, 2026</time>: a sandbox for test data</h3>
+<p>Test and training camps moved to a sandbox environment with its own database and storage. By Jun 27 production and sandbox shared no resource, and a one-time script purged test data that had reached production. I wanted production to hold only real camp data.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">sandbox build</div><div class="shot-img"><a href="img/sg-log-06-16.webp"><img src="img/sg-log-06-16.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Gallery home page in the sandbox environment, filled with invented training camps"></a></div></div><figcaption>The sandbox home page, with invented training camps.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-06-12">Jun 12, 2026</time>: projects on their own origin</h3>
+<p>Camper projects moved to a separate origin, spark-projects, and instructors got an upload page. Before, an iframe sandbox gave each game an opaque origin where localStorage throws, so every game crashed before it loaded. On its own origin a game runs as a normal website and its saves persist.</p>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-06-08">Jun 8, 2026</time>: a magazine on Cloudflare</h3>
+<p>The site moved from GitHub Pages to Astro on Cloudflare Workers with a D1 database, and took a magazine layout: each camp week is an issue with a cover, and each camper has a page. A day later one command published a camp from the private archive. It was our first app open to the public, so I wanted it to have its own style that matched our programs.</p>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-04-23">Apr 23, 2026</time>: the first design</h3>
+<p>I had an idea for a place that shows what kids build at camp, where families can share the work and people curious about our programs can see past camps. The first commit was a design for it.</p>
+</article>
+</details>
 </section>
 </main>
 </div>

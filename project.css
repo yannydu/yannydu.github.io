@@ -57,3 +57,7 @@ main .log{margin:0 0 2.5rem}
 main .log:last-child{margin-bottom:0}
 main .log h3{margin:0 0 .5rem}
 main .log h3 time{color:var(--yellow)}
+main .log-older{margin-top:2.5rem}
+main .log-older > summary{cursor:pointer;color:var(--yellow);font-weight:600}
+main .log-older > summary:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+main .log-older[open] > summary{margin-bottom:1.5rem}
