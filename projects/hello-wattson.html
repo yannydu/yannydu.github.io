@@ -53,6 +53,23 @@
 <h2 id="dev-log" tabindex="-1">Dev log</h2>
 
 <article class="log">
+<h3><time datetime="2026-11-10">Nov 10</time> to <time datetime="2026-11-12">Nov 12, 2026</time>: faster Arduino compiles</h3>
+<p>With one compile at a time, a full class pressing Verify together had to wait. The compile container now runs four compiles at once. On staging, 30 compiles started in the same second all finished, the slowest plain sketch in under 7 seconds. One attempt to speed things up made compiles slower when measured, so it was reverted. The fix that held keeps one build folder per set of libraries a sketch uses, so the compiler stops rebuilding libraries it already built. After that, the first compile after a restart took under 3 seconds.</p>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-11-07">Nov 7, 2026</time>: club levels and archive dates</h3>
+<p>Club seasons became levels, such as Pixel Club Level 1, and one table maps every old address to its new one, so old links still work. An ended club stays open to its members until an archive date set ahead of time, so kids can go back and reread their sessions. The build fails if a club is missing that date.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca/clubs/</div><div class="shot-img"><a href="img/hw-log-11-07.webp"><img src="img/hw-log-11-07.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Clubs page with four cards: Gadget Club and Pixel Club Level 1, open, running six Saturdays from October 24, and Level 2 of each, opening January 16"></a></div></div><figcaption>The clubs page, by level.</figcaption></figure></div>
+</article>
+
+<article class="log">
+<h3><time datetime="2026-11-06">Nov 6</time> to <time datetime="2026-11-10">Nov 10, 2026</time>: lesson code you type, not paste</h3>
+<p>Instructors noticed students pasting lesson code instead of working through it. Code in lessons now has no Copy button and can&rsquo;t be selected or copied, and a writer can turn copying back on for one block, such as a long starter file. Once students were typing, a new problem showed up: the step-by-step code cards marked each new line with a <code>+</code>, and students typed the plus sign into their code too. The sign is gone, and new lines are highlighted in yellow instead.</p>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-11-06.webp"><img src="img/hw-log-11-06.webp" width="672" height="420" loading="lazy" decoding="async" alt="Step card, Bring in the dice, with a two-line code box where the new line, import random, is highlighted in yellow with no plus sign"></a></div></div><figcaption>A step card: the new line is highlighted, not marked with a plus.</figcaption></figure></div>
+</article>
+
+<article class="log">
 <h3><time datetime="2026-10-31">Oct 31, 2026</time>: three doors</h3>
 <p>During the summer camps I noticed the home page getting cluttered once we also offered classroom workshops and camps. I wanted it to be clearer. The program board became three doors, Clubs, Camps and Workshops, each opening its own page. A door shows what is running now, or else what is coming next. Every listed program now names its format and pathway, and the build fails if one is missing a start date or grade band.</p>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-31.webp"><img src="img/hw-log-10-31.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Hello Wattson home page greeting &ldquo;Hello, I&rsquo;m Wattson&rdquo; above three illustrated doors: Clubs, Camps and Workshops"></a></div></div><figcaption>The home page after the change: one door per format.</figcaption></figure></div>
