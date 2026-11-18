@@ -39,7 +39,7 @@ services with real users.
   "Own quality on the program's production web platforms: `node --test` suites (59 and 45 files) on the gallery and lesson site, Vitest suite (58 files) on the curriculum platform, gitleaks full-history scan and typecheck/lint gates in CI on every push.",
   "Track features and bugs on GitHub Issues across 7 repos (990 issues filed, 72 bugs), drafted and triaged with Claude Code.",
   "Build and operate those platforms on Cloudflare Workers: a publishing gallery (509 camper projects from 416 campers), a curriculum system (356 activities by six writers), and public lesson sites (hundreds of visits a month), through a full summer of camps with zero worker errors.",
-  "Teach K-8 coding camps (Python, web development, Arduino, LEGO robotics).",
+  "Trained and managed a team of 5 tech instructors across 26 coding and technology camps for grades 2-12 in summer 2026 (Python, web and app development, Arduino, LEGO robotics).",
 ))
 
 #entry-from(by-id("globalrelay"), bullets: (
