@@ -48,7 +48,7 @@
         "Ship behind checks on every PR: typecheck, lint, `node --test` and Vitest suites (160+ test files), and a full-history gitleaks scan; a fail-closed pre-push name guard and EXIF/GPS stripping are tested invariants.",
         "Built *campkit*, the program's curriculum platform (Hono + Drizzle on Workers, D1, R2): 356 activities and 25 camps by six writers, written once, assembled into camps and costed into shopping lists.",
         "Grew *hello-wattson* (hellowattson.ca) from an internal lesson site into a code-gated teaching platform for outside teachers with zero student data: 22 programs, an in-browser Arduino compiler (Durable Object fronting a toolchain container), and *wattsons-playground*, a LiveCodes fork.",
-        "Trained and managed a team of 5 tech instructors across 26 coding and technology camps for grades 2-12 in summer 2026 (Python, web and app development, Arduino, LEGO robotics); authored SPARK, the program's workshop-design framework."
+        "Trained and managed a team of 5 tech instructors across 26 coding and technology camps for grades 2-12 in summer 2026; authored SPARK, the program's workshop-design framework."
       ]
     },
     {
