@@ -149,7 +149,7 @@
     return art;
   }
 
-  // "13 camps · 509 projects from 416 campers" -> ul.stats; a leading number is
+  // "47 camps · 471 campers · 497 projects published" -> ul.stats; a leading number is
   // strong.n, later numbers plain strong, "28-file" gets a .hy hyphen.
   function statList(str) {
     const ul = el("ul", "stats");
@@ -183,8 +183,126 @@
     if (p.link) desc.append(" ", link(p.link, p.link.replace(/^https?:\/\//, ""), true));
     head.append(h3, desc);
     const art = el("article", "entry", status, head);
-    if (p.facts) art.append(el("div", "sidenote facts", statList(p.facts)));
+    if (p.facts) {
+      const ul = statList(p.facts);
+      if (p.impact) {
+        const li = el("li");
+        li.dataset.impact = p.impact;
+        li.hidden = true;
+        ul.append(li);
+      }
+      const facts = el("div", "sidenote facts", ul);
+      if (p.asOf) facts.append(el("span", "", "as of ", timeEl(p.asOf)));
+      art.append(facts);
+    }
     return art;
+  }
+
+  const MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+  function timeEl(iso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    const t = el("time", "", m ? `${MONTHS[m[2] - 1]} ${+m[3]}, ${m[1]}` : iso);
+    t.dateTime = iso;
+    return t;
+  }
+
+  // ---------- recent changes (home) ----------
+  // The newest dev-log entries, read from the project pages' own markup
+  // (article.log[id] > h3 time + dl) so the text lives in one place.
+  function getRecent() {
+    const projs = typeof content !== "undefined" && content.projects ? content.projects : [];
+    const load = Promise.all(
+      projs
+        .filter((p) => p.page)
+        .map((p) =>
+          fetch(new URL(p.page, ROOT))
+            .then((r) => (r.ok ? r.text() : ""))
+            .then((html) => {
+              const doc = new DOMParser().parseFromString(html, "text/html");
+              return [...doc.querySelectorAll("article.log[id]")]
+                .map((a) => {
+                  const h3 = a.querySelector("h3");
+                  const times = h3 ? h3.querySelectorAll("time[datetime]") : [];
+                  if (!times.length) return null;
+                  const text = h3.textContent.trim();
+                  const cut = text.indexOf(": ");
+                  const dt = a.querySelector("dl > dt");
+                  const dd = dt && dt.nextElementSibling;
+                  return {
+                    app: p.name,
+                    href: new URL(p.page + "#" + a.id, ROOT).href,
+                    date: times[times.length - 1].getAttribute("datetime"),
+                    when: cut > 0 ? text.slice(0, cut) : text,
+                    title: cut > 0 ? text.slice(cut + 2) : p.name,
+                    problem: dd && /^problem$/i.test(dt.textContent.trim()) ? dd.textContent.trim() : "",
+                  };
+                })
+                .filter(Boolean);
+            })
+            .catch(() => [])
+        )
+    ).then((lists) =>
+      lists
+        .flat()
+        .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+        .slice(0, 3)
+    );
+    // The resume must not wait on this: after 2.5 s it renders without the block.
+    return Promise.race([load, new Promise((res) => setTimeout(() => res([]), 2500))]);
+  }
+
+  function recentEntry(e) {
+    const t = el("time", "", e.when);
+    t.dateTime = e.date;
+    const what = el("p", "", el("strong", "", e.app));
+    if (e.problem) what.append(" · Problem: " + e.problem);
+    return el("article", "entry", el("p", "date", t), el("div", "head", el("h3", "", link(e.href, e.title)), what));
+  }
+
+  // ---------- "page updated" ----------
+  // The newest <time> in the page's own content, so the date moves when a
+  // dated entry or count is added and is never typed by hand.
+  function stampUpdated() {
+    const up = document.getElementById("updated");
+    if (!up) return;
+    let newest = "";
+    document.querySelectorAll("main time[datetime]").forEach((t) => {
+      const d = t.getAttribute("datetime");
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d) && d > newest) newest = d;
+    });
+    if (!newest) return;
+    if (isHome) up.replaceChildren("page updated", el("br"), newest);
+    else up.replaceChildren(el("br"), "page updated " + newest);
+    up.hidden = false;
+  }
+
+  // ---------- impact.json figures ----------
+  // Any [data-impact="<key>"] list item is filled from impact.json, which
+  // .github/workflows/impact.yml regenerates weekly. Counts are rounded at the
+  // source, hence the "~". Same 4-week gate as the shell's impact command.
+  const IMPACT_LABELS = {
+    gallery_pages_viewed: "gallery page views",
+    lessons_served: "lesson-site page views",
+  };
+  function fillImpact() {
+    const slots = [...document.querySelectorAll("[data-impact]")];
+    if (!slots.length) return;
+    fetch(new URL("impact.json", ROOT))
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((d) => {
+        if ((d.event_weeks_logged || 0) < 4) return;
+        slots.forEach((li) => {
+          const key = li.dataset.impact;
+          if (!IMPACT_LABELS[key] || typeof d[key] !== "number") return;
+          li.replaceChildren(
+            el("strong", li.closest(".tally") ? "n" : "", "~" + d[key].toLocaleString("en-CA")),
+            " " + IMPACT_LABELS[key] + " since ",
+            timeEl(d.since)
+          );
+          li.hidden = false;
+        });
+      })
+      .catch(() => {});
   }
 
   function section(id, title, ...kids) {
@@ -193,9 +311,10 @@
     return s;
   }
 
-  function buildSections(r) {
+  function buildSections(r, recent) {
     const out = [];
     out.push(section("synopsis", "Synopsis", el("p", "", markup(r.summary))));
+    if (recent.length) out.push(section("recent", "Recent changes", ...recent.map(recentEntry)));
     out.push(section("experience", "Experience", ...r.experience.map(resumeEntry)));
     const projs = typeof content !== "undefined" && content.projects ? content.projects : [];
     if (projs.length) out.push(section("projects", "Projects", ...projs.map(projectEntry)));
@@ -228,16 +347,13 @@
   function renderResume() {
     const box = document.getElementById("resume");
     const main = document.querySelector("main");
-    return getResume()
-      .then((r) => {
+    return Promise.all([getResume(), getRecent()])
+      .then(([r, recent]) => {
         const anchor = document.getElementById("see-also");
-        buildSections(r).forEach((sec) => main.insertBefore(sec, anchor));
+        buildSections(r, recent).forEach((sec) => main.insertBefore(sec, anchor));
         box.remove();
         const role = document.querySelector(".role");
         if (role && r.role) role.textContent = r.role;
-        const up = document.getElementById("updated");
-        if (up && typeof content !== "undefined" && content.updated)
-          up.replaceChildren("page updated", document.createElement("br"), content.updated);
         const list = document.querySelector(".side-contact");
         if (list) {
           const items = r.contacts
@@ -770,4 +886,8 @@
 
   const ready = document.getElementById("resume") ? renderResume() : Promise.resolve();
   ready.then(setupSections, setupSections);
+  ready.then(() => {
+    stampUpdated();
+    fillImpact();
+  });
 })();

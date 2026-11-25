@@ -39,8 +39,8 @@
         <span aria-hidden="true">DANNY-YU(1)</span>
       </div>
       <nav aria-label="Site">
-        <a href="../">resume(1)</a>
-        <a href="spark-gallery.html" aria-current="true">projects(7)</a>
+        <a href="../">Resume</a>
+        <a href="spark-gallery.html" aria-current="true">Projects</a>
         <a href="../shell.html">shell</a>
       </nav>
     </header>
@@ -52,13 +52,20 @@
             <li><a href="spark-gallery.html">spark-gallery(7)</a></li>
             <li><a href="campkit.html" aria-current="page">campkit(7)</a></li>
             <li><a href="hello-wattson.html">hello-wattson(7)</a></li>
-            <li>chessmate(7)</li>
           </ul>
         </nav>
-        <p class="side-meta">status <strong>internal</strong><br />behind Cloudflare Access, no public link<br />page updated 2026-11-02</p>
+        <p class="side-meta">status <strong>internal</strong><br />behind Cloudflare Access, no public link<span id="updated"></span></p>
       </aside>
       <main id="content">
-<div class="page-head"><h1>Campkit</h1><p class="lede">The internal platform where our camp curriculum is written, assembled, and costed.</p></div>
+<div class="page-head"><h1>Campkit</h1><p class="lede">The internal platform where our camp curriculum is written, assembled, and costed.</p><p class="built">How it was built: I frame the problem and make the architecture and privacy decisions; Claude Code writes much of the code.</p></div>
+
+<section><h2 id="milestones" tabindex="-1">Milestones</h2><ul class="milestones" role="list">
+<li><a href="#log-2026-11-06"><time datetime="2026-11-06">Nov 6, 2026</time></a> <span><strong>Problem:</strong> no one place to see what is happening when. <strong>Fix:</strong> events group programs; runs hold the dates, room and instructors. <strong>Result:</strong> an events calendar with a campus filter and search, and each run marked Ready or Not ready.</span></li>
+<li><a href="#log-2026-11-03"><time datetime="2026-11-03">Nov 3, 2026</time></a> <span><strong>Problem:</strong> instructors needed to plan lessons in the team&rsquo;s familiar format. <strong>Fix:</strong> lesson delivery plans that fill in the boxes of the team&rsquo;s Word template. <strong>Result:</strong> a lesson reaches Prepped only when its plan is finished.</span></li>
+<li><a href="#log-2026-09-10"><time datetime="2026-09-10">Sep 10, 2026</time></a> <span><strong>Problem:</strong> I wanted better AI integration for my own workflows. <strong>Fix:</strong> an API at /api/v1, signed in with a Cloudflare Access service token. <strong>Result:</strong> a limit of 600 requests a minute per caller, so one runaway script cannot flood it.</span></li>
+<li><a href="#log-2026-08-14"><time datetime="2026-08-14">Aug 14, 2026</time></a> <span><strong>Problem:</strong> dragging a card in meant scrolling the page. <strong>Fix:</strong> the library docked as a shelf under the board. <strong>Result:</strong> five days fit side by side on one screen.</span></li>
+<li><a href="#log-2026-07-06"><time datetime="2026-07-06">Jul 6, 2026</time></a> <span><strong>Problem:</strong> the first builder had only an Add activity button. <strong>Fix:</strong> a drag-and-drop board and an importer from the Typst curriculum. <strong>Result:</strong> 175 activities, 10 camps and 143 supplies imported by Jul 5.</span></li>
+</ul></section>
 
 <section>
 <h2 id="what-it-is" tabindex="-1">What it is</h2>
@@ -68,79 +75,62 @@
 <section>
 <h2 id="dev-log" tabindex="-1">Dev log</h2>
 
-<article class="log">
-<h3><time datetime="2026-11-13">Nov 13, 2026</time>: printing lesson plans</h3>
-<p>Leads can print every lesson plan at once, or only the plans for one event. Each plan starts on a fresh sheet, so a double-sided stack splits cleanly into one handout per instructor.</p>
+<article class="log" id="log-2026-11-06">
+<h3><time datetime="2026-11-06">Nov 6</time> to <time datetime="2026-11-12">Nov 12, 2026</time>: events and runs</h3>
+<dl><dt>Problem</dt><dd>I wanted one place to see what is happening when.</dd><dt>Changed</dt><dd>An event is a named date range at a campus or venue that groups programs, such as a camp week or a club season. A run is one outing of a program inside an event, with its own room and two instructors; runs now hold the dates and the packing lists. The programs list groups under events, and the admin home page became a month calendar of events.</dd><dt>Result</dt><dd>A run is Ready when its dates and room are set, it has enough instructors, and everything is packed; lesson plans no longer count. Instructors see only the runs of published programs on the new events calendar, which has a campus filter and search.</dd></dl>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-11-07.webp"><img src="img/ck-log-11-07.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Event page for Spring Break Camp 2027 with two runs: one marked Ready, the other Not ready with one of two instructors and no room yet"></a></div></div><figcaption>An event page with its runs (sample data).</figcaption></figure><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-11-10.webp"><img src="img/ck-log-11-10.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Events calendar for March 2027 in month view, with the campus filter set to Burnaby and a Spring Break Camp 2027 bar across March 15 to 19"></a></div></div><figcaption>The events calendar, filtered to one campus (sample data).</figcaption></figure></div>
 </article>
 
-<article class="log">
-<h3><time datetime="2026-11-10">Nov 10</time> to <time datetime="2026-11-12">Nov 12, 2026</time>: a restyle</h3>
-<p>The header was rebuilt around a grouped menu. The event page and a new events calendar, with a campus filter and search, were restyled to match a prototype. A run&rsquo;s Ready rule was settled at the same time: a run is Ready when its dates and room are set, it has enough instructors, and everything is packed. Lesson plans no longer count toward Ready. Instructors see only the runs of published programs on the calendar.</p>
-<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-11-10.webp"><img src="img/ck-log-11-10.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Events calendar for March 2027 in month view, with the campus filter set to Burnaby and a Spring Break Camp 2027 bar across March 15 to 19"></a></div></div><figcaption>The events calendar, filtered to one campus (sample data).</figcaption></figure></div>
-</article>
-
-<article class="log">
-<h3><time datetime="2026-11-06">Nov 6</time> to <time datetime="2026-11-07">Nov 7, 2026</time>: events and runs</h3>
-<p>I wanted one place to see what is happening when. An event is a named date range at a campus or venue that groups programs, such as a camp week or a club season. A run is one outing of a program inside an event, with its own room and two instructors. Runs now hold the dates. The programs list groups under events, packing lists are kept per run, and the admin home page became a month calendar of events.</p>
-<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-11-07.webp"><img src="img/ck-log-11-07.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Event page for Spring Break Camp 2027 with two runs: one marked Ready, the other Not ready with one of two instructors and no room yet"></a></div></div><figcaption>An event page with its runs (sample data).</figcaption></figure></div>
-</article>
-
-<article class="log">
+<article class="log" id="log-2026-11-03">
 <h3><time datetime="2026-11-03">Nov 3</time> to <time datetime="2026-11-06">Nov 6, 2026</time>: lesson delivery plans</h3>
-<p>I wanted instructors to plan each camp lesson in the format the team was used to. Each camp lesson has a lesson delivery plan that fills in the boxes of the team&rsquo;s Word template. An instructor&rsquo;s lesson reaches Prepped only when the plan is finished. A lead can comment on each step, mark the plan reviewed, and print it in the template&rsquo;s layout from the browser. Prep was renamed Lesson plans in the menu.</p>
+<dl><dt>Problem</dt><dd>I wanted instructors to plan each camp lesson in the format the team was used to.</dd><dt>Changed</dt><dd>Each camp lesson has a lesson delivery plan filling in the boxes of the team&rsquo;s Word template. A lead can comment on each step, mark it reviewed, and print it in the template&rsquo;s layout from the browser; Prep was renamed Lesson plans in the menu.</dd><dt>Result</dt><dd>An instructor&rsquo;s lesson reaches Prepped only when the plan is finished. On <time datetime="2026-11-13">Nov 13</time> leads could print every plan at once or one event&rsquo;s, each on a fresh sheet, so a double-sided stack splits cleanly into one handout per instructor.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-11-06.webp"><img src="img/ck-log-11-06.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Lesson delivery plan for Intro to Paper Circuits, marked Plan in progress with 5 of 14 boxes filled, showing partly filled template boxes"></a></div></div><figcaption>A lesson delivery plan in progress (sample data).</figcaption></figure></div>
 </article>
 
-<article class="log">
-<h3><time datetime="2026-10-11">Oct 11</time> to <time datetime="2026-10-13">Oct 13, 2026</time>: one editor by default</h3>
-<p>On Oct 11 the guided writer became the single editor: opening an activity went to it, with a Basics step for title, grades, duration and tags first. On Oct 13 activities started opening in the one-page editor instead. The guided writer stayed, as Guided writer in the More menu.</p>
-<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-10-13.webp"><img src="img/ck-log-10-13.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="One-page activity editor with an outline sidebar, details form, Published badge and Publish button"></a></div></div><figcaption>The one-page editor.</figcaption></figure></div>
-</article>
-
-<article class="log">
+<article class="log" id="log-2026-09-25">
 <h3><time datetime="2026-09-25">Sep 25, 2026</time>: weekly manual deploys</h3>
-<p>Merges to main stopped deploying. Production, code and database migrations together, now updates when someone runs the Deploy workflow, usually on Fridays. A manual run was chosen over a schedule so migrations never apply unwatched. Each deploy is named by its date and gets a GitHub Release listing the merged pull requests. The footer shows the same name, so a bug report pins an exact deploy.</p>
+<dl><dt>Changed</dt><dd>Merges to main stopped deploying; production, code and database migrations together, now updates when someone runs the Deploy workflow, usually on Fridays. A manual run was chosen over a schedule so migrations never apply unwatched.</dd><dt>Result</dt><dd>Each deploy is named by its date and gets a GitHub Release listing the merged pull requests. The footer shows the same name, so a bug report pins an exact deploy.</dd></dl>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-09-22">
 <h3><time datetime="2026-09-22">Sep 22</time> to <time datetime="2026-09-25">Sep 25, 2026</time>: a prep dashboard</h3>
-<p>I wanted instructors to have a better landing page, where they see what they need to do at a glance. Instructors mark each activity they teach as not started, in progress or prepped, and the prep dashboard shows that as a grid per camp, opening on an overview with one row per instructor and program. Instructor notes gained edit, delete, step pins and printing.</p>
+<dl><dt>Problem</dt><dd>I wanted instructors to have a better landing page, where they see what they need to do at a glance.</dd><dt>Changed</dt><dd>Instructors mark each activity they teach as not started, in progress or prepped; the prep dashboard shows that as a grid per camp, opening on an overview with one row per instructor and program. Instructor notes gained edit, delete, step pins and printing.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-09-22.webp"><img src="img/ck-log-09-22.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Prep dashboard showing its empty state, No instructors yet"></a></div></div><figcaption>The prep dashboard, before any instructors were added (sample data).</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-09-15">
 <h3><time datetime="2026-09-15">Sep 15, 2026</time>: a rich-text editor</h3>
-<p>I wanted curriculum writers to be able to format their text better. Text fields now open in Toast UI Editor, a WYSIWYG (what you see is what you get) editor with a formatting toolbar. Each field is still stored as Markdown.</p>
+<dl><dt>Problem</dt><dd>I wanted curriculum writers to be able to format their text better.</dd><dt>Changed</dt><dd>Text fields now open in Toast UI Editor, a WYSIWYG (what you see is what you get) editor with a formatting toolbar. Each field is still stored as Markdown.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-09-15.webp"><img src="img/ck-log-09-15.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Activity form with the rich-text editor open, showing its formatting toolbar and a sample line"></a></div></div><figcaption>The rich-text editor.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-09-10">
 <h3><time datetime="2026-09-10">Sep 10, 2026</time>: an API</h3>
-<p>I wanted better AI integration for my own workflows. The API (application programming interface) at /api/v1 lets a script work with programs and activities and upload files, signed in with a Cloudflare Access service token instead of a person&rsquo;s login. It is rate limited per caller, at 600 requests a minute, so one runaway script cannot flood it.</p>
+<dl><dt>Problem</dt><dd>I wanted better AI integration for my own workflows.</dd><dt>Changed</dt><dd>The API (application programming interface) at /api/v1 lets a script work with programs and activities and upload files, signed in with a Cloudflare Access service token instead of a person&rsquo;s login. It is rate limited per caller, at 600 requests a minute.</dd><dt>Result</dt><dd>One runaway script cannot flood it.</dd></dl>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-08-14">
 <h3><time datetime="2026-08-14">Aug 14, 2026</time>: Day Board v3</h3>
-<p>With a five-day camp and a full library, dragging a card in meant scrolling the page. Day Board v3 docks the library as a shelf under the board and fits it all on one screen: each day scrolls its own list, and five days fit side by side.</p>
+<dl><dt>Problem</dt><dd>With a five-day camp and a full library, dragging a card in meant scrolling the page.</dd><dt>Changed</dt><dd>Day Board v3 docks the library as a shelf under the board, and each day scrolls its own list.</dd><dt>Result</dt><dd>It all fits on one screen, with five days side by side.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-08-14.webp"><img src="img/ck-log-08-14.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Day Board v3 with day columns side by side and the activity library shelf below"></a></div></div><figcaption>Day Board v3 with its library shelf.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-07-06">
 <h3><time datetime="2026-07-06">Jul 6, 2026</time>: drag and drop, and an importer</h3>
-<p>The first builder had only an Add activity button, which made moving activities around hard, so the board became drag and drop. I also wrote an importer from the Typst curriculum; by Jul 5 it had brought in the Summer 2026 programs: 175 activities, 10 camps and 143 supplies.</p>
+<dl><dt>Problem</dt><dd>The first builder had only an Add activity button, which made moving activities around hard.</dd><dt>Changed</dt><dd>The board became drag and drop. An importer from the Typst curriculum followed.</dd><dt>Result</dt><dd>By Jul 5 the importer had brought in the Summer 2026 programs: 175 activities, 10 camps and 143 supplies.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-07-06.webp"><img src="img/ck-log-07-06.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Camp builder with day cards, activity rows with move buttons, a search box and Add day"></a></div></div><figcaption>The drag-and-drop camp builder.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-07-01">
 <h3><time datetime="2026-07-01">Jul 1, 2026</time>: the first app, in a day</h3>
-<p>Word fought me on our tech curriculum: no code blocks, no repeatable template. I moved it to Typst, a typesetting language. That pipeline compiled 355 files in CI (continuous integration) on every push, with a small web editor so staff never touched git. The science writers stayed on Word, and summer camps showed the supply-list mess. In one day I built the first Campkit: authoring, a camp builder, supplies, the print packet and a costed shopping list.</p>
+<dl><dt>Problem</dt><dd>Word fought me on our tech curriculum: no code blocks, no repeatable template.</dd><dt>Tried</dt><dd>I moved it to Typst, a typesetting language, compiling 355 files in CI (continuous integration) on every push, with a small web editor so staff never touched git. The science writers stayed on Word, and summer camps showed the supply-list mess.</dd><dt>Changed</dt><dd>The first Campkit went up in one day, with Claude Code writing much of the code: authoring, a camp builder, supplies, the print packet and a costed shopping list.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">campkit (staff only)</div><div class="shot-img"><a href="img/ck-log-07-01.webp"><img src="img/ck-log-07-01.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="The first version, then called Spark Writer: a plain camp page with a Day 1 activity table"></a></div></div><figcaption>The first camp page.</figcaption></figure></div>
 </article>
 </section>
 
 <section>
 <h2 id="constraints" tabindex="-1">Constraints</h2>
-<p>Built for about ten writers and twenty instructors, with no budget and no appetite for another password. Past camps have to stay as they ran, even after their activities are edited for next year.</p>
+<p>Designed for about ten writers and twenty instructors (design capacity; six writers use it so far), with no budget and no appetite for another password. Past camps have to stay as they ran, even after their activities are edited for next year.</p>
 </section>
 
 <section>
@@ -178,7 +168,8 @@
 
 <section>
 <h2 id="numbers" tabindex="-1">Numbers</h2>
-<ul class="tally" role="list"><li><strong class="n">405</strong> published activities and lessons</li><li><strong class="n">41</strong> programs (camps, workshops, clubs, events)</li></ul>
+<ul class="tally" role="list"><li><strong class="n">405</strong> published activities and lessons</li><li><strong class="n">41</strong> programs (camps, workshops, clubs, events)</li><li><strong class="n">6</strong> writers</li></ul>
+<p class="muted">Counts as of <time datetime="2026-11-02">Nov 2, 2026</time>.</p>
 </section>
 
 <section>

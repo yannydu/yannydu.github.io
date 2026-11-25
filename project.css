@@ -57,3 +57,19 @@ main .log{margin:0 0 2.5rem}
 main .log:last-child{margin-bottom:0}
 main .log h3{margin:0 0 .5rem}
 main .log h3 time{color:var(--yellow)}
+
+/* how-it-was-built line under the lede */
+main .built{margin:.875rem 0 0;font-size:.9375rem;color:var(--muted);text-wrap:pretty}
+
+/* milestones: a dated link to the dev-log entry above one Problem / Fix / Result line */
+main .milestones{margin:0;padding:0}
+main .milestones li{margin:0 0 1rem;padding:0}
+main .milestones li:last-child{margin-bottom:0}
+main .milestones li::before{content:none}
+main .milestones a{display:block;width:fit-content;font-family:var(--mono);font-size:.875rem}
+
+/* dev-log steps: Problem / Tried / Changed / Result (/ Still open) */
+main .log{scroll-margin-top:calc(var(--header-h,0px) + 1rem)}
+main .log dl{margin:0 0 1rem}
+main .log dd{margin:.125rem 0 .75rem}
+main .log dd:last-child{margin-bottom:0}

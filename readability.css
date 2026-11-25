@@ -73,6 +73,7 @@ main .entry > .facts{margin:1rem 0 0;display:flex;flex-wrap:wrap;align-items:cen
 main .stats{margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.25rem 1.5rem}
 main .stats li{margin:0;padding:0;white-space:nowrap}
 main .stats li::before{content:none}
+main .stats li[data-impact]{white-space:normal}
 main .stats strong{font-family:var(--mono);font-weight:700;color:var(--yellow)}
 
 /* ---------- layout ---------- */

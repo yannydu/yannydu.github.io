@@ -25,8 +25,8 @@
 <span aria-hidden="true">DANNY-YU(1)</span>
 </div>
 <nav aria-label="Site">
-<a href="../">resume(1)</a>
-<a href="spark-gallery.html" aria-current="true">projects(7)</a>
+<a href="../">Resume</a>
+<a href="spark-gallery.html" aria-current="true">Projects</a>
 <a href="../shell.html">shell</a>
 </nav>
 </header>
@@ -37,12 +37,22 @@
 <li><a href="spark-gallery.html">spark-gallery(7)</a></li>
 <li><a href="campkit.html">campkit(7)</a></li>
 <li><a href="hello-wattson.html" aria-current="page">hello-wattson(7)</a></li>
-<li>chessmate(7)</li>
 </ul></nav>
-<p class="side-meta">status <strong class="ok">live</strong><br><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">hellowattson.ca&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a><br>page updated 2026-11-02</p>
+<p class="side-meta">status <strong class="ok">live</strong><br><a href="https://hellowattson.ca" target="_blank" rel="noopener noreferrer">hellowattson.ca&nbsp;↗<span class="sr-only"> (opens in new tab)</span></a><span id="updated"></span></p>
 </aside>
 <main id="content">
-<div class="page-head"><h1>Hello Wattson</h1><p class="lede">Lessons and coding tools for classrooms, opened by an access code in class, with logins coming for our own clubs.</p></div>
+<div class="page-head"><h1>Hello Wattson</h1><p class="lede">Lessons and coding tools for classrooms, opened by an access code in class, with logins coming for our own clubs.</p>
+<p class="built">How it was built: I frame the problem and make the architecture and privacy decisions; Claude Code writes much of the code.</p></div>
+
+<section>
+<h2 id="milestones" tabindex="-1">Milestones</h2>
+<ul class="milestones" role="list">
+<li><a href="#log-2026-11-10"><time datetime="2026-11-10">Nov 10, 2026</time></a> <span><strong>Problem:</strong> a full class pressing Verify together had to wait. <strong>Fix:</strong> four compiles at once and one build folder per library set. <strong>Result:</strong> on staging, 30 compiles started in the same second all finished, the slowest plain sketch in under 7 seconds.</span></li>
+<li><a href="#log-2026-11-06"><time datetime="2026-11-06">Nov 6, 2026</time></a> <span><strong>Problem:</strong> students pasted lesson code instead of working through it. <strong>Fix:</strong> lesson code can&rsquo;t be copied, and new lines are highlighted instead of marked with a <code>+</code>. <strong>Result:</strong> students were typing the code.</span></li>
+<li><a href="#log-2026-10-18"><time datetime="2026-10-18">Oct 18, 2026</time></a> <span><strong>Problem:</strong> school laptops can&rsquo;t install the Arduino IDE. <strong>Fix:</strong> the IDE&rsquo;s Verify and Upload buttons in the browser, with a server compile queue and Web Serial flashing. <strong>Result:</strong> Gadget Club&rsquo;s first session used it on Oct 24.</span></li>
+<li><a href="#log-2026-07-10"><time datetime="2026-07-10">Jul 10, 2026</time></a> <span><strong>Problem:</strong> our plan called for auto-graded quizzes, interactive lesson widgets and a public catalogue. <strong>Fix:</strong> a move from Eleventy to Astro 6, keeping every URL. <strong>Result:</strong> a teacher outside our program can preview a module and run it on their own schedule.</span></li>
+</ul>
+</section>
 
 <section>
 <h2 id="what-it-is" tabindex="-1">What it is</h2>
@@ -52,69 +62,68 @@
 <section>
 <h2 id="dev-log" tabindex="-1">Dev log</h2>
 
-<article class="log">
+<article class="log" id="log-2026-11-10">
 <h3><time datetime="2026-11-10">Nov 10</time> to <time datetime="2026-11-12">Nov 12, 2026</time>: faster Arduino compiles</h3>
-<p>With one compile at a time, a full class pressing Verify together had to wait. The compile container now runs four compiles at once. On staging, 30 compiles started in the same second all finished, the slowest plain sketch in under 7 seconds. One attempt to speed things up made compiles slower when measured, so it was reverted. The fix that held keeps one build folder per set of libraries a sketch uses, so the compiler stops rebuilding libraries it already built. After that, the first compile after a restart took under 3 seconds.</p>
+<dl><dt>Problem</dt><dd>With one compile at a time, a full class pressing Verify together had to wait.</dd><dt>Tried</dt><dd>One attempt to speed things up made compiles slower when measured, so it was reverted.</dd><dt>Changed</dt><dd>The compile container now runs four compiles at once. It also keeps one build folder per set of libraries a sketch uses, so the compiler stops rebuilding libraries it already built.</dd><dt>Result</dt><dd>On staging, 30 compiles started in the same second all finished, the slowest plain sketch in under 7 seconds. The first compile after a restart took under 3 seconds.</dd></dl>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-11-07">
 <h3><time datetime="2026-11-07">Nov 7, 2026</time>: club levels and archive dates</h3>
-<p>Club seasons became levels, such as Pixel Club Level 1, and one table maps every old address to its new one, so old links still work. An ended club stays open to its members until an archive date set ahead of time, so kids can go back and reread their sessions. The build fails if a club is missing that date.</p>
+<dl><dt>Changed</dt><dd>Club seasons became levels, such as Pixel Club Level 1, and one table maps every old address to its new one. An ended club stays open to its members until an archive date set ahead of time, and the build fails if a club is missing that date.</dd><dt>Result</dt><dd>Old links still work, and kids can go back and reread their sessions after a club ends.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca/clubs/</div><div class="shot-img"><a href="img/hw-log-11-07.webp"><img src="img/hw-log-11-07.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Clubs page with four cards: Gadget Club and Pixel Club Level 1, open, running six Saturdays from October 24, and Level 2 of each, opening January 16"></a></div></div><figcaption>The clubs page, by level.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-11-06">
 <h3><time datetime="2026-11-06">Nov 6</time> to <time datetime="2026-11-10">Nov 10, 2026</time>: lesson code you type, not paste</h3>
-<p>Instructors noticed students pasting lesson code instead of working through it. Code in lessons now has no Copy button and can&rsquo;t be selected or copied, and a writer can turn copying back on for one block, such as a long starter file. Once students were typing, a new problem showed up: the step-by-step code cards marked each new line with a <code>+</code>, and students typed the plus sign into their code too. The sign is gone, and new lines are highlighted in yellow instead.</p>
+<dl><dt>Problem</dt><dd>Instructors noticed students pasting lesson code instead of working through it.</dd><dt>Changed</dt><dd>Lesson code has no Copy button and can&rsquo;t be selected or copied; a writer can turn copying back on for one block, such as a long starter file. Step-by-step code cards now highlight new lines in yellow instead of marking them with a <code>+</code>.</dd><dt>Result</dt><dd>Students were typing the code. They also typed the <code>+</code> that marked each new line, which is why the sign is gone.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-11-06.webp"><img src="img/hw-log-11-06.webp" width="672" height="420" loading="lazy" decoding="async" alt="Step card, Bring in the dice, with a two-line code box where the new line, import random, is highlighted in yellow with no plus sign"></a></div></div><figcaption>A step card: the new line is highlighted, not marked with a plus.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-10-31">
 <h3><time datetime="2026-10-31">Oct 31, 2026</time>: three doors</h3>
-<p>During the summer camps I noticed the home page getting cluttered once we also offered classroom workshops and camps. I wanted it to be clearer. The program board became three doors, Clubs, Camps and Workshops, each opening its own page. A door shows what is running now, or else what is coming next. Every listed program now names its format and pathway, and the build fails if one is missing a start date or grade band.</p>
+<dl><dt>Problem</dt><dd>During the summer camps I noticed the home page getting cluttered once we also offered classroom workshops and camps. I wanted it to be clearer.</dd><dt>Changed</dt><dd>The program board became three doors, Clubs, Camps and Workshops, each opening its own page and showing what is running now, or else what is coming next. Every listed program names its format and pathway; the build fails without a start date or grade band.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-31.webp"><img src="img/hw-log-10-31.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Hello Wattson home page greeting &ldquo;Hello, I&rsquo;m Wattson&rdquo; above three illustrated doors: Clubs, Camps and Workshops"></a></div></div><figcaption>The home page after the change: one door per format.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-10-22">
 <h3><time datetime="2026-10-22">Oct 22</time> to <time datetime="2026-11-01">Nov 1, 2026</time>: a picture-book session format</h3>
-<p>I wanted the site to have a design of its own, with more of the Science Alive mascots in it, giving them more life and stories. Each club session now opens with a story and a mission card, and the idea decks carry concept pictures: small drawings of pins, parts and direction, most of them short animations with a still version. The sessions moved over to this format one at a time.</p>
+<dl><dt>Problem</dt><dd>I wanted the site to have a design of its own, with more of the Science Alive mascots in it, giving them more life and stories.</dd><dt>Changed</dt><dd>Each club session now opens with a story and a mission card, and idea decks carry concept pictures: small drawings of pins, parts and direction, most of them short animations with a still version. Sessions moved to this format one at a time.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-11-01.webp"><img src="img/hw-log-11-01.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Gadget Club mission card with a concept picture of a breadboard, a glowing LED, a resistor and wires"></a></div></div><figcaption>A session card in the picture-book format.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-10-18">
 <h3><time datetime="2026-10-18">Oct 18</time> to <time datetime="2026-10-24">Oct 24, 2026</time>: Arduino in the browser</h3>
-<p>Once the LiveCodes playground was part of the site, we wanted the same consistency for hardware, and an easier way to run hardware workshops in schools, offsite and on other devices. School laptops can&rsquo;t install the Arduino IDE (integrated development environment), so the editor uses the IDE&rsquo;s own Verify and Upload buttons. Verify sends the sketch to a compile route that needs an unlocked session and is rate-limited per IP address. A Durable Object holds up to 30 waiting compiles in front of a container running arduino-cli with internet off, and accepts only a short list of libraries. Upload flashes the board over Web Serial with our own uploader, so the editor needs Chrome or Edge. Common compiler errors come back as one plain line naming the line number, with the raw text folded underneath.</p>
-<p>I built it Oct 18 to 21. On staging, 25 compiles sent at once waited at most 44 seconds, because one instance compiles one sketch at a time. A flash test on a real Uno passed on Linux; the Windows club laptop and a Chromebook are next. Gadget Club&rsquo;s first session used it on Oct 24.</p>
+<dl><dt>Problem</dt><dd>Once the LiveCodes playground was part of the site, we wanted the same consistency for hardware, and an easier way to run hardware workshops in schools, offsite and on other devices. School laptops can&rsquo;t install the Arduino IDE (integrated development environment).</dd><dt>Changed</dt><dd>It was built Oct 18 to 21: an editor that uses the IDE&rsquo;s own Verify and Upload buttons. Verify sends the sketch to a compile route that needs an unlocked session and is rate-limited per IP address; a Durable Object holds up to 30 waiting compiles in front of a container running arduino-cli with internet off, and accepts only a short list of libraries. Upload flashes the board over Web Serial with our own uploader, so the editor needs Chrome or Edge. Common compiler errors come back as one plain line naming the line number, with the raw text folded underneath.</dd><dt>Result</dt><dd>As of Oct 21 one instance compiled sketches one at a time, so 25 compiles sent at once on staging waited at most 44 seconds. Gadget Club&rsquo;s first session used it on Oct 24, and <a href="#log-2026-11-10">since Nov 12 the container runs four at once</a>.</dd><dt>Still open</dt><dd>Flash tests on the Windows club laptop and a Chromebook. Only Linux has passed, on a real Uno.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-21.webp"><img src="img/hw-log-10-21.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Gadget Club Light Test lesson beside the Arduino editor, with Verify and Upload buttons and a serial monitor"></a></div></div><figcaption>The Arduino editor, with the IDE&rsquo;s Verify and Upload buttons.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-10-15">
 <h3><time datetime="2026-10-15">Oct 15</time> to <time datetime="2026-10-18">Oct 18, 2026</time>: idea cards, playground first</h3>
-<p>Pixel Club and Gadget Club are weekly Saturday clubs whose sessions open on their own dates. Their reading pages became idea-card decks: one card shows at a time, with Back and Next, and each card holds at most 40 words. Our lead picked this layout, &ldquo;One idea at a time&rdquo;, from several versions. The software clubs also went playground-first: lesson steps no longer mention a local editor, and taking the project home moved to a section at the end of the lesson.</p>
-<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-18.webp"><img src="img/hw-log-10-18.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Pixel Lab idea card, What You&rsquo;ll Make Today, with two turtle-graphics previews and a card counter"></a></div></div><figcaption>An idea-card deck: one short card at a time.</figcaption></figure></div>
+<dl><dt>Changed</dt><dd>Pixel Club and Gadget Club are weekly Saturday clubs whose sessions open on their own dates. Their reading pages became idea-card decks: one card at a time, with Back and Next, each card at most 40 words.</dd><dd>Our lead picked this layout, &ldquo;One idea at a time&rdquo;, from several versions.</dd><dd>The software clubs went playground-first: lesson steps no longer mention a local editor, and taking the project home moved to a section at the end of the lesson.</dd></dl>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-18.webp"><img src="img/hw-log-10-18.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Pixel Club idea card, What You&rsquo;ll Make Today, with two turtle-graphics previews and a card counter"></a></div></div><figcaption>An idea-card deck: one short card at a time.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-10-07">
 <h3><time datetime="2026-10-07">Oct 7, 2026</time>: the Workbench</h3>
-<p>The Workbench puts the playground beside a Pixel Lab lesson. On screens 1200 pixels wide and up, the lesson takes 42% of the width and the playground the rest. Smaller screens keep a link out to the playground, and phones get no embed. If the embed hasn&rsquo;t loaded in 8 seconds, the page shows a plain message and the link instead.</p>
-<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-07.webp"><img src="img/hw-log-10-07.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Workbench layout: a Pixel Lab lesson, First Traces, with its contents list beside the playground"></a></div></div><figcaption>The Workbench: lesson and playground side by side.</figcaption></figure></div>
+<dl><dt>Changed</dt><dd>The Workbench puts the playground beside a Pixel Club lesson. On screens 1200 pixels wide and up, the lesson takes 42% of the width and the playground the rest.</dd><dd>Smaller screens keep a link out to the playground, and phones get no embed. If the embed hasn&rsquo;t loaded in 8 seconds, the page shows a plain message and the link instead.</dd></dl>
+<div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-10-07.webp"><img src="img/hw-log-10-07.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Workbench layout: a Pixel Club lesson, First Traces, with its contents list beside the playground"></a></div></div><figcaption>The Workbench: lesson and playground side by side.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-09-20">
 <h3><time datetime="2026-09-20">Sep 20, 2026</time>: classroom codes and a playground</h3>
-<p>Classroom codes moved out of git into Workers KV, Cloudflare&rsquo;s key-value store. Each code lists its modules, a label and an optional expiry, and one command-line tool issues, lists or revokes codes without a redeploy. A LiveCodes playground went up on its own origin, play.hellowattson.ca. Student code runs entirely in the browser and saves to the device.</p>
+<dl><dt>Changed</dt><dd>Classroom codes moved out of git into Workers KV, Cloudflare&rsquo;s key-value store. Each code lists its modules, a label and an optional expiry, and one command-line tool issues, lists or revokes codes without a redeploy.</dd><dd>A LiveCodes playground went up on its own origin, play.hellowattson.ca. Student code runs entirely in the browser and saves to the device.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca</div><div class="shot-img"><a href="img/hw-log-09-20.webp"><img src="img/hw-log-09-20.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Playground page with a form for a title, description, tags and starter code"></a></div></div><figcaption>The playground page, which builds a link to a playground with starter code.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-07-10">
 <h3><time datetime="2026-07-10">Jul 10, 2026</time>: Astro 6 and a public catalogue</h3>
-<p>I moved the site from Eleventy to Astro 6, keeping every existing URL. Our plan called for auto-graded quizzes, interactive lesson widgets and a public catalogue, which Astro handles better, and moving first meant building the catalogue and track templates once. A Cloudflare Worker in front checks the access code on the server before any lesson leaves. The catalogue and undated tracks let a teacher outside our program preview a module and run it on their own schedule, and a plain-language privacy page went up with them.</p>
+<dl><dt>Problem</dt><dd>Our plan called for auto-graded quizzes, interactive lesson widgets and a public catalogue, which Astro handles better.</dd><dt>Changed</dt><dd>The site moved from Eleventy to Astro 6, keeping every existing URL; moving first meant building the catalogue and track templates once. A Cloudflare Worker in front checks the access code on the server before any lesson leaves.</dd><dt>Result</dt><dd>The catalogue and undated tracks let a teacher outside our program preview a module and run it on their own schedule. A plain-language privacy page went up with them.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">hellowattson.ca/catalog/</div><div class="shot-img"><a href="img/hw-log-07-10.webp"><img src="img/hw-log-07-10.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Teach with our materials catalogue page with a Web Development module card"></a></div></div><figcaption>The first public catalogue.</figcaption></figure></div>
 </article>
 
-<article class="log">
+<article class="log" id="log-2026-03-09">
 <h3><time datetime="2026-03-09">Mar 9, 2026</time>: a notes site</h3>
-<p>It started as an Eleventy site, a static site generator, holding notes our own instructors projected in class. I wanted students to have notes they could reach outside camps and classes if they wanted to keep studying, and to give instructors more resources to point students to.</p>
+<dl><dt>Problem</dt><dd>I wanted students to have notes they could reach outside camps and classes if they wanted to keep studying, and to give instructors more resources to point students to.</dd><dt>Changed</dt><dd>It started as an Eleventy site, a static site generator, holding notes our own instructors projected in class.</dd></dl>
 <div class="shots"><figure class="shot"><div class="shot-frame"><div class="shot-bar" aria-hidden="true">notes site, March 2026</div><div class="shot-img"><a href="img/hw-log-03-09.webp"><img src="img/hw-log-03-09.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="The early notes site: an Intro to the Web page with a diagram of clients, the Internet and a server"></a></div></div><figcaption>Where it began: a static page of notes.</figcaption></figure></div>
 </article>
 </section>
@@ -142,16 +151,16 @@
 <li style="--r:3;--c:1"><strong>lesson pages</strong><span>Astro 6 + MDX, built to static files</span></li>
 <li style="--r:3;--c:3" data-to="down"><strong>compile Durable Object</strong><span>needs a session; queues a class&rsquo;s sketches</span></li>
 <li style="--r:4;--c:1" data-to="up"><strong>weekly rebuild</strong><span>Saturday 06:00 UTC, updates program status and opens club sessions</span></li>
-<li class="quiet" style="--r:4;--c:3"><strong>compile container</strong><span>arduino-cli, internet off, one sketch at a time</span></li>
+<li class="quiet" style="--r:4;--c:3"><strong>compile container</strong><span>arduino-cli, internet off, four compiles at once since Nov 12, 2026 (one before)</span></li>
 </ol>
 <figcaption>Figure 1. A classroom device hits the gate Worker first, which checks the code against KV. A correct code gets the static lesson pages; a wrong one gets the code entry page, and only those failures count toward the rate limit. Arduino compiles pass through a Durable Object to a single container. The playground lives on its own origin. A weekly rebuild, plus a manual deploy when a program starts midweek, keeps program status current.</figcaption>
 </figure>
-<p>The Worker runs ahead of the files it serves, so a gated lesson is never handed out and then hidden. A build served without the Worker would give everything away, which is why every deploy goes through it. The rate limit counts only failed code attempts, so one student mistyping cannot lock out the classmates sharing that school IP address. The playground is a separate Worker with no gate and no secrets, and a first-party subdomain is less likely to be blocked by a school content filter than a third-party domain.</p>
+<p>The Worker runs ahead of the files it serves, so a gated lesson is never handed out and then hidden. A build served without the Worker would give everything away, which is why every deploy goes through it. The rate limit counts only failed code attempts, so one student mistyping cannot lock out the classmates sharing that school IP address. The playground is a separate Worker with no gate and no secrets, and a first-party subdomain is less likely to be blocked by a school content filter than a third-party domain. Stack: Astro on Cloudflare Workers, hand-written CSS, no client-side framework.</p>
 </section>
 
 <section>
 <h2 id="numbers" tabindex="-1">Numbers</h2>
-<ul class="tally" role="list"><li><strong class="n">22</strong> programs</li><li><strong class="n">12</strong> club sessions</li></ul>
+<ul class="tally" role="list"><li><strong class="n">22</strong> programs</li><li><strong class="n">12</strong> club sessions</li><li data-impact="lessons_served" hidden></li></ul>
 </section>
 
 <section>

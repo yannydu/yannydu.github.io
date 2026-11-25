@@ -360,7 +360,6 @@ const commands = {
           `  error rate             ${d.error_rate_pct} %`,
           `  lessons served         ${approx(d.lessons_served)}`,
           `  gallery pages viewed   ${approx(d.gallery_pages_viewed)}`,
-          `  sponsor pages viewed   ${approx(d.sponsor_pages_viewed)}`,
           `  (updated ${d.updated}; aggregate counts only, no personal data)`,
         ].join("\n");
         typewrite(write(escapeHtml(lines)));
@@ -770,9 +769,6 @@ async function boot() {
       `<span style="color: var(--muted)">resume data didn't load; skills, contact and open github/email are unavailable.</span>`,
     );
   }
-  write(
-    `<span style="color: var(--muted)">last updated ${escapeHtml(content.updated)}</span>`,
-  );
   write("");
   write(
     `type <span class="ok">help</span> to see commands, ` +
